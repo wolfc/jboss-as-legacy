@@ -22,12 +22,15 @@
 
 package org.jboss.legacy.jnp;
 
+import javax.naming.NamingException;
+
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jnp.interfaces.Naming;
+import org.jnp.server.SingletonNamingServer;
 
 
 /**
@@ -38,6 +41,8 @@ public class LegacyJNPServerService implements Service<JNPServer>{
 
 
     public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LegacyJNPServerModel.LEGACY).append(LegacyJNPServerModel.SERVICE_NAME);
+
+    private SingletonNamingServer singletonNamingServer;
 
     public LegacyJNPServerService() {
         super();
@@ -52,12 +57,17 @@ public class LegacyJNPServerService implements Service<JNPServer>{
 
     @Override
     public void start(StartContext startContext) throws StartException {
-
+        try {
+            this.singletonNamingServer = new SingletonNamingServer();
+        } catch (NamingException e) {
+            throw new StartException(e);
+        }
     }
 
     @Override
     public void stop(StopContext stopContext) {
-
+        this.singletonNamingServer.destroy();
+        this.singletonNamingServer = null;
     }
 
 }

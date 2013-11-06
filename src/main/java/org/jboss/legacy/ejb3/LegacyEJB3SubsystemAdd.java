@@ -41,13 +41,6 @@ class LegacyEJB3SubsystemAdd extends AbstractBoottimeAddStepHandler{
     public static final LegacyEJB3SubsystemAdd INSTANCE = new LegacyEJB3SubsystemAdd();
     LegacyEJB3SubsystemAdd() {
     }
-//
-//    @Override
-//    protected void performRuntime(OperationContext context, ModelNode operation, ModelNode model,
-//            ServiceVerificationHandler verificationHandler, List<ServiceController<?>> newControllers)
-//            throws OperationFailedException {
-//        System.err.println("LegacyEJB3SubsystemAdd:"+operation);
-//    }
 
     @Override
     protected void performBoottime(OperationContext context, ModelNode operation, ModelNode model,

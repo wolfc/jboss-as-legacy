@@ -23,6 +23,7 @@
 package org.jboss.legacy.ejb3.registrar;
 
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
@@ -38,6 +39,8 @@ import org.jboss.aop.joinpoint.Invocation;
 import org.jboss.aop.joinpoint.InvocationResponse;
 import org.jboss.aop.joinpoint.MethodInvocation;
 import org.jboss.as.ee.component.Attachments;
+import org.jboss.as.ee.component.ComponentConfiguration;
+import org.jboss.as.ee.component.ComponentConfigurator;
 import org.jboss.as.ee.component.ComponentDescription;
 import org.jboss.as.ee.component.EEModuleDescription;
 import org.jboss.as.ee.component.ViewDescription;
@@ -63,6 +66,8 @@ import org.jboss.metadata.ejb.spec.EjbJarMetaData;
 import org.jboss.metadata.ejb.spec.EnterpriseBeanMetaData;
 import org.jboss.metadata.ejb.spec.EnterpriseBeansMetaData;
 import org.jboss.msc.service.ServiceController;
+import org.jboss.msc.value.InjectedValue;
+import org.jboss.msc.value.Values;
 
 /**
  * Processor to hook up EJB with nice JNP/AOP binding.
@@ -71,9 +76,10 @@ import org.jboss.msc.service.ServiceController;
 public class LegacyEJB3DeploymentProcessor implements DeploymentUnitProcessor {
 
     @Override
-    public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
+    public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
         System.err.println("DOING: " + deploymentUnit.getName() + " > " + EjbDeploymentMarker.isEjbDeployment(deploymentUnit));
+        final ClassLoader moduleClassLoader = this.getClass().getClassLoader();
         if (!EjbDeploymentMarker.isEjbDeployment(deploymentUnit)) {
             return;
         }
@@ -95,30 +101,44 @@ public class LegacyEJB3DeploymentProcessor implements DeploymentUnitProcessor {
         }
         final EEModuleDescription moduleDescription = deploymentUnit.getAttachment(Attachments.EE_MODULE_DESCRIPTION);
         if (moduleDescription != null) {
+
             for (final ComponentDescription componentDescription : moduleDescription.getComponentDescriptions()) {
                 if (componentDescription instanceof EJBComponentDescription) {
-                    final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
-                    EJBViewDescription remoteView = ejbComponentDescription.getEjbRemoteView();
-                    ejbComponentDescription.getViews();
-                    if (remoteView == null) {
-                        System.err.println("No EJB 2.x Remote View: " + ejbComponentDescription.getEJBClassName());
-                    } else {
+                    try {
+                        final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
+                        final InjectedValue<ClassLoader> viewClassLoader = new InjectedValue<ClassLoader>();
 
-                        System.err.println("Removet view '" + ejbComponentDescription.getEJBClassName() + "' > '"
-                                + remoteView.getViewClassName() + "'");
-                    }
+                        ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
+                            public void configure(DeploymentPhaseContext context, ComponentDescription description,
+                                    ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
+                                viewClassLoader.setValue(Values.immediateValue(configuration.getModuleClassLoader()));
 
-                    Set<ViewDescription> views = ejbComponentDescription.getViews();
-                    for (ViewDescription vd : views) {
-                        final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
-                        if (viewType == MethodIntf.REMOTE || viewType == MethodIntf.HOME) {
-                            System.err.println("Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName() + "' > '"
-                                    + vd.getViewClassName() + "'");
-                            doTestBind(vd.getViewClassName(), phaseContext);
-                        } else {
-                            System.err.println("NON Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName() + "' > '"
-                                    + vd.getViewClassName() + "'");
-                        }
+                                EJBViewDescription remoteView = ejbComponentDescription.getEjbRemoteView();
+                                ejbComponentDescription.getViews();
+                                if (remoteView == null) {
+                                    System.err.println("No EJB 2.x Remote View: " + ejbComponentDescription.getEJBClassName());
+                                } else {
+
+                                    System.err.println("Removet view '" + ejbComponentDescription.getEJBClassName() + "' > '"
+                                            + remoteView.getViewClassName() + "'");
+                                }
+
+                                Set<ViewDescription> views = ejbComponentDescription.getViews();
+                                for (ViewDescription vd : views) {
+                                    final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
+                                    if (viewType == MethodIntf.REMOTE || viewType == MethodIntf.HOME) {
+                                        System.err.println("Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName()
+                                                + "' > '" + vd.getViewClassName() + "'");
+                                        doTestBind(vd.getViewClassName(), phaseContext, viewClassLoader, moduleClassLoader);
+                                    } else {
+                                        System.err.println("NON Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName()
+                                                + "' > '" + vd.getViewClassName() + "'");
+                                    }
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -152,13 +172,14 @@ public class LegacyEJB3DeploymentProcessor implements DeploymentUnitProcessor {
         return (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
     }
 
-    private void doTestBind(String remoteClassName, DeploymentPhaseContext phaseContext) {
+    private void doTestBind(String remoteClassName, DeploymentPhaseContext phaseContext,
+            InjectedValue<ClassLoader> viewClassLoader, final ClassLoader moduleClassLoader) {
 
         JBossSessionBeanMetaData smd = createMetaData(remoteClassName);
         final String containerName = smd.getName();
         // Register with AOP
-        //phaseContext.getServiceTarget().get
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        // phaseContext.getServiceTarget().get
+        final ClassLoader cl = viewClassLoader.getValue();
         Dispatcher.singleton.registerTarget(containerName, new InvokableContextClassProxyHack(new InvokableContext() {
             @Override
             public Object invoke(Object proxy, SerializableMethod method, Object[] args) throws Throwable {
@@ -183,20 +204,28 @@ public class LegacyEJB3DeploymentProcessor implements DeploymentUnitProcessor {
                 return response;
             }
         }));
-        ServiceController<LegacyEJB3Registrar> controller = (ServiceController<LegacyEJB3Registrar>) phaseContext.getServiceRegistry().getService(LegacyEJB3RegistrarService.SERVICE_NAME);
+        ServiceController<LegacyEJB3Registrar> controller = (ServiceController<LegacyEJB3Registrar>) phaseContext
+                .getServiceRegistry().getService(LegacyEJB3RegistrarService.SERVICE_NAME);
         LegacyEJB3Registrar value = controller.getValue();
         final JndiStatelessSessionRegistrar registrar = value.getJndiStatelessSessionRegistrar();
         final String containerGuid = containerName + ":" + UUID.randomUUID().toString();
         final AspectManager aspectManager = AspectManager.instance(cl);
         // TODO: probably ClassAdvisor won't do
         final Advisor advisor = new ClassAdvisor(Object.class, aspectManager);
-
+        final ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
-            InitialContext context = new InitialContext();
+            Thread.currentThread().setContextClassLoader(moduleClassLoader);
+            Hashtable<String, String> env = new Hashtable<String, String>();
+            env.put("java.naming.factory.initial", "org.jnp.interfaces.LocalOnlyContextFactory");
+            env.put("java.naming.factory.url.pkgs", "org.jboss.naming:org.jnp.interfaces");
+            InitialContext context = new InitialContext(env);
             registrar.bindEjb(context, smd, cl, containerName, containerGuid, advisor);
         } catch (NamingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
         }
+
     }
 }

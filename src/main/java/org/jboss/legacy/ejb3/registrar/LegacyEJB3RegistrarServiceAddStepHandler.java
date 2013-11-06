@@ -68,7 +68,6 @@ public class LegacyEJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAd
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
 
         final LegacyEJB3RegistrarService service = new LegacyEJB3RegistrarService();
-
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<LegacyEJB3Registrar> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
         serviceBuilder.addDependency(LegacyRemotingConnectorService.SERVICE_NAME,Connector.class,service.getInjectedValueConnector());
