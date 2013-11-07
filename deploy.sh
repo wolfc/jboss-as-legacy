@@ -4,10 +4,10 @@ if [ "x$JBOSS_HOME" = "x" ]; then
     echo "Set ENV JBOSS_HOME!"
     return 1
 fi
-#mvn clean install
-#cp -r lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
-#cp -r jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
-#cp -r ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
+mvn clean install
+cp -r lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -r jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -r ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
 
 echo "Edit configuration file - for instance $JBOSS_HOME/standalone/configuration/standalone.xml"
 
