@@ -35,7 +35,7 @@
     
     <properties>
     	<directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
-    	<module.name>org.jboss.ejb3.legacy</module.name>
+    	<module.name>org.jboss.legacy.ejb3</module.name>
         <version.jboss.as>${project.version}</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
@@ -363,8 +363,16 @@
                   					<outputDirectory>${directory.dependencies}</outputDirectory>
                   					<destFileName>jnpserver.jar</destFileName>
                 				</artifactItem>
-                			       			
+                			    <artifactItem>
+									<groupId>org.jboss.aspects</groupId>
+                					<artifactId>jboss-transaction-aspects</artifactId>
+                  					<type>jar</type>
+                  					<overWrite>true</overWrite>
+                  					<outputDirectory>${directory.dependencies}</outputDirectory>
+                  					<destFileName>jboss-transaction-aspects.jar</destFileName>
+                				</artifactItem>
                 				<!-- org.jboss.logging:jboss-logging-spi org.jboss.naming:jnpserver:jar:5.0.3.GA_CP02
+                				org.jboss.aspects:jboss-transaction-aspects
                 				<artifactItem>
                   					<groupId>org.jboss.spec.javax.xml.rpc</groupId>
             						<artifactId>jboss-remoting-aspects</artifactId>

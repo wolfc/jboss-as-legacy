@@ -1,4 +1,4 @@
-<module xmlns="urn:jboss:module:1.0" name="org.jboss.ejb3.legacy">
+<module xmlns="urn:jboss:module:1.0" name="org.jboss.legacy.ejb3">
     <resources>
         <resource-root path="jboss-as-ejb3-legacy.jar"/>
         <resource-root path="lib/concurrent.jar"/>
@@ -34,6 +34,7 @@
         <resource-root path="lib/jboss-mdr.jar"/>
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
+        <resource-root path="lib/jboss-transaction-aspects.jar"/>
 
         <!-- 
         <resource-root path="lib/jboss-jaxrpc-api_1.1_spec.jar"/>

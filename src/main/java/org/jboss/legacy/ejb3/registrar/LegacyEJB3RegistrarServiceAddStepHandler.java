@@ -36,6 +36,7 @@ import org.jboss.as.server.deployment.Phase;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.LegacyEJB3Extension;
 import org.jboss.legacy.ejb3.remoting.LegacyRemotingConnectorService;
+import org.jboss.legacy.jnp.LegacyJNPServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
@@ -71,6 +72,7 @@ public class LegacyEJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAd
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<LegacyEJB3Registrar> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
         serviceBuilder.addDependency(LegacyRemotingConnectorService.SERVICE_NAME,Connector.class,service.getInjectedValueConnector());
+        serviceBuilder.addDependency(LegacyJNPServerService.SERVICE_NAME);
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }

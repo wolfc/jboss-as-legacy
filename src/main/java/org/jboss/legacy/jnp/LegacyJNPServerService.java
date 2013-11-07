@@ -30,19 +30,20 @@ import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jnp.interfaces.Naming;
+import org.jnp.server.NamingBean;
 import org.jnp.server.SingletonNamingServer;
-
+import org.jnp.server.Main;
 
 /**
  * @author baranowb
- *
  */
-public class LegacyJNPServerService implements Service<JNPServer>{
+public class LegacyJNPServerService implements Service<JNPServer> {
 
-
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LegacyJNPServerModel.LEGACY).append(LegacyJNPServerModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LegacyJNPServerModel.LEGACY).append(
+            LegacyJNPServerModel.SERVICE_NAME);
 
     private SingletonNamingServer singletonNamingServer;
+    private Main serverConnector;
 
     public LegacyJNPServerService() {
         super();
@@ -54,12 +55,24 @@ public class LegacyJNPServerService implements Service<JNPServer>{
         return null;
     }
 
-
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
             this.singletonNamingServer = new SingletonNamingServer();
         } catch (NamingException e) {
+            throw new StartException(e);
+        }
+        this.serverConnector = new Main();
+        this.serverConnector.setNamingInfo(new NamingBean() {
+
+            @Override
+            public Naming getNamingInstance() {
+                return singletonNamingServer;
+            }
+        });
+        try {
+            this.serverConnector.start();
+        } catch (Exception e) {
             throw new StartException(e);
         }
     }
@@ -68,6 +81,8 @@ public class LegacyJNPServerService implements Service<JNPServer>{
     public void stop(StopContext stopContext) {
         this.singletonNamingServer.destroy();
         this.singletonNamingServer = null;
+        this.serverConnector.stop();
+        this.serverConnector = null;
     }
 
 }

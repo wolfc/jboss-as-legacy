@@ -34,6 +34,7 @@ import org.jboss.as.controller.ServiceVerificationHandler;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.registrar.LegacyEJB3RegistrarService;
 import org.jboss.legacy.ejb3.registrar.LegacyEJB3RegistrarServiceAddStepHandler;
+import org.jboss.legacy.jnp.LegacyJNPServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
@@ -64,6 +65,7 @@ public class LegacyRemotingServiceAddStepHandler extends AbstractBoottimeAddStep
 
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<Connector> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
+        serviceBuilder.addDependency(LegacyJNPServerService.SERVICE_NAME);
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }

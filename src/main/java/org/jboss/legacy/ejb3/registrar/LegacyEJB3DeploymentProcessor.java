@@ -196,10 +196,13 @@ public class LegacyEJB3DeploymentProcessor implements DeploymentUnitProcessor {
                 System.err.println("Invoked method = " + si.getActualMethod());
                 System.err.println("Arguments = " + Arrays.toString(si.getArguments()));
 
+                System.err.println("Method: "+si.getMethod());
+                System.err.println("Method: "+si.getActualMethod());
                 // business logic
-                final Object result = "Hi " + si.getArguments()[0];
+                for(Object arg: si.getArguments())
+                    System.err.println("ARG["+arg+"]");
 
-                final InvocationResponse response = new InvocationResponse(result);
+                final InvocationResponse response = new InvocationResponse(new Integer(300));
                 // response.setContextInfo();
                 return response;
             }
