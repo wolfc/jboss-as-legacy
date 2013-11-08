@@ -25,6 +25,9 @@ package org.jboss.legacy.jnp;
 import javax.xml.stream.XMLStreamException;
 
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
+import org.jboss.dmr.ModelNode;
+import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
+import org.jboss.legacy.jnp.server.JNPServerModel;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
@@ -35,8 +38,56 @@ import org.jboss.staxmapper.XMLExtendedStreamWriter;
 public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext>{
 
     public static final JNPSubsystemXMLPersister INSTANCE = new JNPSubsystemXMLPersister();
+
     @Override
-    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter, SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        subsystemMarshallingContext.startSubsystemElement(JNPSubsystemNamespace.LEGACY_JNP_1_0.getUriString(), false);
+
+        writeElements(xmlExtendedStreamWriter, subsystemMarshallingContext);
+
+        // write the subsystem end element
+        xmlExtendedStreamWriter.writeEndElement();
     }
 
+    private void writeElements(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode();
+
+        if (model.hasDefined(JNPServerModel.SERVICE_NAME)) {
+            writeJNPServer(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
+
+        if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
+            writeConnector(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
+    }
+
+    /**
+     * @param xmlExtendedStreamWriter
+     * @param subsystemMarshallingContext
+     */
+    private void writeConnector(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(JNPServerConnectorModel.SERVICE_NAME);
+
+        xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_CONNECTOR.getLocalName());
+        if (model.hasDefined(JNPServerConnectorModel.HOST)) {
+            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.HOST.getLocalName(), model.get(JNPServerConnectorModel.HOST)
+                    .asString());
+        }
+
+        if (model.hasDefined(JNPServerConnectorModel.PORT)) {
+            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.PORT.getLocalName(), model.get(JNPServerConnectorModel.PORT)
+                    .asString());
+        }
+        xmlExtendedStreamWriter.writeEndElement();
+    }
+
+    private void writeJNPServer(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode();
+        xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_SERVER.getLocalName());
+        xmlExtendedStreamWriter.writeEndElement();
+    }
 }

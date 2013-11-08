@@ -20,29 +20,29 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3;
+package org.jboss.legacy.jnp;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.legacy.ejb3.remoting.RemotingModel;
+import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 
 /**
  * @author baranowb
  *
  */
-public enum EJB3XMLSubsystemAttribute {
+public enum JNPSubsystemXMLAttribute {
     UNKNOWN(null),
 
-    HOST(RemotingModel.HOST),
+    HOST(JNPServerConnectorModel.HOST),
 
-    PORT(RemotingModel.PORT),
+    PORT(JNPServerConnectorModel.PORT),
 
     ;
 
     private final String name;
 
-    EJB3XMLSubsystemAttribute(final String name) {
+    JNPSubsystemXMLAttribute(final String name) {
         this.name = name;
     }
 
@@ -54,11 +54,11 @@ public enum EJB3XMLSubsystemAttribute {
         return name;
     }
 
-    private static final Map<String, EJB3XMLSubsystemAttribute> MAP;
+    private static final Map<String, JNPSubsystemXMLAttribute> MAP;
 
     static {
-        final Map<String, EJB3XMLSubsystemAttribute> map = new HashMap<String, EJB3XMLSubsystemAttribute>();
-        for (EJB3XMLSubsystemAttribute element : values()) {
+        final Map<String, JNPSubsystemXMLAttribute> map = new HashMap<String, JNPSubsystemXMLAttribute>();
+        for (JNPSubsystemXMLAttribute element : values()) {
             final String name = element.getLocalName();
             if (name != null)
                 map.put(name, element);
@@ -66,8 +66,8 @@ public enum EJB3XMLSubsystemAttribute {
         MAP = map;
     }
 
-    public static EJB3XMLSubsystemAttribute forName(String localName) {
-        final EJB3XMLSubsystemAttribute element = MAP.get(localName);
+    public static JNPSubsystemXMLAttribute forName(String localName) {
+        final JNPSubsystemXMLAttribute element = MAP.get(localName);
         return element == null ? UNKNOWN : element;
     }
 

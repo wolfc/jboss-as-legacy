@@ -42,9 +42,12 @@ public class JNPServerConnectorService implements Service<Main> {
     private InjectedValue<JNPServer> jnpServer = new InjectedValue<JNPServer>();
     private Main serverConnector;
 
-    public JNPServerConnectorService() {
+    private String host;
+    private int port;
+    public JNPServerConnectorService(String host, int port) {
         super();
-
+        this.host = host;
+        this.port = port;
     }
 
     public InjectedValue<JNPServer> getJnjectedValueJnpServer() {
@@ -60,7 +63,10 @@ public class JNPServerConnectorService implements Service<Main> {
     public void start(StartContext startContext) throws StartException {
         this.serverConnector = new Main();
         this.serverConnector.setNamingInfo(jnpServer.getValue().getNamingBean());
+
         try {
+            this.serverConnector.setBindAddress(this.host);
+            this.serverConnector.setPort(this.port);
             this.serverConnector.start();
         } catch (Exception e) {
             throw new StartException(e);

@@ -25,18 +25,69 @@ package org.jboss.legacy.ejb3;
 import javax.xml.stream.XMLStreamException;
 
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
+import org.jboss.dmr.ModelNode;
+import org.jboss.legacy.ejb3.registrar.EJB3RegistrarModel;
+import org.jboss.legacy.ejb3.remoting.RemotingModel;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
 /**
  * @author baranowb
- *
  */
-public class EJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext>{
+public class EJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext> {
 
     public static final EJB3SubsystemXMLPersister INSTANCE = new EJB3SubsystemXMLPersister();
+
     @Override
-    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter, SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        subsystemMarshallingContext.startSubsystemElement(EJB3SubsystemNamespace.LEGACY_EJB3_1_0.getUriString(), false);
+
+        writeElements(xmlExtendedStreamWriter, subsystemMarshallingContext);
+
+        // write the subsystem end element
+        xmlExtendedStreamWriter.writeEndElement();
+    }
+
+    private void writeElements(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode();
+
+        if (model.hasDefined(EJB3RegistrarModel.SERVICE_NAME)) {
+            writeEjb3Registrar(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
+
+        if (model.hasDefined(RemotingModel.SERVICE_NAME)) {
+            writeRemoting(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
+    }
+
+    /**
+     * @param xmlExtendedStreamWriter
+     * @param subsystemMarshallingContext
+     */
+    private void writeRemoting(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(RemotingModel.SERVICE_NAME);
+
+        xmlExtendedStreamWriter.writeStartElement(EJB3SubsystemXMLElement.REMOTING.getLocalName());
+        if (model.hasDefined(RemotingModel.HOST)) {
+            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.HOST.getLocalName(), model.get(RemotingModel.HOST)
+                    .asString());
+        }
+
+        if (model.hasDefined(RemotingModel.PORT)) {
+            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.PORT.getLocalName(), model.get(RemotingModel.PORT)
+                    .asString());
+        }
+        xmlExtendedStreamWriter.writeEndElement();
+    }
+
+    private void writeEjb3Registrar(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode();
+        xmlExtendedStreamWriter.writeStartElement(EJB3SubsystemXMLElement.EJB3_REGISTRAR.getLocalName());
+        xmlExtendedStreamWriter.writeEndElement();
     }
 
 }

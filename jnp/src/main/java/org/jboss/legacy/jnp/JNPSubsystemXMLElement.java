@@ -32,7 +32,7 @@ import org.jboss.legacy.jnp.server.JNPServerModel;
  * @author baranowb
  *
  */
-public enum JNPSybsystemXMLElement {
+public enum JNPSubsystemXMLElement {
  // must be first
     UNKNOWN(null),
 
@@ -42,7 +42,7 @@ public enum JNPSybsystemXMLElement {
 
     private final String name;
 
-    JNPSybsystemXMLElement(final String name) {
+    JNPSubsystemXMLElement(final String name) {
         this.name = name;
     }
 
@@ -55,19 +55,19 @@ public enum JNPSybsystemXMLElement {
         return name;
     }
 
-    private static final Map<String, JNPSybsystemXMLElement> MAP;
+    private static final Map<String, JNPSubsystemXMLElement> MAP;
 
     static {
-        final Map<String, JNPSybsystemXMLElement> map = new HashMap<String, JNPSybsystemXMLElement>();
-        for (JNPSybsystemXMLElement element : values()) {
+        final Map<String, JNPSubsystemXMLElement> map = new HashMap<String, JNPSubsystemXMLElement>();
+        for (JNPSubsystemXMLElement element : values()) {
             final String name = element.getLocalName();
             if (name != null) map.put(name, element);
         }
         MAP = map;
     }
 
-    public static JNPSybsystemXMLElement forName(String localName) {
-        final JNPSybsystemXMLElement element = MAP.get(localName);
+    public static JNPSubsystemXMLElement forName(String localName) {
+        final JNPSubsystemXMLElement element = MAP.get(localName);
         return element == null ? UNKNOWN : element;
     }
 }

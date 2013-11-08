@@ -75,12 +75,12 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
         result.add(ejb3RegistrarServerServiceAddOperation);
 
         // elements
-        final EnumSet<EJB3SybsystemXMLElement> encountered = EnumSet.noneOf(EJB3SybsystemXMLElement.class);
+        final EnumSet<EJB3SubsystemXMLElement> encountered = EnumSet.noneOf(EJB3SubsystemXMLElement.class);
         while (xmlExtendedStreamReader.hasNext() && xmlExtendedStreamReader.nextTag() != XMLStreamConstants.END_ELEMENT) {
             if (EJB3SubsystemNamespace.forUri(xmlExtendedStreamReader.getNamespaceURI()) != EJB3SubsystemNamespace.LEGACY_EJB3_1_0) {
                 throw unexpectedElement(xmlExtendedStreamReader);
             }
-            final EJB3SybsystemXMLElement element = EJB3SybsystemXMLElement.forName(xmlExtendedStreamReader
+            final EJB3SubsystemXMLElement element = EJB3SubsystemXMLElement.forName(xmlExtendedStreamReader
                     .getLocalName());
             if (!encountered.add(element)) {
                 throw unexpectedElement(xmlExtendedStreamReader);
@@ -113,7 +113,7 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
-            switch (EJB3XMLSubsystemAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
+            switch (EJB3SubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
                 case HOST:
                     RemotingResourceDefinition.HOST.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
                             xmlExtendedStreamReader);

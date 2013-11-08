@@ -74,12 +74,12 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
 
 
      // elements
-        final EnumSet<JNPSybsystemXMLElement> encountered = EnumSet.noneOf(JNPSybsystemXMLElement.class);
+        final EnumSet<JNPSubsystemXMLElement> encountered = EnumSet.noneOf(JNPSubsystemXMLElement.class);
         while (xmlExtendedStreamReader.hasNext() && xmlExtendedStreamReader.nextTag() != XMLStreamConstants.END_ELEMENT) {
             if (JNPSubsystemNamespace.forUri(xmlExtendedStreamReader.getNamespaceURI()) != JNPSubsystemNamespace.LEGACY_JNP_1_0) {
                 throw unexpectedElement(xmlExtendedStreamReader);
             }
-            final JNPSybsystemXMLElement element = JNPSybsystemXMLElement.forName(xmlExtendedStreamReader
+            final JNPSubsystemXMLElement element = JNPSubsystemXMLElement.forName(xmlExtendedStreamReader
                     .getLocalName());
             if (!encountered.add(element)) {
                 throw unexpectedElement(xmlExtendedStreamReader);
@@ -111,7 +111,7 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
-            switch (JNPXMLSubsystemAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
+            switch (JNPSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
                 case HOST:
                     JNPServerConnectorResourceDefinition.HOST.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
                             xmlExtendedStreamReader);
