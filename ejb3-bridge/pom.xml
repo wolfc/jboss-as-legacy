@@ -27,7 +27,7 @@
         <version>7.3.0.Final-redhat-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jboss-as-ejb3-legacy</artifactId>
+    <artifactId>jboss-as-legacy-ejb3-bridge</artifactId>
 
     <name>JBoss Application Server: Legacy : EJB3 Bridge</name>
 

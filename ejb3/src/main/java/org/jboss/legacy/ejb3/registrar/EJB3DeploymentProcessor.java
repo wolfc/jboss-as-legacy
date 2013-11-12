@@ -174,7 +174,12 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
 
     private void doTestBind(String remoteClassName, DeploymentPhaseContext phaseContext,
             InjectedValue<ClassLoader> viewClassLoader, final ClassLoader moduleClassLoader) {
-
+        try {
+            Thread.currentThread().sleep(500);
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
         JBossSessionBeanMetaData smd = createMetaData(remoteClassName);
         final String containerName = smd.getName();
         // Register with AOP
