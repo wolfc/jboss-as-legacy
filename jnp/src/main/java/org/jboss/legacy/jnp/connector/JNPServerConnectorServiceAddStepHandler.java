@@ -57,8 +57,8 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-        final String host = JNPServerConnectorResourceDefinition.HOST.resolveModelAttribute(context, model).asString();
-        final int port = JNPServerConnectorResourceDefinition.PORT.resolveModelAttribute(context, model).asInt();
+        final String host = JNPServerConnectorResourceDefinition.HOST.resolveModelAttribute(context, operation).asString();
+        final int port = JNPServerConnectorResourceDefinition.PORT.resolveModelAttribute(context, operation).asInt();
         final JNPServerConnectorService service = new JNPServerConnectorService(host,port);
 
         final ServiceTarget serviceTarget = context.getServiceTarget();

@@ -59,8 +59,8 @@ public class RemotingServiceAddStepHandler extends AbstractBoottimeAddStepHandle
     }
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context,final ModelNode operation, final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-        final String host = RemotingResourceDefinition.HOST.resolveModelAttribute(context, model).asString();
-        final int port = RemotingResourceDefinition.PORT.resolveModelAttribute(context, model).asInt();
+        final String host = RemotingResourceDefinition.HOST.resolveModelAttribute(context, operation).asString();
+        final int port = RemotingResourceDefinition.PORT.resolveModelAttribute(context, operation).asInt();
         final RemotingConnectorService service = new RemotingConnectorService(host, port);
 
         final ServiceTarget serviceTarget = context.getServiceTarget();
