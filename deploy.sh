@@ -18,8 +18,10 @@ echo
 echo "2. Add sdubsystem definition(no args == default IP/port)"
 echo "<subsystem xmlns=\"urn:jboss:domain:legacy-jnp:1.0\">"
 echo "    <jnp-server/>"
-echo "    <jnp-connector/>"
+echo "    <jnp-connector socket-binding="jnp" />"
 echo "</subsystem>"
+echo 
+echo "3. Define a socket-binding for the JNP Server using the 'jnp' name"
 echo 
 echo
 echo "To enable EJB3:"

@@ -55,7 +55,7 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
         final ModelNode model = subsystemMarshallingContext.getModelNode();
 
         if (model.hasDefined(JNPServerModel.SERVICE_NAME)) {
-            writeJNPServer(xmlExtendedStreamWriter, subsystemMarshallingContext);
+            writeJNPServer(xmlExtendedStreamWriter);
         }
 
         if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
@@ -72,21 +72,19 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
         final ModelNode model = subsystemMarshallingContext.getModelNode().get(JNPServerConnectorModel.SERVICE_NAME);
 
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_CONNECTOR.getLocalName());
-        if (model.hasDefined(JNPServerConnectorModel.HOST)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.HOST.getLocalName(), model.get(JNPServerConnectorModel.HOST)
+        if (model.hasDefined(JNPServerConnectorModel.SOCKET_BINDING)) {
+            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.SOCKET_BINDING.getLocalName(), model.get(JNPServerConnectorModel.SOCKET_BINDING)
                     .asString());
         }
 
-        if (model.hasDefined(JNPServerConnectorModel.PORT)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.PORT.getLocalName(), model.get(JNPServerConnectorModel.PORT)
+        if (model.hasDefined(JNPServerConnectorModel.RMI_SOCKET_BINDING)) {
+            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.RMI_SOCKET_BINDING.getLocalName(), model.get(JNPServerConnectorModel.RMI_SOCKET_BINDING)
                     .asString());
         }
         xmlExtendedStreamWriter.writeEndElement();
     }
 
-    private void writeJNPServer(XMLExtendedStreamWriter xmlExtendedStreamWriter,
-            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode();
+    private void writeJNPServer(XMLExtendedStreamWriter xmlExtendedStreamWriter) throws XMLStreamException {
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_SERVER.getLocalName());
         xmlExtendedStreamWriter.writeEndElement();
     }

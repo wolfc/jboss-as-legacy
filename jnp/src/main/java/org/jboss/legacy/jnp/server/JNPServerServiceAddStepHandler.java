@@ -57,10 +57,9 @@ public class JNPServerServiceAddStepHandler extends AbstractBoottimeAddStepHandl
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
 
         final JNPServerService service = new JNPServerService();
-        final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor("java:/lovesOss");
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<JNPServer> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
-        serviceBuilder.addDependency(bindInfo.getParentContextServiceName(), ServiceBasedNamingStore.class, service.getNamingStoreInjector());
+        serviceBuilder.addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, service.getNamingStoreInjector());
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }

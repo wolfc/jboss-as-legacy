@@ -14,8 +14,8 @@ targetNamespace="urn:jboss:domain:legacy-jnp:1.0" elementFormDefault="qualified"
     </xs:complexType>
     
     <xs:complexType name="jnpServerConnectorType">
-    	<xs:attribute name="host" type="xs:string" use="optional"/>
-    	<xs:attribute name="port" type="xs:int" use="optional"/>
+        <xs:attribute name="socket-binding" type="xs:string" use="required" />
+        <xs:attribute name="rmi-socket-binding" type="xs:string" use="optional"/>
     </xs:complexType>
     <xs:complexType name="jnpServerType"/>
 

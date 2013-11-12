@@ -32,6 +32,6 @@ public interface JNPServerConnectorModel {
     String SERVICE_NAME = "jnp-connector";
     String LEGACY = "legacy";
 
-    String HOST = "host";
-    String PORT = "port";
+    String SOCKET_BINDING = "socket-binding";
+    String RMI_SOCKET_BINDING = "rmi-socket-binding";
 }
