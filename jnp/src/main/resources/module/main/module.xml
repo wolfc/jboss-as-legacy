@@ -15,6 +15,7 @@
         -->
         <module name="org.jboss.vfs"/>
         <module name="org.jboss.legacy.library"/>
+        <module name="org.jboss.as.naming"/>
         <!--
         <module name="org.jboss.as.ejb3"/>
         <module name="org.jboss.as.ee"/>

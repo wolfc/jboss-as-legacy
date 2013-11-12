@@ -28,48 +28,48 @@
     </parent>
 
     <artifactId>jboss-as-legacy-parent</artifactId>
-	<groupId>org.jboss.as.legacy</groupId>
-	<!-- NOTE: dont change version, it must be the same as AS, cause if it isn't, ${project.version} in parent is resolved to one set in here -->
+    <groupId>org.jboss.as.legacy</groupId>
+    <!-- NOTE: dont change version, it must be the same as AS, cause if it isn't, ${project.version} in parent is resolved to one set in here -->
     <name>JBoss Application Server: Legacy : Parent</name>
 
     <packaging>pom</packaging>
-    
+
     <properties>
-    	<directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
+        <directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
         <version.jboss.as>7.3.0.Final-redhat-SNAPSHOT</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
     </properties>
 
-	<modules>
-		<module>lib</module>
-		<module>jnp</module>
-		<module>ejb3</module>
-		<!--
-		<module>ejb3-bridge</module>
-		-->
-	</modules>
-	
-	<dependencies>
-		<!-- I have no idea why this is required.... -->
-		<dependency>
+    <modules>
+        <module>lib</module>
+        <module>jnp</module>
+        <module>ejb3</module>
+        <!--
+        <module>ejb3-bridge</module>
+        -->
+    </modules>
+
+    <dependencies>
+        <!-- I have no idea why this is required.... -->
+        <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-build-config</artifactId>
             <version>${version.jboss.as}</version>
         </dependency>
-	</dependencies>
+    </dependencies>
     <dependencyManagement>
-      <dependencies>
-      		<!--
-      		<dependency>
+        <dependencies>
+            <!--
+                <dependency>
                 <groupId>org.jboss.as</groupId>
-        		<artifactId>jboss-as-parent</artifactId>
-        		<version>${version.jboss.as}</version>
+                        <artifactId>jboss-as-parent</artifactId>
+                        <version>${version.jboss.as}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             -->
-           <dependency>
+            <dependency>
                 <groupId>org.jboss.ejb3.bom</groupId>
                 <artifactId>bom-eap5</artifactId>
                 <version>1.0.4</version>
@@ -139,9 +139,9 @@
                 <artifactId>jboss-remoting</artifactId>
                 <version>2.5.4.SP4</version>
             </dependency>
-      </dependencies>
+        </dependencies>
     </dependencyManagement>
-    
+
     <repositories>
         <repository>
             <id>mead-repository.redhat.com</id>
@@ -156,26 +156,26 @@
         </repository>
     </repositories>
     <build>
-      <!-- Maven will append the version to the finalName (which is the name 
-         given to the generated war, and hence the context root) -->
-      <finalName>${project.artifactId}</finalName>
-      <plugins>
-      		<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-        		<executions>
-					<execution>
-	    	        	<id>ban-bad-dependencies</id>
-        	        	<goals>
-            		    	<goal>enforce</goal>
-            	    	</goals>
-        	        	<configuration>
-        	        		<!-- This module does not ban bad deps, since it actually depends on bad dep! -->
-    	    				<skip>true</skip>                      
-	                	</configuration>
-        	     	</execution>
-    	    	</executions>
-	    	</plugin>
+        <!-- Maven will append the version to the finalName (which is the name
+        given to the generated war, and hence the context root) -->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ban-bad-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -192,8 +192,8 @@
                     <argLine>-Xmx512m</argLine>
                     <systemProperties>
                         <property>
-                          <name>jboss.home</name>
-                          <value>${jboss.home}</value>
+                            <name>jboss.home</name>
+                            <value>${jboss.home}</value>
                         </property>
                     </systemProperties>
                     <includes>

@@ -19,19 +19,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.jnp.server;
 
 import javax.naming.NamingException;
+import org.jboss.as.naming.ServiceBasedNamingStore;
+import org.jboss.msc.inject.Injector;
 
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
+import org.jboss.msc.value.InjectedValue;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.NamingBean;
-import org.jnp.server.SingletonNamingServer;
 import org.jnp.server.Main;
 
 /**
@@ -42,7 +43,9 @@ public class JNPServerService implements Service<JNPServer> {
     public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(JNPServerModel.LEGACY).append(
             JNPServerModel.SERVICE_NAME);
 
-    private SingletonNamingServer singletonNamingServer;
+    private final InjectedValue<ServiceBasedNamingStore> namingStoreValue = new InjectedValue<ServiceBasedNamingStore>();
+
+    private NamingStoreWrapper singletonNamingServer;
     private Main serverConnector;
 
     public JNPServerService() {
@@ -67,10 +70,19 @@ public class JNPServerService implements Service<JNPServer> {
         };
     }
 
+    /**
+     * Get the naming store injector.
+     *
+     * @return the injector
+     */
+    public Injector<ServiceBasedNamingStore> getNamingStoreInjector() {
+        return namingStoreValue;
+    }
+
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
-            this.singletonNamingServer = new SingletonNamingServer();
+            this.singletonNamingServer = new NamingStoreWrapper(namingStoreValue.getValue());
         } catch (NamingException e) {
             throw new StartException(e);
         }
@@ -91,7 +103,6 @@ public class JNPServerService implements Service<JNPServer> {
 
     @Override
     public void stop(StopContext stopContext) {
-        this.singletonNamingServer.destroy();
         this.singletonNamingServer = null;
         this.serverConnector.stop();
         this.serverConnector = null;

@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.jnp.server;
 
 import java.util.ArrayList;
@@ -30,6 +29,8 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.naming.ServiceBasedNamingStore;
+import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.dmr.ModelNode;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
@@ -56,9 +57,10 @@ public class JNPServerServiceAddStepHandler extends AbstractBoottimeAddStepHandl
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
 
         final JNPServerService service = new JNPServerService();
-
+        final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor("java:/lovesOss");
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<JNPServer> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
+        serviceBuilder.addDependency(bindInfo.getParentContextServiceName(), ServiceBasedNamingStore.class, service.getNamingStoreInjector());
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }
