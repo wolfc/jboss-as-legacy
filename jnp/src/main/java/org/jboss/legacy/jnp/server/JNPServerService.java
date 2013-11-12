@@ -79,6 +79,7 @@ public class JNPServerService implements Service<JNPServer> {
         return namingStoreValue;
     }
 
+
     @Override
     public void start(StartContext startContext) throws StartException {
         try {

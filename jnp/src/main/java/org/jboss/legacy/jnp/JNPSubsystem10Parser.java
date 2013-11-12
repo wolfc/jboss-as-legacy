@@ -107,18 +107,16 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
     }
 
     private void parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
-            final ModelNode ejb3RemotingServiceAddOperation) throws XMLStreamException {
+            final ModelNode jnpServerServiceAddOperation) throws XMLStreamException {
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
             switch (JNPSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
-                case HOST:
-                    JNPServerConnectorResourceDefinition.HOST.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
-                            xmlExtendedStreamReader);
+                case SOCKET_BINDING:
+                    JNPServerConnectorResourceDefinition.SOCKET_BINDING.parseAndSetParameter(value, jnpServerServiceAddOperation, xmlExtendedStreamReader);
                     break;
-                case PORT:
-                    JNPServerConnectorResourceDefinition.PORT.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
-                            xmlExtendedStreamReader);
+                case RMI_SOCKET_BINDING:
+                    JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.parseAndSetParameter(value, jnpServerServiceAddOperation, xmlExtendedStreamReader);
                     break;
                 case UNKNOWN:
                 default: {

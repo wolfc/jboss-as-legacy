@@ -19,9 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.jnp.connector;
 
+import org.jboss.as.network.SocketBinding;
 import org.jboss.legacy.jnp.server.JNPServer;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
@@ -40,18 +40,27 @@ public class JNPServerConnectorService implements Service<Main> {
             JNPServerConnectorModel.SERVICE_NAME);
 
     private InjectedValue<JNPServer> jnpServer = new InjectedValue<JNPServer>();
+    private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();
+    private final InjectedValue<SocketBinding> rmiBinding = new InjectedValue<SocketBinding>();
+
     private Main serverConnector;
 
-    private String host;
-    private int port;
-    public JNPServerConnectorService(String host, int port) {
+
+    public JNPServerConnectorService() {
         super();
-        this.host = host;
-        this.port = port;
+
     }
 
     public InjectedValue<JNPServer> getJnjectedValueJnpServer() {
         return jnpServer;
+    }
+
+    public InjectedValue<SocketBinding> getBinding() {
+        return binding;
+    }
+
+    public InjectedValue<SocketBinding> getRmiBinding() {
+        return rmiBinding;
     }
 
     @Override
@@ -63,10 +72,13 @@ public class JNPServerConnectorService implements Service<Main> {
     public void start(StartContext startContext) throws StartException {
         this.serverConnector = new Main();
         this.serverConnector.setNamingInfo(jnpServer.getValue().getNamingBean());
-
         try {
-            this.serverConnector.setBindAddress(this.host);
-            this.serverConnector.setPort(this.port);
+            if (this.getRmiBinding().getOptionalValue() != null) {
+                this.serverConnector.setRmiBindAddress(this.getRmiBinding().getValue().getAddress().getHostName());
+                this.serverConnector.setRmiPort(this.getRmiBinding().getValue().getAbsolutePort());
+            }
+            this.serverConnector.setBindAddress(this.getBinding().getValue().getAddress().getHostName());
+            this.serverConnector.setPort(this.getBinding().getValue().getAbsolutePort());
             this.serverConnector.start();
         } catch (Exception e) {
             throw new StartException(e);

@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.jnp.connector;
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.jnp.server.JNPServer;
 import org.jboss.legacy.jnp.server.JNPServerService;
@@ -57,13 +57,19 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-        final String host = JNPServerConnectorResourceDefinition.HOST.resolveModelAttribute(context, operation).asString();
-        final int port = JNPServerConnectorResourceDefinition.PORT.resolveModelAttribute(context, operation).asInt();
-        final JNPServerConnectorService service = new JNPServerConnectorService(host,port);
-
+        final ModelNode bindingRefModel = JNPServerConnectorResourceDefinition.SOCKET_BINDING.resolveModelAttribute(context, operation);
+        final JNPServerConnectorService service = new JNPServerConnectorService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<Main> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
-        serviceBuilder.addDependency(JNPServerService.SERVICE_NAME,JNPServer.class,service.getJnjectedValueJnpServer());
+        serviceBuilder.addDependency(JNPServerService.SERVICE_NAME, JNPServer.class, service.getJnjectedValueJnpServer())
+                .addDependency(SocketBinding.JBOSS_BINDING_NAME.append(bindingRefModel.asString()), SocketBinding.class, service.getBinding());
+
+        ModelNode rmiBindingRefModel = JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.resolveModelAttribute(context, operation);
+         if (rmiBindingRefModel.isDefined()) {
+            serviceBuilder.addDependency(SocketBinding.JBOSS_BINDING_NAME.append(rmiBindingRefModel.asString()), SocketBinding.class, service.getRmiBinding());
+        } else {
+            service.getRmiBinding().inject(null);
+        }
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }

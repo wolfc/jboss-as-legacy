@@ -33,12 +33,8 @@ import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
  */
 public enum JNPSubsystemXMLAttribute {
     UNKNOWN(null),
-
-    HOST(JNPServerConnectorModel.HOST),
-
-    PORT(JNPServerConnectorModel.PORT),
-
-    ;
+    SOCKET_BINDING(JNPServerConnectorModel.SOCKET_BINDING),
+    RMI_SOCKET_BINDING(JNPServerConnectorModel.RMI_SOCKET_BINDING);
 
     private final String name;
 
