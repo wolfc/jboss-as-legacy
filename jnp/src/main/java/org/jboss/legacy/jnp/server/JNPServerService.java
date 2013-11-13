@@ -33,7 +33,6 @@ import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.NamingBean;
-import org.jnp.server.Main;
 
 /**
  * @author baranowb
@@ -44,19 +43,15 @@ public class JNPServerService implements Service<JNPServer> {
             JNPServerModel.SERVICE_NAME);
 
     private final InjectedValue<ServiceBasedNamingStore> namingStoreValue = new InjectedValue<ServiceBasedNamingStore>();
-
     private NamingStoreWrapper singletonNamingServer;
-    private Main serverConnector;
 
     public JNPServerService() {
         super();
-
     }
 
     @Override
     public JNPServer getValue() throws IllegalStateException, IllegalArgumentException {
         return new JNPServer() {
-
             @Override
             public NamingBean getNamingBean() {
                 return new NamingBean() {
@@ -79,7 +74,6 @@ public class JNPServerService implements Service<JNPServer> {
         return namingStoreValue;
     }
 
-
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
@@ -87,26 +81,11 @@ public class JNPServerService implements Service<JNPServer> {
         } catch (NamingException e) {
             throw new StartException(e);
         }
-        this.serverConnector = new Main();
-        this.serverConnector.setNamingInfo(new NamingBean() {
-
-            @Override
-            public Naming getNamingInstance() {
-                return singletonNamingServer;
-            }
-        });
-        try {
-            this.serverConnector.start();
-        } catch (Exception e) {
-            throw new StartException(e);
-        }
     }
 
     @Override
     public void stop(StopContext stopContext) {
         this.singletonNamingServer = null;
-        this.serverConnector.stop();
-        this.serverConnector = null;
     }
 
 }
