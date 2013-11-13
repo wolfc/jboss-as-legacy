@@ -25,36 +25,24 @@ package org.jboss.legacy.ejb3.remoting;
 import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ReloadRequiredWriteAttributeHandler;
 import org.jboss.as.controller.SimpleAttributeDefinition;
-import org.jboss.as.controller.SimpleAttributeDefinitionBuilder;
+import static org.jboss.as.controller.SimpleAttributeDefinitionBuilder.create;
 import org.jboss.as.controller.SimpleResourceDefinition;
-import org.jboss.as.controller.registry.AttributeAccess;
+import org.jboss.as.controller.access.management.SensitiveTargetAccessConstraintDefinition;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
-import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.ModelType;
+import static org.jboss.dmr.ModelType.STRING;
 import org.jboss.legacy.ejb3.EJB3Extension;
+import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 
 /**
  * @author baranowb
  */
 public class RemotingResourceDefinition extends SimpleResourceDefinition {
 
-    public static final SimpleAttributeDefinition HOST = new SimpleAttributeDefinitionBuilder(RemotingModel.HOST,
-            ModelType.STRING)
-    .setDefaultValue(new ModelNode().set("0.0.0.0"))
-    //.setXmlName(XXX.HOST.getLocalName())
-    .setAllowExpression(true)
-    .setAllowNull(true)
-    .setFlags(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
-    .build();
-
-    public static final SimpleAttributeDefinition PORT = new SimpleAttributeDefinitionBuilder(RemotingModel.PORT,
-            ModelType.INT)
-    .setDefaultValue(new ModelNode().set(4873))
-    //.setXmlName(XXX.PORT.getLocalName())
-    .setAllowExpression(true)
-    .setAllowNull(true)
-    .setFlags(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
-    .build();
+    public static final SimpleAttributeDefinition SOCKET_BINDING = create(JNPServerConnectorModel.SOCKET_BINDING, STRING)
+            .setAllowNull(false)
+            .setRestartAllServices()
+            .addAccessConstraint(SensitiveTargetAccessConstraintDefinition.SOCKET_BINDING_REF)
+            .build();
 
     public static final RemotingResourceDefinition INSTANCE = new RemotingResourceDefinition();
 
@@ -67,8 +55,7 @@ public class RemotingResourceDefinition extends SimpleResourceDefinition {
     @Override
     public void registerAttributes(ManagementResourceRegistration resourceRegistration) {
         super.registerAttributes(resourceRegistration);
-        final ReloadRequiredWriteAttributeHandler handler = new ReloadRequiredWriteAttributeHandler(HOST,PORT);
-        resourceRegistration.registerReadWriteAttribute(HOST, null, handler);
-        resourceRegistration.registerReadWriteAttribute(PORT, null, handler);
+        final ReloadRequiredWriteAttributeHandler handler = new ReloadRequiredWriteAttributeHandler(SOCKET_BINDING);
+        resourceRegistration.registerReadWriteAttribute(SOCKET_BINDING, null, handler);
     }
 }

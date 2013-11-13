@@ -19,60 +19,64 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.ejb3.remoting;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jboss.as.network.SocketBinding;
 
 import org.jboss.aspects.remoting.AOPRemotingInvocationHandler;
-import org.jboss.ejb3.common.registrar.spi.Ejb3RegistrarLocator;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
+import org.jboss.msc.value.InjectedValue;
 import org.jboss.remoting.ServerConfiguration;
 import org.jboss.remoting.transport.Connector;
-
 
 /**
  * @author baranowb
  *
  */
-public class RemotingConnectorService implements Service<Connector>{
+public class RemotingConnectorService implements Service<Connector> {
 
     private static final String INVOCATION_HANDLER_KEY = "AOP";
     private static final String INVOCATION_HANDLER_CLASS = AOPRemotingInvocationHandler.class.getName();
     private static final String URL_SCHEME = "socket://";
     private Connector connector;
-    /** The name of the remoting service */
 
+    private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();
+
+    /**
+     * The name of the remoting service
+     */
     public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingModel.LEGACY).append(RemotingModel.SERVICE_NAME);
 
-    public RemotingConnectorService(final String host, final int port) {
+    public RemotingConnectorService() {
         super();
-        final ServerConfiguration serverConfiguration = new ServerConfiguration();
-        final Map<String, String> invocationHandlers = new HashMap<String, String>();
-        invocationHandlers.put(INVOCATION_HANDLER_KEY, INVOCATION_HANDLER_CLASS);
-        serverConfiguration.setInvocationHandlers(invocationHandlers);
-        this.connector = new Connector(URL_SCHEME+host+":"+port);
-        //this.connector = new Connector("socket://0.0.0.0:4873");
-        this.connector.setServerConfiguration(serverConfiguration);
     }
 
+    public InjectedValue<SocketBinding> getBinding() {
+        return binding;
+    }
 
     @Override
     public Connector getValue() throws IllegalStateException, IllegalArgumentException {
         return this.connector;
     }
 
-
     @Override
     public void start(StartContext startContext) throws StartException {
-        try{
+        try {
+            final ServerConfiguration serverConfiguration = new ServerConfiguration();
+            final Map<String, String> invocationHandlers = new HashMap<String, String>();
+            invocationHandlers.put(INVOCATION_HANDLER_KEY, INVOCATION_HANDLER_CLASS);
+            serverConfiguration.setInvocationHandlers(invocationHandlers);
+            this.connector = new Connector(URL_SCHEME + this.getBinding().getValue().getAddress().getHostName() + ':' + this.getBinding().getValue().getAbsolutePort());
+            this.connector.setServerConfiguration(serverConfiguration);
             this.connector.start();
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new StartException(e);
         }
     }

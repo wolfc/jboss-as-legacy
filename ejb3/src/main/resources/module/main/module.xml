@@ -21,6 +21,7 @@
         <module name="org.jboss.vfs"/>
         <module name="org.jboss.legacy.library"/>
         <module name="org.jboss.legacy.jnp"/>
+        <module name="org.jboss.as.network" />
 
         <module name="org.jboss.as.ejb3"/>
         <module name="org.jboss.as.ee"/>

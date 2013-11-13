@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.ejb3;
 
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
@@ -37,12 +36,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 
 import org.jboss.as.controller.operations.common.Util;
-import org.jboss.as.controller.parsing.ParseUtils;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarModel;
 import org.jboss.legacy.ejb3.remoting.RemotingModel;
 import org.jboss.legacy.ejb3.remoting.RemotingResourceDefinition;
-import org.jboss.legacy.jnp.server.JNPServerModel;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 
@@ -90,7 +87,7 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
                     this.parseRemoting(xmlExtendedStreamReader, remotingServiceAddOperation);
                     break;
                 case EJB3_REGISTRAR:
-                    this.parseRegistrar(xmlExtendedStreamReader, ejb3RegistrarServerServiceAddOperation);
+                    this.parseRegistrar(xmlExtendedStreamReader);
                     break;
                 case UNKNOWN:
                 default:
@@ -102,8 +99,7 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
 
     }
 
-    private void parseRegistrar(XMLExtendedStreamReader xmlExtendedStreamReader,
-            ModelNode ejb3RegistrarServerServiceAddOperation) throws XMLStreamException {
+    private void parseRegistrar(XMLExtendedStreamReader xmlExtendedStreamReader) throws XMLStreamException {
         requireNoAttributes(xmlExtendedStreamReader);
         requireNoContent(xmlExtendedStreamReader);
     }
@@ -114,12 +110,8 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
             switch (EJB3SubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
-                case HOST:
-                    RemotingResourceDefinition.HOST.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
-                            xmlExtendedStreamReader);
-                    break;
-                case PORT:
-                    RemotingResourceDefinition.PORT.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
+                case SOCKET_BINDING:
+                    RemotingResourceDefinition.SOCKET_BINDING.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
                             xmlExtendedStreamReader);
                     break;
                 case UNKNOWN:

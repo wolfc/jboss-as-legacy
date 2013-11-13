@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.ejb3;
 
 import javax.xml.stream.XMLStreamException;
@@ -71,14 +70,9 @@ public class EJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMars
         final ModelNode model = subsystemMarshallingContext.getModelNode().get(RemotingModel.SERVICE_NAME);
 
         xmlExtendedStreamWriter.writeStartElement(EJB3SubsystemXMLElement.REMOTING.getLocalName());
-        if (model.hasDefined(RemotingModel.HOST)) {
-            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.HOST.getLocalName(), model.get(RemotingModel.HOST)
-                    .asString());
-        }
-
-        if (model.hasDefined(RemotingModel.PORT)) {
-            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.PORT.getLocalName(), model.get(RemotingModel.PORT)
-                    .asString());
+        if (model.hasDefined(RemotingModel.SOCKET_BINDING)) {
+            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.SOCKET_BINDING.getLocalName(),
+                    model.get(RemotingModel.SOCKET_BINDING).asString());
         }
         xmlExtendedStreamWriter.writeEndElement();
     }

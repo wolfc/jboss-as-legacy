@@ -32,6 +32,5 @@ public interface RemotingModel {
     String SERVICE_NAME = "remoting";
     String LEGACY = "legacy";
 
-    String HOST = "host";
-    String PORT = "port";
+    String SOCKET_BINDING = "socket-binding";
 }

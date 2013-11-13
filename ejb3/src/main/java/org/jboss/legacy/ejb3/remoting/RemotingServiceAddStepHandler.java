@@ -19,21 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.ejb3.remoting;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jboss.as.controller.AbstractAddStepHandler;
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
-import org.jboss.legacy.ejb3.registrar.EJB3RegistrarService;
-import org.jboss.legacy.ejb3.registrar.EJB3RegistrarServiceAddStepHandler;
 import org.jboss.legacy.jnp.server.JNPServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
@@ -47,8 +44,9 @@ import org.jboss.remoting.transport.Connector;
 public class RemotingServiceAddStepHandler extends AbstractBoottimeAddStepHandler {
 
     public static final RemotingServiceAddStepHandler INSTANCE = new RemotingServiceAddStepHandler();
+
     public RemotingServiceAddStepHandler() {
-        super(RemotingResourceDefinition.HOST,RemotingResourceDefinition.PORT);
+        super(RemotingResourceDefinition.SOCKET_BINDING);
     }
 
     @Override
@@ -58,14 +56,15 @@ public class RemotingServiceAddStepHandler extends AbstractBoottimeAddStepHandle
         newControllers.addAll(this.installRuntimeServices(context, operation, model, verificationHandler));
     }
 
-    Collection<ServiceController<?>> installRuntimeServices(final OperationContext context,final ModelNode operation, final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-        final String host = RemotingResourceDefinition.HOST.resolveModelAttribute(context, operation).asString();
-        final int port = RemotingResourceDefinition.PORT.resolveModelAttribute(context, operation).asInt();
-        final RemotingConnectorService service = new RemotingConnectorService(host, port);
+    Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation, final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
 
+        final ModelNode bindingRefModel = RemotingResourceDefinition.SOCKET_BINDING.resolveModelAttribute(context, operation);
+
+        final RemotingConnectorService service = new RemotingConnectorService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<Connector> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
-        serviceBuilder.addDependency(JNPServerService.SERVICE_NAME);
+        serviceBuilder.addDependency(JNPServerService.SERVICE_NAME).addDependency(SocketBinding.JBOSS_BINDING_NAME.append(
+                bindingRefModel.asString()), SocketBinding.class, service.getBinding());
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }

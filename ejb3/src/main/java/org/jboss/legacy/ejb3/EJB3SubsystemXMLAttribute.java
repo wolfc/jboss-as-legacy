@@ -33,12 +33,7 @@ import org.jboss.legacy.ejb3.remoting.RemotingModel;
  */
 public enum EJB3SubsystemXMLAttribute {
     UNKNOWN(null),
-
-    HOST(RemotingModel.HOST),
-
-    PORT(RemotingModel.PORT),
-
-    ;
+    SOCKET_BINDING(RemotingModel.SOCKET_BINDING);
 
     private final String name;
 
