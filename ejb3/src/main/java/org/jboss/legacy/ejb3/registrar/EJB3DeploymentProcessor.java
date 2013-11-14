@@ -88,8 +88,9 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
                                 final EJBDataProxy data = deploymentUnit.getAttachment(EJBDataProxy.ATTACHMENT_KEY);
                                 if (data != null) {
-                                    createLegacyBinding(data,phaseContext);
-                                }                            }
+                                    createLegacyBinding(data, phaseContext);
+                                }
+                            }
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -99,12 +100,22 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
         }
     }
 
+    @Override
+    public void undeploy(DeploymentUnit deploymentUnit) {
+        if (!EjbDeploymentMarker.isEjbDeployment(deploymentUnit)) {
+            return;
+        }
+        final EJBDataProxy data = deploymentUnit.getAttachment(EJBDataProxy.ATTACHMENT_KEY);
+        if (data != null) {
+            removeLegacyBinding(data, deploymentUnit);
+        }
+    }
     /**
      * @param data
      * @param phaseContext
      */
-    protected void createLegacyBinding(final EJBDataProxy data, final DeploymentPhaseContext phaseContext) {
-        JBossSessionBeanMetaData metaData = createMetaData(data);
+    private void createLegacyBinding(final EJBDataProxy data, final DeploymentPhaseContext phaseContext) {
+        final JBossSessionBeanMetaData metaData = createMetaData(data);
         final String containerName = metaData.getName();
         final ClassLoader beanClassLoader = data.getBeanClassLoader();
         Dispatcher.singleton.registerTarget(containerName, new InvokableContextClassProxyHack(new InvokableContext() {
@@ -134,11 +145,10 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
             }
         }));
 
-        ServiceController<EJB3Registrar> controller = (ServiceController<EJB3Registrar>) phaseContext
+        final ServiceController<EJB3Registrar> controller = (ServiceController<EJB3Registrar>) phaseContext
                 .getServiceRegistry().getService(EJB3RegistrarService.SERVICE_NAME);
-        EJB3Registrar value = controller.getValue();
-        //TODO: this still fails!
-        final JndiSessionRegistrarBase registrar = data.isStateful() ? value.getJndiStatefulSessionRegistrar() : value.getJndiStatelessSessionRegistrar();
+        final EJB3Registrar value = controller.getValue();
+        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(data,value);
         final String containerGuid = containerName + ":" + UUID.randomUUID().toString();
         final AspectManager aspectManager = AspectManager.instance(beanClassLoader);
         // TODO: probably ClassAdvisor won't do
@@ -158,12 +168,28 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
         }
     }
 
-    @Override
-    public void undeploy(DeploymentUnit context) {
-
+    private void removeLegacyBinding(final EJBDataProxy data, final DeploymentUnit deploymentUnit){
+        final ServiceController<EJB3Registrar> controller = (ServiceController<EJB3Registrar>) deploymentUnit
+                .getServiceRegistry().getService(EJB3RegistrarService.SERVICE_NAME);
+        final EJB3Registrar value = controller.getValue();
+        final JBossSessionBeanMetaData metaData = createMetaData(data);
+        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(data,value);
+        final ClassLoader old = switchLoader(getClass().getClassLoader());
+        try {
+            Hashtable<String, String> env = new Hashtable<String, String>();
+            env.put("java.naming.factory.initial", "org.jnp.interfaces.LocalOnlyContextFactory");
+            env.put("java.naming.factory.url.pkgs", "org.jboss.naming:org.jnp.interfaces");
+            InitialContext context = new InitialContext(env);
+            registrar.unbindEjb(context, metaData);
+        } catch (NamingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
-    private static JBossSessionBeanMetaData createMetaData(final EJBDataProxy data) {
+    private JBossSessionBeanMetaData createMetaData(final EJBDataProxy data) {
         final JBossMetaData jarMetaData = new JBossMetaData();
         jarMetaData.setEjbVersion(data.getEJBVersion());
         final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
@@ -180,9 +206,13 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
         return (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
     }
 
-    private static ClassLoader switchLoader(final ClassLoader loader){
+    private ClassLoader switchLoader(final ClassLoader loader){
         ClassLoader current = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(loader);
         return current;
+    }
+
+    private JndiSessionRegistrarBase getJndiSessionRegistrarBase(final EJBDataProxy data, final EJB3Registrar registrarService){
+        return data.isStateful() ? registrarService.getJndiStatefulSessionRegistrar() : registrarService.getJndiStatelessSessionRegistrar();
     }
 }
