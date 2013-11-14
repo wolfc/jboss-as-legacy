@@ -22,10 +22,11 @@
 
 package org.jboss.legacy.ejb3.registrar;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import javax.naming.InitialContext;
@@ -43,11 +44,7 @@ import org.jboss.as.ee.component.ComponentConfiguration;
 import org.jboss.as.ee.component.ComponentConfigurator;
 import org.jboss.as.ee.component.ComponentDescription;
 import org.jboss.as.ee.component.EEModuleDescription;
-import org.jboss.as.ee.component.ViewDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
-import org.jboss.as.ejb3.component.EJBViewDescription;
-import org.jboss.as.ejb3.component.MethodIntf;
-import org.jboss.as.ejb3.deployment.EjbDeploymentAttachmentKeys;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
@@ -55,50 +52,29 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
 import org.jboss.ejb3.common.lang.SerializableMethod;
 import org.jboss.ejb3.common.metadata.MetadataUtil;
-import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatelessSessionRegistrar;
+import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.impl.remoting.SessionSpecRemotingMetadata;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
+import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
 import org.jboss.metadata.ejb.spec.BusinessRemotesMetaData;
-import org.jboss.metadata.ejb.spec.EjbJarMetaData;
-import org.jboss.metadata.ejb.spec.EnterpriseBeanMetaData;
-import org.jboss.metadata.ejb.spec.EnterpriseBeansMetaData;
 import org.jboss.msc.service.ServiceController;
-import org.jboss.msc.value.InjectedValue;
-import org.jboss.msc.value.Values;
-
 /**
  * Processor to hook up EJB with nice JNP/AOP binding.
  * @author baranowb
  */
 public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
 
+    public static final EJB3DeploymentProcessor INSTANCE = new EJB3DeploymentProcessor();
     @Override
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
-        System.err.println("DOING: " + deploymentUnit.getName() + " > " + EjbDeploymentMarker.isEjbDeployment(deploymentUnit));
-        final ClassLoader moduleClassLoader = this.getClass().getClassLoader();
         if (!EjbDeploymentMarker.isEjbDeployment(deploymentUnit)) {
             return;
         }
-        // for each remote interface we rock
-        final EjbJarMetaData ejbMetaData = deploymentUnit.getAttachment(EjbDeploymentAttachmentKeys.EJB_JAR_METADATA);
-        if (ejbMetaData != null) {
-            EnterpriseBeansMetaData data = ejbMetaData.getEnterpriseBeans();
-            if (data != null) {
-                Iterator<EnterpriseBeanMetaData> it = data.iterator();
-                while (it.hasNext()) {
-                    EnterpriseBeanMetaData ebmd = it.next();
-                    System.err.println(">> " + ebmd);
-                }
-            } else {
-                System.err.println("METADATA2 IS NULL!");
-            }
-        } else {
-            System.err.println("METADATA IS NULL!");
-        }
+
         final EEModuleDescription moduleDescription = deploymentUnit.getAttachment(Attachments.EE_MODULE_DESCRIPTION);
         if (moduleDescription != null) {
 
@@ -106,85 +82,31 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                 if (componentDescription instanceof EJBComponentDescription) {
                     try {
                         final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
-                        final InjectedValue<ClassLoader> viewClassLoader = new InjectedValue<ClassLoader>();
 
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
-                                viewClassLoader.setValue(Values.immediateValue(configuration.getModuleClassLoader()));
-
-                                EJBViewDescription remoteView = ejbComponentDescription.getEjbRemoteView();
-                                ejbComponentDescription.getViews();
-                                if (remoteView == null) {
-                                    System.err.println("No EJB 2.x Remote View: " + ejbComponentDescription.getEJBClassName());
-                                } else {
-
-                                    System.err.println("Removet view '" + ejbComponentDescription.getEJBClassName() + "' > '"
-                                            + remoteView.getViewClassName() + "'");
-                                }
-
-                                Set<ViewDescription> views = ejbComponentDescription.getViews();
-                                for (ViewDescription vd : views) {
-                                    final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
-                                    if (viewType == MethodIntf.REMOTE || viewType == MethodIntf.HOME) {
-                                        System.err.println("Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName()
-                                                + "' > '" + vd.getViewClassName() + "'");
-                                        doTestBind(vd.getViewClassName(), phaseContext, viewClassLoader, moduleClassLoader);
-                                    } else {
-                                        System.err.println("NON Remote 3.x VIEW '" + ejbComponentDescription.getEJBClassName()
-                                                + "' > '" + vd.getViewClassName() + "'");
-                                    }
-                                }
-                            }
+                                final EJBDataProxy data = deploymentUnit.getAttachment(EJBDataProxy.ATTACHMENT_KEY);
+                                if (data != null) {
+                                    createLegacyBinding(data,phaseContext);
+                                }                            }
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
-        } else {
-            System.err.println("NO EEModuleDescription");
         }
     }
 
-    @Override
-    public void undeploy(DeploymentUnit context) {
-
-    }
-
-    private static JBossSessionBeanMetaData createMetaData(String remoteClass) {
-        final JBossMetaData jarMetaData = new JBossMetaData();
-        jarMetaData.setEjbVersion("3.0");
-        final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
-        jarMetaData.setEnterpriseBeans(enterpriseBeansMetaData);
-        enterpriseBeansMetaData.setEjbJarMetaData(jarMetaData);
-        final JBossSessionBeanMetaData smd = new JBossSessionBeanMetaData();
-        smd.setEnterpriseBeansMetaData(enterpriseBeansMetaData);
-        smd.setEjbName("CalculatorBean");
-        enterpriseBeansMetaData.add(smd);
-        final BusinessRemotesMetaData businessRemotes = new BusinessRemotesMetaData();
-        businessRemotes.add(remoteClass);
-        smd.setBusinessRemotes(businessRemotes);
-        // // TODO: normally this is resolved through the JNDI decorator
-        // smd.setJndiName("GreeterBean");
-        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        MetadataUtil.decorateEjbsWithJndiPolicy(jarMetaData, cl);
-        return (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
-    }
-
-    private void doTestBind(String remoteClassName, DeploymentPhaseContext phaseContext,
-            InjectedValue<ClassLoader> viewClassLoader, final ClassLoader moduleClassLoader) {
-        try {
-            Thread.currentThread().sleep(500);
-        } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        JBossSessionBeanMetaData smd = createMetaData(remoteClassName);
-        final String containerName = smd.getName();
-        // Register with AOP
-        // phaseContext.getServiceTarget().get
-        final ClassLoader cl = viewClassLoader.getValue();
+    /**
+     * @param data
+     * @param phaseContext
+     */
+    protected void createLegacyBinding(final EJBDataProxy data, final DeploymentPhaseContext phaseContext) {
+        JBossSessionBeanMetaData metaData = createMetaData(data);
+        final String containerName = metaData.getName();
+        final ClassLoader beanClassLoader = data.getBeanClassLoader();
         Dispatcher.singleton.registerTarget(containerName, new InvokableContextClassProxyHack(new InvokableContext() {
             @Override
             public Object invoke(Object proxy, SerializableMethod method, Object[] args) throws Throwable {
@@ -196,45 +118,71 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                 final MethodInvocation si = (MethodInvocation) invocation;
                 final SerializableMethod invokedMethod = (SerializableMethod) si.getMetaData(
                         SessionSpecRemotingMetadata.TAG_SESSION_INVOCATION, SessionSpecRemotingMetadata.KEY_INVOKED_METHOD);
-                final Class<?> invokedBusinessInterface = Class.forName(invokedMethod.getActualClassName(), false, cl);
-                System.err.println("Invoked business interface = " + invokedBusinessInterface);
-                System.err.println("Invoked method = " + si.getActualMethod());
-                System.err.println("Arguments = " + Arrays.toString(si.getArguments()));
 
-                System.err.println("Method: "+si.getMethod());
-                System.err.println("Method: "+si.getActualMethod());
-                // business logic
-                for(Object arg: si.getArguments())
-                    System.err.println("ARG["+arg+"]");
-
-                final InvocationResponse response = new InvocationResponse(new Integer(300));
-                // response.setContextInfo();
-                return response;
+                ClassLoader invocationCL = switchLoader(beanClassLoader);
+                try {
+                    // business logic
+                    final InitialContext ic = new InitialContext();
+                    final Object proxy = ic.lookup(data.getLocalASBinding());
+                    final Method method = invokedMethod.toMethod();
+                    final Object returnValue = method.invoke(proxy, si.getArguments());
+                    final InvocationResponse response = new InvocationResponse(returnValue);
+                    return response;
+                } finally {
+                    switchLoader(invocationCL);
+                }
             }
         }));
+
         ServiceController<EJB3Registrar> controller = (ServiceController<EJB3Registrar>) phaseContext
                 .getServiceRegistry().getService(EJB3RegistrarService.SERVICE_NAME);
         EJB3Registrar value = controller.getValue();
         //TODO: this still fails!
-        final JndiStatelessSessionRegistrar registrar = value.getJndiStatelessSessionRegistrar();
+        final JndiSessionRegistrarBase registrar = data.isStateful() ? value.getJndiStatefulSessionRegistrar() : value.getJndiStatelessSessionRegistrar();
         final String containerGuid = containerName + ":" + UUID.randomUUID().toString();
-        final AspectManager aspectManager = AspectManager.instance(cl);
+        final AspectManager aspectManager = AspectManager.instance(beanClassLoader);
         // TODO: probably ClassAdvisor won't do
         final Advisor advisor = new ClassAdvisor(Object.class, aspectManager);
-        final ClassLoader old = Thread.currentThread().getContextClassLoader();
+        final ClassLoader old = switchLoader(getClass().getClassLoader());
         try {
-            Thread.currentThread().setContextClassLoader(moduleClassLoader);
             Hashtable<String, String> env = new Hashtable<String, String>();
             env.put("java.naming.factory.initial", "org.jnp.interfaces.LocalOnlyContextFactory");
             env.put("java.naming.factory.url.pkgs", "org.jboss.naming:org.jnp.interfaces");
             InitialContext context = new InitialContext(env);
-            registrar.bindEjb(context, smd, cl, containerName, containerGuid, advisor);
+            registrar.bindEjb(context, metaData, beanClassLoader, containerName, containerGuid, advisor);
         } catch (NamingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }
+    }
 
+    @Override
+    public void undeploy(DeploymentUnit context) {
+
+    }
+
+    private static JBossSessionBeanMetaData createMetaData(final EJBDataProxy data) {
+        final JBossMetaData jarMetaData = new JBossMetaData();
+        jarMetaData.setEjbVersion(data.getEJBVersion());
+        final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
+        jarMetaData.setEnterpriseBeans(enterpriseBeansMetaData);
+        enterpriseBeansMetaData.setEjbJarMetaData(jarMetaData);
+        final JBossSessionBeanMetaData smd = new JBossSessionBeanMetaData();
+        smd.setEnterpriseBeansMetaData(enterpriseBeansMetaData);
+        smd.setEjbName(data.getName());
+        enterpriseBeansMetaData.add(smd);
+        final BusinessRemotesMetaData businessRemotes = new BusinessRemotesMetaData();
+        businessRemotes.add(data.getRemoteInterfaceClass());
+        smd.setBusinessRemotes(businessRemotes);
+        MetadataUtil.decorateEjbsWithJndiPolicy(jarMetaData, data.getBeanClassLoader());
+        return (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
+    }
+
+    private static ClassLoader switchLoader(final ClassLoader loader){
+        ClassLoader current = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(loader);
+        return current;
     }
 }

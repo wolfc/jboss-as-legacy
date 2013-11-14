@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3;
+package org.jboss.legacy.ejb3.bridge;
 
-import static org.jboss.legacy.ejb3.LegacyEJB3SubsystemNamespace.LEGACY_EJB3_1_0;
+import static org.jboss.legacy.ejb3.bridge.EJB3BridgeSubsystemNamespace.LEGACY_EJB3_BRIDGE_1_0;
 
 import org.jboss.as.controller.Extension;
 import org.jboss.as.controller.ExtensionContext;
@@ -34,38 +34,38 @@ import org.jboss.as.controller.descriptions.StandardResourceDescriptionResolver;
 import org.jboss.as.controller.parsing.ExtensionParsingContext;
 
 /**
- * @author baranowb
+ * Bridge. This extension handles all EJB stuff in AS7 CL space to avoid clash with EAP5 classes.
  *
+ * @author baranowb
  */
-public class LegacyEJB3Extension implements Extension {
+public class EJB3BridgeExtension implements Extension {
+    public static final String SUBSYSTEM_NAME = "legacy-ejb3-bridge";
 
-    public static final String SUBSYSTEM_NAME = "legacy-ejb3";
-
-
-    private static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(ModelDescriptionConstants.SUBSYSTEM, SUBSYSTEM_NAME);
-    private static final String RESOURCE_NAME = LegacyEJB3Extension.class.getPackage().getName() + ".LocalDescriptions";
+    public static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(ModelDescriptionConstants.SUBSYSTEM,
+            SUBSYSTEM_NAME);
+    private static final String RESOURCE_NAME = EJB3BridgeExtension.class.getPackage().getName() + ".LocalDescriptions";
     private static final int MANAGEMENT_API_MAJOR_VERSION = 1;
     private static final int MANAGEMENT_API_MINOR_VERSION = 0;
     private static final int MANAGEMENT_API_MICRO_VERSION = 0;
 
-    public static final String NAMESPACE_1_0 = LEGACY_EJB3_1_0.getUriString();
+    public static final String NAMESPACE_1_0 = LEGACY_EJB3_BRIDGE_1_0.getUriString();
 
     public static ResourceDescriptionResolver getResourceDescriptionResolver(final String keyPrefix) {
-        return new StandardResourceDescriptionResolver(keyPrefix, RESOURCE_NAME, LegacyEJB3Extension.class.getClassLoader(), true, true);
+        return new StandardResourceDescriptionResolver(keyPrefix, RESOURCE_NAME, EJB3BridgeExtension.class.getClassLoader(),
+                true, true);
     }
+
     @Override
     public void initialize(ExtensionContext context) {
         final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, MANAGEMENT_API_MAJOR_VERSION,
                 MANAGEMENT_API_MINOR_VERSION, MANAGEMENT_API_MICRO_VERSION);
-
-        //subsystem.registerXMLElementWriter(EJB3SubsystemXMLPersister.INSTANCE);
-        subsystem.registerSubsystemModel(LegacyEJB3SubsystemRootResourceDefinition.INSTANCE);
-        subsystem.registerXMLElementWriter(LegacyEJB3SubsystemXMLPersister.INSTANCE);
+        subsystem.registerSubsystemModel(EJB3BridgeSubsystemRootResourceDefinition.INSTANCE);
+        subsystem.registerXMLElementWriter(EJB3BridgeSubsystemXMLPersister.INSTANCE);
     }
 
     @Override
     public void initializeParsers(ExtensionParsingContext context) {
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, NAMESPACE_1_0, LegacyEJB3Subsystem10Parser.INSTANCE);
+        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, NAMESPACE_1_0, EJB3BridgeSubsystem10Parser.INSTANCE);
     }
 
 }

@@ -22,9 +22,7 @@
 
 package org.jboss.legacy.ejb3;
 
-import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.SimpleResourceDefinition;
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarResourceDefinition;
@@ -39,7 +37,7 @@ public class EJB3SubsystemRootResourceDefinition extends SimpleResourceDefinitio
     public static final EJB3SubsystemRootResourceDefinition INSTANCE = new EJB3SubsystemRootResourceDefinition();
 
     EJB3SubsystemRootResourceDefinition() {
-        super(PathElement.pathElement(ModelDescriptionConstants.SUBSYSTEM, EJB3Extension.SUBSYSTEM_NAME),
+        super(EJB3Extension.SUBSYSTEM_PATH,
                 EJB3Extension.getResourceDescriptionResolver(EJB3Extension.SUBSYSTEM_NAME),
                 EJB3SubsystemAdd.INSTANCE, EJB3SubsystemRemove.INSTANCE,
                 OperationEntry.Flag.RESTART_ALL_SERVICES, OperationEntry.Flag.RESTART_ALL_SERVICES);

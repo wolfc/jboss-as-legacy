@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,44 +20,33 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3.remoting;
+package org.jboss.legacy.ejb3.bridge;
 
 import org.jboss.as.controller.AbstractRemoveStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
-import org.jboss.as.controller.PathAddress;
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
 import org.jboss.dmr.ModelNode;
 
 /**
- * @author baranowb
+ * Handler for removing the Legacy EJB3 subsystem.
  *
+ * @author baranowb
  */
-public class LegacyRemotingServiceRemoveStepHandler extends AbstractRemoveStepHandler {
+public class EJB3BridgeSubsystemRemove extends AbstractRemoveStepHandler {
 
-    public static final LegacyRemotingServiceRemoveStepHandler INSTANCE = new LegacyRemotingServiceRemoveStepHandler();
+    public static final EJB3BridgeSubsystemRemove INSTANCE = new EJB3BridgeSubsystemRemove();
+
+    private EJB3BridgeSubsystemRemove() {
+    }
 
     @Override
     protected void performRuntime(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
-        if (context.isResourceServiceRestartAllowed()) {
-            removeRuntimeService(context, operation);
-        } else {
-            context.reloadRequired();
-        }
+        // This subsystem registers DUPs, so we can't remove it from the runtime without a reload
+        context.reloadRequired();
     }
 
     @Override
     protected void recoverServices(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
-        if (context.isResourceServiceRestartAllowed()) {
-            //TODO: not null verification handler?
-            LegacyRemotingServiceAddStepHandler.INSTANCE.installRuntimeServices(context, operation,model, null);
-        } else {
-            context.revertReloadRequired();
-        }
-    }
-
-    void removeRuntimeService(OperationContext context, ModelNode operation) {
-        final String name = PathAddress.pathAddress(operation.get(ModelDescriptionConstants.ADDRESS)).getLastElement().getValue();
-        context.removeService(LegacyRemotingConnectorService.SERVICE_NAME);
+        context.revertReloadRequired();
     }
 }

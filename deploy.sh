@@ -8,6 +8,7 @@ mvn clean install
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -Rf ejb3-bridge/target/module/org $JBOSS_HOME/modules/system/layers/base/
 
 echo "Edit configuration file - for instance $JBOSS_HOME/standalone/configuration/standalone.xml"
 
@@ -36,3 +37,12 @@ echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3:1.0\">"
 echo "    <remoting/>"
 echo "    <ejb3-registrar/>"
 echo "</subsystem>"
+echo "To enable EJB3-Bridge:"
+echo "1 Add extension definition in <extensions>."
+echo
+echo "<extension module=\"org.jboss.legacy.ejb3.bridge\"/>"
+echo
+echo
+echo "2. Add subsystem definition(no args == default IP/port)"
+echo
+echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3-bridge:1.0\"/>"

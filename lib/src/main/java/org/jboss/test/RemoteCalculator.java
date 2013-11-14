@@ -20,15 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3.registrar;
+package org.jboss.test;
 
 /**
- * @author baranowb
- *
+ * @author Jaikiran Pai
  */
-public interface LegacyEJB3RegistrarModel {
+public interface RemoteCalculator {
 
-    String SERVICE = "service";
-    String SERVICE_NAME = "ejb3-registrar";
-    String LEGACY = "legacy";
+    int add(int a, int b);
+
+    int subtract(int a, int b);
 }

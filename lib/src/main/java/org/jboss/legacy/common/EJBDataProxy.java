@@ -20,23 +20,31 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.jnp;
+package org.jboss.legacy.common;
 
-import org.jboss.as.controller.PathElement;
-import org.jboss.as.controller.SimpleResourceDefinition;
-import org.jboss.legacy.ejb3.LegacyEJB3Extension;
+import java.util.Set;
+
+import org.jboss.as.server.deployment.AttachmentKey;
+
+
 
 /**
  * @author baranowb
  */
-public class LegacyJNPServerResourceDefinition extends SimpleResourceDefinition {
+public interface EJBDataProxy {
 
+    AttachmentKey<EJBDataProxy> ATTACHMENT_KEY = AttachmentKey.create(EJBDataProxy.class);
 
-    public static final LegacyJNPServerResourceDefinition INSTANCE = new LegacyJNPServerResourceDefinition();
+    String getName();
 
-    private LegacyJNPServerResourceDefinition() {
-        super(PathElement.pathElement(LegacyJNPServerModel.SERVICE, LegacyJNPServerModel.SERVICE_NAME), LegacyEJB3Extension
-                .getResourceDescriptionResolver(LegacyJNPServerModel.SERVICE_NAME), LegacyJNPServerServiceAddStepHandler.INSTANCE,
-                LegacyJNPServerServiceRemoveStepHandler.INSTANCE);
-    }
+    String getRemoteInterfaceClass();
+
+    String getEJBVersion();
+
+    boolean isStateful();
+
+    ClassLoader getBeanClassLoader();
+
+    String getLocalASBinding();
+    //TODO: add more if need be.
 }

@@ -22,6 +22,11 @@
 
 package org.jboss.test;
 
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
 /**
  * @author baranowb
  */
@@ -31,6 +36,19 @@ public class Test {
      * @param args
      */
     public static void main(String[] args) {
+        try {
+            Properties properties = new Properties();
+            properties.put("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
+            properties.put("java.naming.factory.url.pkgs", "org.jboss.naming org.jnp.interfaces");
+            properties.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099");
+            InitialContext context = new InitialContext(properties);
+            Object o = context.lookup("CalculatorBean/remote");
+            System.err.println(">>> " + o);
+            RemoteCalculator rc = (RemoteCalculator) o;
+            System.err.println(">>> " + rc.subtract(121, 11));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

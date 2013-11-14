@@ -20,37 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.jnp;
+package org.jboss.legacy.ejb3.bridge;
 
 import org.jboss.as.controller.SimpleResourceDefinition;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
-import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
-import org.jboss.legacy.jnp.server.JNPServerResourceDefinition;
 
 /**
  * @author baranowb
  *
  */
-public class JNPSubsystemRootResourceDefinition extends SimpleResourceDefinition {
+public class EJB3BridgeSubsystemRootResourceDefinition extends SimpleResourceDefinition {
 
-    public static final JNPSubsystemRootResourceDefinition INSTANCE = new JNPSubsystemRootResourceDefinition();
+    public static final EJB3BridgeSubsystemRootResourceDefinition INSTANCE = new EJB3BridgeSubsystemRootResourceDefinition();
 
-    JNPSubsystemRootResourceDefinition() {
-        super(JNPExtension.SUBSYSTEM_PATH,
-                JNPExtension.getResourceDescriptionResolver(JNPExtension.SUBSYSTEM_NAME),
-                JNPSubsystemAdd.INSTANCE, JNPSubsystemRemove.INSTANCE, OperationEntry.Flag.RESTART_ALL_SERVICES,
+    EJB3BridgeSubsystemRootResourceDefinition() {
+        super(EJB3BridgeExtension.SUBSYSTEM_PATH,EJB3BridgeExtension.getResourceDescriptionResolver(EJB3BridgeExtension.SUBSYSTEM_NAME),
+                EJB3BridgeSubsystemAdd.INSTANCE, EJB3BridgeSubsystemRemove.INSTANCE, OperationEntry.Flag.RESTART_ALL_SERVICES,
                 OperationEntry.Flag.RESTART_ALL_SERVICES);
     }
 
     @Override
     public void registerChildren(ManagementResourceRegistration resourceRegistration) {
         super.registerChildren(resourceRegistration);
-
-        // subsystem=legacy-jnp/service=jnp-server
-        resourceRegistration.registerSubModel(JNPServerResourceDefinition.INSTANCE);
-        // subsystem=legacy-jnp/service=jnp-connector
-        resourceRegistration.registerSubModel(JNPServerConnectorResourceDefinition.INSTANCE);
+//
+//        // subsystem=legacy-jnp/service=jnp-server
+//        resourceRegistration.registerSubModel(JNPServerResourceDefinition.INSTANCE);
+//        // subsystem=legacy-jnp/service=jnp-connector
+//        resourceRegistration.registerSubModel(JNPServerConnectorResourceDefinition.INSTANCE);
     }
 
 }

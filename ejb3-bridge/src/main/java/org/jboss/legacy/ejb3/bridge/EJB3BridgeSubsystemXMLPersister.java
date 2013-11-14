@@ -20,11 +20,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3;
+package org.jboss.legacy.ejb3.bridge;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
+import org.jboss.dmr.ModelNode;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
@@ -32,11 +33,24 @@ import org.jboss.staxmapper.XMLExtendedStreamWriter;
  * @author baranowb
  *
  */
-public class LegacyEJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext>{
+public class EJB3BridgeSubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext>{
 
-    public static final LegacyEJB3SubsystemXMLPersister INSTANCE = new LegacyEJB3SubsystemXMLPersister();
+    public static final EJB3BridgeSubsystemXMLPersister INSTANCE = new EJB3BridgeSubsystemXMLPersister();
+
     @Override
-    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter, SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+    public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        subsystemMarshallingContext.startSubsystemElement(EJB3BridgeSubsystemNamespace.LEGACY_EJB3_BRIDGE_1_0.getUriString(), false);
+
+        writeElements(xmlExtendedStreamWriter, subsystemMarshallingContext);
+
+        // write the subsystem end element
+        xmlExtendedStreamWriter.writeEndElement();
     }
 
+    private void writeElements(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode();
+
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,55 +20,52 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3;
+package org.jboss.legacy.ejb3.bridge;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.legacy.ejb3.registrar.LegacyEJB3RegistrarModel;
-import org.jboss.legacy.ejb3.remoting.LegacyRemotingModel;
-import org.jboss.legacy.jnp.LegacyJNPServerModel;
-
 /**
- * @author baranowb
+ * An enumeration of the supported EJB3 Bridge subsystem namespaces
  *
+ * @author baranowb
  */
-public enum LegacyEJB3SybsystemXMLElement {
- // must be first
+public enum EJB3BridgeSubsystemNamespace {
+    // must be first
     UNKNOWN(null),
 
-    REMOTING(LegacyRemotingModel.SERVICE_NAME),
-    JNP_SERVER(LegacyJNPServerModel.SERVICE_NAME),
-    EJB3_REGISTRAR(LegacyEJB3RegistrarModel.SERVICE_NAME);
+    LEGACY_EJB3_BRIDGE_1_0("urn:jboss:domain:legacy-ejb3-bridge:1.0");
+
 
     private final String name;
 
-    LegacyEJB3SybsystemXMLElement(final String name) {
+    EJB3BridgeSubsystemNamespace(final String name) {
         this.name = name;
     }
 
     /**
-     * Get the local name of this element.
+     * Get the URI of this namespace.
      *
-     * @return the local name
+     * @return the URI
      */
-    public String getLocalName() {
+    public String getUriString() {
         return name;
     }
 
-    private static final Map<String, LegacyEJB3SybsystemXMLElement> MAP;
+    private static final Map<String, EJB3BridgeSubsystemNamespace> MAP;
 
     static {
-        final Map<String, LegacyEJB3SybsystemXMLElement> map = new HashMap<String, LegacyEJB3SybsystemXMLElement>();
-        for (LegacyEJB3SybsystemXMLElement element : values()) {
-            final String name = element.getLocalName();
-            if (name != null) map.put(name, element);
+        final Map<String, EJB3BridgeSubsystemNamespace> map = new HashMap<String, EJB3BridgeSubsystemNamespace>();
+        for (EJB3BridgeSubsystemNamespace namespace : values()) {
+            final String name = namespace.getUriString();
+            if (name != null) map.put(name, namespace);
         }
         MAP = map;
     }
 
-    public static LegacyEJB3SybsystemXMLElement forName(String localName) {
-        final LegacyEJB3SybsystemXMLElement element = MAP.get(localName);
+    public static EJB3BridgeSubsystemNamespace forUri(String uri) {
+        final EJB3BridgeSubsystemNamespace element = MAP.get(uri);
         return element == null ? UNKNOWN : element;
     }
+
 }

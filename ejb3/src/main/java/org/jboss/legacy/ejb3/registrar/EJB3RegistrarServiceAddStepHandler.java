@@ -60,9 +60,10 @@ public class EJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAddStepH
         context.addStep(new AbstractDeploymentChainStep() {
             @Override
             protected void execute(DeploymentProcessorTarget processorTarget) {
-                processorTarget.addDeploymentProcessor(EJB3Extension.SUBSYSTEM_NAME, Phase.INSTALL, 0, new EJB3DeploymentProcessor());
+                processorTarget.addDeploymentProcessor(EJB3Extension.SUBSYSTEM_NAME, Phase.INSTALL, 1000,
+                        EJB3DeploymentProcessor.INSTANCE);
             }
-        },OperationContext.Stage.RUNTIME);
+        }, OperationContext.Stage.RUNTIME);
     }
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,

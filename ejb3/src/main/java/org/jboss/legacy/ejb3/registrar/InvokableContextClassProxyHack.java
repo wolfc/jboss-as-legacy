@@ -37,7 +37,7 @@ import org.jboss.ejb3.proxy.spi.container.InvokableContext;
  *
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  */
-class InvokableContextClassProxyHack implements ClassProxy {
+public class InvokableContextClassProxyHack implements ClassProxy {
     private InvokableContext container;
 
     InvokableContextClassProxyHack(InvokableContext container) {

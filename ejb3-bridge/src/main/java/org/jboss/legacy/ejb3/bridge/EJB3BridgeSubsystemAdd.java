@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,10 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.jnp;
+package org.jboss.legacy.ejb3.bridge;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
@@ -31,40 +29,36 @@ import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
 import org.jboss.dmr.ModelNode;
-import org.jboss.msc.service.ServiceBuilder;
+import org.jboss.as.server.AbstractDeploymentChainStep;
 import org.jboss.msc.service.ServiceController;
-import org.jboss.msc.service.ServiceTarget;
+import org.jboss.as.server.DeploymentProcessorTarget;
+import org.jboss.as.server.deployment.Phase;
 
 /**
+ * Add operation handler for the Legacy EJB3 subsystem.
+ *
  * @author baranowb
  */
-public class LegacyJNPServerServiceAddStepHandler extends AbstractBoottimeAddStepHandler {
+class EJB3BridgeSubsystemAdd extends AbstractBoottimeAddStepHandler {
 
-    public static final LegacyJNPServerServiceAddStepHandler INSTANCE = new LegacyJNPServerServiceAddStepHandler();
+    public static final EJB3BridgeSubsystemAdd INSTANCE = new EJB3BridgeSubsystemAdd();
 
-    public LegacyJNPServerServiceAddStepHandler() {
+    EJB3BridgeSubsystemAdd() {
     }
 
     @Override
     protected void performBoottime(OperationContext context, ModelNode operation, ModelNode model,
             ServiceVerificationHandler verificationHandler, List<ServiceController<?>> newControllers)
             throws OperationFailedException {
-        newControllers.addAll(this.installRuntimeServices(context, operation, model, verificationHandler));
+
+        context.addStep(new AbstractDeploymentChainStep() {
+            @Override
+            protected void execute(DeploymentProcessorTarget processorTarget) {
+                processorTarget.addDeploymentProcessor(EJB3BridgeExtension.SUBSYSTEM_NAME, Phase.INSTALL, 10,
+                        EJB3BridgeDeploymentProcessor.INSTANCE);
+            }
+        }, OperationContext.Stage.RUNTIME);
+
     }
 
-    Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
-            final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-
-        final LegacyJNPServerService service = new LegacyJNPServerService();
-
-        final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<JNPServer> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
-        if (verificationHandler != null) {
-            serviceBuilder.addListener(verificationHandler);
-        }
-        final ServiceController<JNPServer> remotingServiceController = serviceBuilder.install();
-        final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
-        installedServices.add(remotingServiceController);
-        return installedServices;
-    }
 }

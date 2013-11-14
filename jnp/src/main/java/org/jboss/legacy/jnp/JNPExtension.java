@@ -42,7 +42,7 @@ public class JNPExtension implements Extension {
     public static final String SUBSYSTEM_NAME = "legacy-jnp";
 
 
-    private static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(ModelDescriptionConstants.SUBSYSTEM, SUBSYSTEM_NAME);
+    public static final PathElement SUBSYSTEM_PATH = PathElement.pathElement(ModelDescriptionConstants.SUBSYSTEM, SUBSYSTEM_NAME);
     private static final String RESOURCE_NAME = JNPExtension.class.getPackage().getName() + ".LocalDescriptions";
     private static final int MANAGEMENT_API_MAJOR_VERSION = 1;
     private static final int MANAGEMENT_API_MINOR_VERSION = 0;
