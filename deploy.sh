@@ -6,7 +6,7 @@ if [ "x$JBOSS_HOME" = "x" ]; then
 fi
 mvn clean install
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
-cp -Rf jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3-bridge/target/module/org $JBOSS_HOME/modules/system/layers/base/
 

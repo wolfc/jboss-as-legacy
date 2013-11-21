@@ -35,14 +35,34 @@
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
-
-        <!-- 
+        <!-- Cache -->
+        <resource-root path="lib/jbosscache-core.jar"/>
+        <resource-root path="lib/jbosscache-pojo.jar"/>
+        <!-- HA -->
+        <resource-root path="lib/jboss-ha-client.jar"/>
+        <resource-root path="lib/jboss-ha-server-api.jar"/>
+        <resource-root path="lib/jboss-ha-server-cache-spi.jar"/>
+        <resource-root path="lib/jboss-ha-server-cache-jbc.jar"/>
+        <resource-root path="lib/jboss-as-cluster.jar"/>
+        <resource-root path="lib/jboss-as-system.jar"/>
+        <!--
+        <resource-root path="lib/jboss-as-server.jar"/>
+        <resource-root path="lib/jboss-as-system-jmx.jar"/>
+        <resource-root path="lib/jboss-as-jmx.jar"/>
+        <resource-root path="lib/jboss-as-j2se.jar"/>
+        <resource-root path="lib/jboss-kernel.jar"/>
+        <resource-root path="lib/jboss-dependency.jar"/>
+        <resource-root path="lib/jboss-bootstrap.jar"/>
+        <resource-root path="lib/jgroups.jar"/>
+        -->
+        <!--
         <resource-root path="lib/jboss-jaxrpc-api_1.1_spec.jar"/>
         -->
     </resources>
 
     <dependencies>
         <module name="javax.api"/>
+        <module name="javax.transaction.api" />
         <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.as.controller"/>
         <module name="org.jboss.as.server"/>
@@ -51,7 +71,8 @@
         <!--
         <module name="org.jboss.logging"/>
         -->
-        <module name="org.jboss.vfs"/>
+        <module name="org.jboss.vfs"/>        
+        <module name="org.apache.commons.logging" />
         <!--
         <module name="org.jboss.as.ejb3"/>
         <module name="org.jboss.as.ee"/>
