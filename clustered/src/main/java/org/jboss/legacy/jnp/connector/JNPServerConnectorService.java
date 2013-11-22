@@ -91,7 +91,7 @@ public class JNPServerConnectorService implements Service<HANamingService> {
             InfinispanHAPartition partition = new InfinispanHAPartition(coreGroupCommunicationService.getValue());
             this.haNamingService.setHAPartition(partition);
             this.haNamingService.setDistributedTreeManager(distributedTreeManager.getValue());
-            this.haNamingService.setLocalNamingInstance(new HAJNDI(partition, getDistributedTreeManager().getValue(), singletonNamingServer));
+            this.haNamingService.setLocalNamingInstance(singletonNamingServer);
 
             if (this.getRmiBinding().getOptionalValue() != null) {
                 haNamingService.setRmiBindAddress(this.getRmiBinding().getValue().getAddress().getHostName());
