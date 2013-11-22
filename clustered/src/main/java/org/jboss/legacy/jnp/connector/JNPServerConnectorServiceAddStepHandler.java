@@ -30,6 +30,8 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.naming.ServiceBasedNamingStore;
+import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ha.jndi.HANamingService;
@@ -65,7 +67,8 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
         final ServiceBuilder<HANamingService> serviceBuilder = serviceTarget.addService(JNPServerConnectorService.SERVICE_NAME, service);
         serviceBuilder.addDependency(CoreGroupCommunicationService.getServiceName(containerRef), CoreGroupCommunicationService.class, service.getCoreGroupCommunicationService())
                 .addDependency(DistributedTreeManagerService.SERVICE_NAME, InfinispanDistributedTreeManager.class, service.getDistributedTreeManager())
-                .addDependency(SocketBinding.JBOSS_BINDING_NAME.append(bindingRefModel.asString()), SocketBinding.class, service.getBinding());
+                .addDependency(SocketBinding.JBOSS_BINDING_NAME.append(bindingRefModel.asString()), SocketBinding.class, service.getBinding())
+                .addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, service.getNamingStoreValue());
 
         ModelNode rmiBindingRefModel = JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.resolveModelAttribute(context, operation);
         if (rmiBindingRefModel.isDefined()) {

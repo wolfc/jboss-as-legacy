@@ -409,7 +409,7 @@ public class InfinispanDistributedTreeManager implements org.jnp.interfaces.Nami
         }
 
         if (!this.cache.getRoot().hasChild(this.m_root)) {
-            this.cache.put(this.m_root, null);
+            this.cache.put(this.m_root, Collections.<String, Binding>emptyMap());
             this.treeRootSet = true;
         }
     }

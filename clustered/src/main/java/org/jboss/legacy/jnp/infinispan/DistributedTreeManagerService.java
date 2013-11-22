@@ -26,21 +26,11 @@ public class DistributedTreeManagerService implements Service<InfinispanDistribu
 
     private InfinispanDistributedTreeManager treeManager;
     private InjectedValue<Cache> cache = new InjectedValue<Cache>();
-    private final InjectedValue<ServiceBasedNamingStore> namingStoreValue = new InjectedValue<ServiceBasedNamingStore>();
-
-    private NamingStoreWrapper singletonNamingServer;
 
     @Override
     public void start(StartContext context) throws StartException {
-        try {
             this.treeManager = new InfinispanDistributedTreeManager();
             this.treeManager.setClusteredCache(cache.getValue());
-            this.singletonNamingServer = new NamingStoreWrapper(namingStoreValue.getValue());
-            this.treeManager.setHAStub(singletonNamingServer);
-            this.treeManager.init();
-        } catch (NamingException e) {
-            throw new StartException(e);
-        }
     }
 
     @Override
@@ -56,9 +46,4 @@ public class DistributedTreeManagerService implements Service<InfinispanDistribu
     public InjectedValue<Cache> getCache() {
         return cache;
     }
-
-    public InjectedValue<ServiceBasedNamingStore> getNamingStoreValue() {
-        return namingStoreValue;
-    }
-
 }

@@ -10,19 +10,21 @@
         <xs:sequence>
             <xs:element name="jnp-server" minOccurs="1" maxOccurs="1" type="jnpServerType"/>
             <xs:element name="jnp-connector" minOccurs="1" maxOccurs="1" type="jnpServerConnectorType"/>
-            <xs:element name="distributed-tree" minOccurs="1" maxOccurs="1" type="jnpServerConnectorType"/>
+            <!--<xs:element name="distributed-tree" minOccurs="1" maxOccurs="1" type="jnpServerConnectorType"/>-->
         </xs:sequence>
     </xs:complexType>
     
     <xs:complexType name="jnpServerConnectorType">
         <xs:attribute name="socket-binding" type="xs:string" use="required" />
         <xs:attribute name="rmi-socket-binding" type="xs:string" use="optional"/>
+        <xs:attribute name="cache-ref" type="xs:string" use="optional"/>
         <xs:attribute name="cache-container" type="xs:string" use="optional"/>
     </xs:complexType>
     <xs:complexType name="jnpServerType"/>
+    <!--
     <xs:complexType name="distributedTreeType">
         <xs:attribute name="cache-ref" type="xs:string" use="optional"/>
         <xs:attribute name="cache-container" type="xs:string" use="optional"/>
     </xs:complexType>
-
+    -->
 </xs:schema>

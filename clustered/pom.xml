@@ -87,11 +87,6 @@
             <version>7.3.0.Final-redhat-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-tree</artifactId>
-            <version>5.2.7.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-clustering-impl</artifactId>
             <version>7.3.0.Final-redhat-SNAPSHOT</version>

@@ -91,13 +91,10 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
             switch (element) {
                 case JNP_CONNECTOR:
-                    this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation/*, distributedTreManagerServiceAddOperation*/);
+                    this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation, distributedTreManagerServiceAddOperation);
                     break;
                 case JNP_SERVER:
                     this.parseJNPServer(xmlExtendedStreamReader, jnpServerServiceAddOperation);
-                    break;
-                case DISTRIBUTED_TREE:
-                    this.parseDistributedTree(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation, distributedTreManagerServiceAddOperation);
                     break;
                 case UNKNOWN:
                 default:
@@ -115,7 +112,7 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
     }
 
     private void parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
-            final ModelNode jnpServerConnectorServiceAddOperation/*, final ModelNode distributedTreManagerServiceAddOperation*/) throws XMLStreamException {
+            final ModelNode jnpServerConnectorServiceAddOperation, final ModelNode distributedTreManagerServiceAddOperation) throws XMLStreamException {
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
@@ -128,27 +125,6 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
                     break;
                 case CACHE_CONTAINER:
                     JNPServerConnectorResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
-                    /*DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
-                     break;
-                case CACHE_REF:
-                    DistributedTreeManagerResourceDefinition.CACHE_REF.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
-                   */ break;
-                case UNKNOWN:
-                default: {
-                    throw unexpectedAttribute(xmlExtendedStreamReader, i);
-                }
-            }
-        }
-        requireNoContent(xmlExtendedStreamReader);
-    }
-
-    private void parseDistributedTree(final XMLExtendedStreamReader xmlExtendedStreamReader, final ModelNode jnpServerConnectorServiceAddOperation, final ModelNode distributedTreManagerServiceAddOperation) throws XMLStreamException {
-        for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
-            requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
-            final String value = xmlExtendedStreamReader.getAttributeValue(i);
-            switch (JNPSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
-                case CACHE_CONTAINER:
-                    // JNPServerConnectorResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
                     DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
                     break;
                 case CACHE_REF:

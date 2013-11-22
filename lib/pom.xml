@@ -24,8 +24,8 @@
 
     <parent>
         <artifactId>jboss-as-legacy-parent</artifactId>
-		<groupId>org.jboss.as.legacy</groupId>
-		<version>7.3.0.Final-redhat-SNAPSHOT</version>
+        <groupId>org.jboss.as.legacy</groupId>
+        <version>7.3.0.Final-redhat-SNAPSHOT</version>
     </parent>
 
     <artifactId>jboss-as-legacy-lib</artifactId>
@@ -401,6 +401,62 @@
                                     <outputDirectory>${directory.dependencies}</outputDirectory>
                                     <destFileName>jboss-as-cluster.jar</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.jbossas</groupId>
+                                    <artifactId>jboss-as-system</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-as-system.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.jbossas</groupId>
+                                    <artifactId>jboss-as-system-jmx</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-as-system-jmx.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.jbossas</groupId>
+                                    <artifactId>jboss-as-j2se</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-as-j2se.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.microcontainer</groupId>
+                                    <artifactId>jboss-kernel</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-kernel.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.jbossas</groupId>
+                                    <artifactId>jboss-as-server</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-as-server.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.microcontainer</groupId>
+                                    <artifactId>jboss-dependency</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-dependency.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.infinispan</groupId>
+                                    <artifactId>infinispan-tree</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>infinispan-tree.jar</destFileName>
+                                </artifactItem>
 
                                                 <!--<artifactItem>
                                                     <groupId>org.jboss.cache</groupId>
@@ -419,14 +475,7 @@
                                                     <destFileName>jbosscache-pojo.jar</destFileName>
                 				</artifactItem>
                                                 
-                                                <artifactItem>
-                                                    <groupId>org.jboss.jbossas</groupId>
-                                                    <artifactId>jboss-as-server</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-as-server.jar</destFileName>
-                                                </artifactItem>                                               
+                                                                           
                                                <artifactItem>
                                                     <groupId>org.jgroups</groupId>
                                                     <artifactId>jgroups</artifactId>
@@ -435,22 +484,7 @@
                                                     <outputDirectory>${directory.dependencies}</outputDirectory>
                                                     <destFileName>jgroups.jar</destFileName>
                                                </artifactItem>
-                                               <artifactItem>
-                                                    <groupId>org.jboss.jbossas</groupId>
-                                                    <artifactId>jboss-as-system</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-as-system.jar</destFileName>
-                                               </artifactItem>
-                                               <artifactItem>
-                                                    <groupId>org.jboss.jbossas</groupId>
-                                                    <artifactId>jboss-as-system-jmx</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-as-system-jmx.jar</destFileName>
-                                               </artifactItem>
+                                               
                                                <artifactItem>
                                                     <groupId>org.jboss.jbossas</groupId>
                                                     <artifactId>jboss-as-jmx</artifactId>
@@ -459,14 +493,7 @@
                                                     <outputDirectory>${directory.dependencies}</outputDirectory>
                                                     <destFileName>jboss-as-jmx.jar</destFileName>
                                                </artifactItem>
-                                               <artifactItem>
-                                                   <groupId>org.jboss.jbossas</groupId>
-                                                   <artifactId>jboss-as-j2se</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-as-j2se.jar</destFileName>
-                                               </artifactItem>
+                                              
                                                <artifactItem>
                                                     <groupId>org.jboss.bootstrap</groupId>
                                                     <artifactId>jboss-bootstrap</artifactId>
@@ -483,14 +510,7 @@
                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
                                                    <destFileName>jboss-dependency.jar</destFileName>
                                                </artifactItem>
-                                               <artifactItem>
-                                                   <groupId>org.jboss.microcontainer</groupId>
-                                                   <artifactId>jboss-kernel</artifactId>
-                                                   <type>jar</type>
-                                                   <overWrite>true</overWrite>
-                                                   <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                   <destFileName>jboss-kernel.jar</destFileName>
-                                                </artifactItem>-->
+                                              -->
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -816,12 +836,13 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--
+
+        <!-- HA -->
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-server</artifactId>
             <version>${legacy.jboss.version}</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-cluster</artifactId>
@@ -842,15 +863,19 @@
             <artifactId>jboss-as-system-jmx</artifactId>
             <version>${legacy.jboss.version}</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-j2se</artifactId>
             <version>${legacy.jboss.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss.bootstrap</groupId>
-            <artifactId>jboss-bootstrap</artifactId>
+            <groupId>org.jboss.microcontainer</groupId>
+            <artifactId>jboss-kernel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-tree</artifactId>
+            <version>5.2.7.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.microcontainer</groupId>
@@ -859,6 +884,14 @@
         <dependency>
             <groupId>org.jboss.microcontainer</groupId>
             <artifactId>jboss-dependency</artifactId>
+        </dependency>
+
+
+        <!--
+      
+        <dependency>
+            <groupId>org.jboss.bootstrap</groupId>
+            <artifactId>jboss-bootstrap</artifactId>
         </dependency>-->
 
         <dependency>

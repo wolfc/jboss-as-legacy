@@ -21,13 +21,7 @@
  */
 package org.jboss.legacy.jnp.server;
 
-import javax.naming.NamingException;
-import org.jboss.as.naming.ServiceBasedNamingStore;
 import org.jboss.ha.jndi.HANamingService;
-import org.jboss.legacy.jnp.connector.JNPServerConnectorService;
-import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerService;
-import org.jboss.legacy.jnp.infinispan.InfinispanDistributedTreeManager;
-import org.jboss.msc.inject.Injector;
 
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
@@ -72,7 +66,7 @@ public class JNPServerService implements Service<JNPServer> {
 
                     @Override
                     public Naming getNamingInstance() {
-                        return (InfinispanDistributedTreeManager) haNamingService.getValue().getDistributedTreeManager();
+                        return haNamingService.getValue().getLocalNamingInstance();
                     }
                 };
             }

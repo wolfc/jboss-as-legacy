@@ -15,8 +15,6 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
-import org.jboss.as.naming.ServiceBasedNamingStore;
-import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.dmr.ModelNode;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
@@ -47,8 +45,7 @@ public class DistributedTreeManagerServiceAddStepHandler extends AbstractBoottim
         final DistributedTreeManagerService service = new DistributedTreeManagerService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
         final ServiceBuilder<InfinispanDistributedTreeManager> serviceBuilder = serviceTarget.addService(DistributedTreeManagerService.SERVICE_NAME, service);
-        serviceBuilder.addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, service.getNamingStoreValue())
-                .addDependency(CacheService.getServiceName(containerRef, cacheRef), Cache.class, service.getCache());
+        serviceBuilder.addDependency(CacheService.getServiceName(containerRef, cacheRef), Cache.class, service.getCache());
         final ServiceController<InfinispanDistributedTreeManager> distributedTreeManagerController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(distributedTreeManagerController);

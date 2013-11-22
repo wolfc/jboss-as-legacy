@@ -23,8 +23,8 @@
 
     <parent>
         <artifactId>jboss-as-legacy-parent</artifactId>
-		<groupId>org.jboss.as.legacy</groupId>
-		<version>7.3.0.Final-redhat-SNAPSHOT</version>
+        <groupId>org.jboss.as.legacy</groupId>
+        <version>7.3.0.Final-redhat-SNAPSHOT</version>
     </parent>
 
     <artifactId>jboss-as-legacy-jnp</artifactId>
@@ -32,17 +32,17 @@
     <name>JBoss Application Server: Legacy : JNP</name>
 
     <packaging>jar</packaging>
-    
+
     <properties>
-    	<module.name>org.jboss.legacy.jnp</module.name>
+        <module.name>org.jboss.legacy.jnp</module.name>
     </properties>
-    
+
 
     <build>
-      <!-- Maven will append the version to the finalName (which is the name 
-         given to the generated war, and hence the context root) -->
-      <finalName>${project.artifactId}</finalName>
-      <plugins>
+        <!-- Maven will append the version to the finalName (which is the name
+        given to the generated war, and hence the context root) -->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -55,20 +55,20 @@
                         </goals>
                         <phase>package</phase>
                         <configuration>
-                           <target>
-                               <!-- Replace the '.' in ${module.name} with '/' to get its path  -->
-                               <tempfile property="temp.file"/>
-                               <echo message="${module.name}" file="${temp.file}"/>
-                               <replace file="${temp.file}" token="." value="/"/>
-                               <loadfile srcfile="${temp.file}" property="module.path"/>
-                               <delete file="${temp.file}"/>
-                               
-                               <delete dir="target/module"/>
-                               <property name="module.dir" value="target/module/${module.path}/main"/>
-                               <property name="module.lib.dir" value="${module.dir}/lib"/>
-                               <copy file="src/main/resources/module/main/module.xml" tofile="${module.dir}/module.xml"/>
-                               <copy file="target/${project.artifactId}.jar" todir="${module.dir}"/>
-                               <echo>Module ${module.name} has been created in the target/module directory. Copy to your JBoss AS 7 installation.</echo>
+                            <target>
+                                <!-- Replace the '.' in ${module.name} with '/' to get its path  -->
+                                <tempfile property="temp.file"/>
+                                <echo message="${module.name}" file="${temp.file}"/>
+                                <replace file="${temp.file}" token="." value="/"/>
+                                <loadfile srcfile="${temp.file}" property="module.path"/>
+                                <delete file="${temp.file}"/>
+
+                                <delete dir="target/module"/>
+                                <property name="module.dir" value="target/module/${module.path}/main"/>
+                                <property name="module.lib.dir" value="${module.dir}/lib"/>
+                                <copy file="src/main/resources/module/main/module.xml" tofile="${module.dir}/module.xml"/>
+                                <copy file="target/${project.artifactId}.jar" todir="${module.dir}"/>
+                                <echo>Module ${module.name} has been created in the target/module directory. Copy to your JBoss AS 7 installation.</echo>
                             </target>
                         </configuration>
                     </execution>
@@ -76,13 +76,19 @@
             </plugin>
         </plugins>
     </build>
-    
-    
+
+
     <dependencies>
         <dependency>
-        	<artifactId>jboss-as-legacy-lib</artifactId>
+            <artifactId>jboss-as-legacy-lib</artifactId>
             <groupId>org.jboss.as.legacy</groupId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+            <version>3.2.12.Final-redhat-1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

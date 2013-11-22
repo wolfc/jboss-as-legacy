@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import org.jboss.as.clustering.GroupMembershipListener;
-import org.jboss.as.clustering.StateTransferProvider;
 import org.jboss.as.clustering.impl.CoreGroupCommunicationService;
 import org.jboss.ha.framework.interfaces.ClusterNode;
 import org.jboss.ha.framework.interfaces.DistributedReplicantManager;
 import org.jboss.ha.framework.interfaces.DistributedState;
 import org.jboss.ha.framework.interfaces.HAPartition;
 import org.jboss.ha.framework.interfaces.ResponseFilter;
+import org.jboss.ha.framework.server.DistributedReplicantManagerImpl;
 
 /**
  *
@@ -24,11 +23,13 @@ import org.jboss.ha.framework.interfaces.ResponseFilter;
  */
 public class InfinispanHAPartition implements HAPartition {
 
-    private CoreGroupCommunicationService service;
-    private Map<HAMembershipListener, HAMembershipListenerAdapter> groupMembershipListeners = new HashMap<HAMembershipListener, HAMembershipListenerAdapter>();
+    private final CoreGroupCommunicationService service;
+    private final Map<HAMembershipListener, HAMembershipListenerAdapter> groupMembershipListeners = new HashMap<HAMembershipListener, HAMembershipListenerAdapter>();
+    private final DistributedReplicantManagerImpl distributedReplicantManager;
 
     public InfinispanHAPartition(CoreGroupCommunicationService service) {
         this.service = service;
+        this.distributedReplicantManager = new DistributedReplicantManagerImpl(this);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class InfinispanHAPartition implements HAPartition {
 
     @Override
     public DistributedReplicantManager getDistributedReplicantManager() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.distributedReplicantManager;
     }
 
     @Override
@@ -145,6 +146,11 @@ public class InfinispanHAPartition implements HAPartition {
     @Override
     public ClusterNode getClusterNode() {
         return new LegacyClusterNodeAdapter(service.getClusterNode());
+    }
+
+    public void start() throws Exception {
+        this.distributedReplicantManager.createService();
+        this.distributedReplicantManager.startService();
     }
 
 }

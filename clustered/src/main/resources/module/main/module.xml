@@ -10,6 +10,7 @@
         <module name="org.jboss.as.server"/>
         <module name="org.jboss.modules"/>
         <module name="org.jboss.msc"/>
+        <module name="org.infinispan"/>
         <!--
         <module name="org.jboss.logging"/>
         -->
@@ -18,7 +19,10 @@
         <module name="org.jboss.as.naming"/>
         <module name="org.jboss.as.network" />
         <module name="org.jboss.as.clustering.service" />
-        <module name="org.jboss.as.clustering.service" />
+        <module name="org.jboss.as.clustering.impl" />
+        <module name="org.jboss.as.clustering.infinispan"/>
+        <module name="org.jboss.as.clustering.api"/>
+        <module name="org.jboss.invocation"/>
         <!--
         <module name="org.jboss.as.ejb3"/>
         <module name="org.jboss.as.ee"/>

@@ -61,10 +61,6 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
         if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
             writeConnector(xmlExtendedStreamWriter, subsystemMarshallingContext);
         }
-
-        if (model.hasDefined(DistributedTreeManagerModel.SERVICE_NAME)) {
-            writeDistributedTree(xmlExtendedStreamWriter, subsystemMarshallingContext);
-        }
     }
 
     /**
@@ -91,20 +87,7 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
                     .asString());
         }
 
-        /*   if (treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(DistributedTreeManagerModel.CACHE_REF)
-         .asString());
-         }*/
-        xmlExtendedStreamWriter.writeEndElement();
-    }
-
-    private void writeDistributedTree(XMLExtendedStreamWriter xmlExtendedStreamWriter, SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
         final ModelNode treeModel = subsystemMarshallingContext.getModelNode().get(DistributedTreeManagerModel.SERVICE_NAME);
-        xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.DISTRIBUTED_TREE.getLocalName());
-        if (treeModel.hasDefined(DistributedTreeManagerModel.CACHE_CONTAINER)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_CONTAINER.getLocalName(), treeModel.get(DistributedTreeManagerModel.CACHE_CONTAINER)
-                    .asString());
-        }
-
         if (treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {
             xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(DistributedTreeManagerModel.CACHE_REF)
                     .asString());

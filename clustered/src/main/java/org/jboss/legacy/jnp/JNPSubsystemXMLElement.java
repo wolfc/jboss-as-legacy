@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
-import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 
 /**
@@ -36,7 +35,6 @@ import org.jboss.legacy.jnp.server.JNPServerModel;
 public enum JNPSubsystemXMLElement {
  // must be first
     UNKNOWN(null),
-    DISTRIBUTED_TREE(DistributedTreeManagerModel.SERVICE_NAME),
     JNP_CONNECTOR(JNPServerConnectorModel.SERVICE_NAME),
     JNP_SERVER(JNPServerModel.SERVICE_NAME);
 
