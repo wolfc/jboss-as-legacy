@@ -4,7 +4,6 @@
         <resource-root path="lib/concurrent.jar"/>
         <resource-root path="lib/jboss-common-core.jar"/>
         <resource-root path="lib/jboss-ejb3-security.jar"/>
-        <resource-root path="lib/jboss-ejb3-security.jar"/>
         <resource-root path="lib/jboss-iiop-client.jar"/>
         <resource-root path="lib/jboss-marshalling-river.jar"/>
         <resource-root path="lib/jboss-security-spi.jar"/>
@@ -19,7 +18,9 @@
         <resource-root path="lib/jbosssx.jar"/>
         <resource-root path="lib/jboss-classfilewriter.jar"/>
         <resource-root path="lib/jboss-ejb3-proxy-impl.jar"/>
+        <!--
         <resource-root path="lib/jboss-ejb-client.jar"/>
+        -->
         <resource-root path="lib/jboss-marshalling.jar"/>
         <resource-root path="lib/jboss-metadata.jar"/>
         <resource-root path="lib/jbossws-spi.jar"/>
@@ -35,6 +36,7 @@
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
+
         <!-- HA -->
         <resource-root path="lib/jboss-ha-client.jar"/>
         <resource-root path="lib/jboss-ha-server-api.jar"/>
@@ -52,9 +54,6 @@
         <!--
         <resource-root path="lib/jbosscache-core.jar"/>
         <resource-root path="lib/jbosscache-pojo.jar"/>-->
-        <!--
-        <resource-root path="lib/jboss-jaxrpc-api_1.1_spec.jar"/>
-        -->
     </resources>
 
     <dependencies>

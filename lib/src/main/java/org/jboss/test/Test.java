@@ -22,6 +22,8 @@
 
 package org.jboss.test;
 
+import java.lang.reflect.Method;
+import java.util.IdentityHashMap;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -37,11 +39,17 @@ public class Test {
      */
     public static void main(String[] args) {
         try {
-            Properties properties = new Properties();
-            properties.put("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
-            properties.put("java.naming.factory.url.pkgs", "org.jboss.naming org.jnp.interfaces");
-            properties.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099");
-            InitialContext context = new InitialContext(properties);
+            Properties env = new Properties();
+            env.put("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
+            env.put("java.naming.factory.url.pkgs", "org.jboss.naming org.jnp.interfaces");
+            env.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099");
+//            env.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.security.jndi.JndiLoginInitialContextFactory");
+//            env.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099/");
+//            //password
+//            env.setProperty(Context.SECURITY_CREDENTIALS, "test-xx");
+//            //user
+//            env.setProperty(Context.SECURITY_PRINCIPAL, "test-yy");
+            InitialContext context = new InitialContext(env);
             Object o = context.lookup("CalculatorBean/remote");
             System.err.println(">>> " + o);
             RemoteCalculator rc = (RemoteCalculator) o;
@@ -49,6 +57,46 @@ public class Test {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            Properties env = new Properties();
+            env.put("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
+            env.put("java.naming.factory.url.pkgs", "org.jboss.naming org.jnp.interfaces");
+            env.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099");
+            // env.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.security.jndi.JndiLoginInitialContextFactory");
+            // env.setProperty(Context.PROVIDER_URL, "jnp://localhost:1099/");
+            // env.setProperty(Context.SECURITY_CREDENTIALS, "test-xx");
+            // env.setProperty(Context.SECURITY_PRINCIPAL, "test-yy ");
+            InitialContext context = new InitialContext(env);
+            Object o = context.lookup("StoryBean/remote");
+            System.err.println(">>> " + o);
+            RemoteStoryTeller rc = (RemoteStoryTeller) o;
+            System.err.println(">>> " + rc.doTell());
+            System.err.println(">>> " + rc.doTell());
+            Thread.currentThread().sleep(1000);
+            System.err.println(">>> " + rc.doTell());
+            o = context.lookup("StoryBean/remote");
+            System.err.println(">>> " + o);
+            rc = (RemoteStoryTeller) o;
+            System.err.println(">>> " + rc.doTell());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
+// <security-domain name="ejb-security-domain" cache-type="default">
+// <authentication>
+// <login-module code="Remoting" flag="optional">
+// <module-option name="password-stacking" value="useFirstPass"/>
+// </login-module>
+// <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
+// <module-option name="defaultUsersProperties" value="${jboss.server.config.dir}/ejb-users.properties"/>
+// <module-option name="defaultRolesProperties" value="${jboss.server.config.dir}/ejb-roles.properties"/>
+// <module-option name="usersProperties" value="${jboss.server.config.dir}/ejb-users.properties"/>
+// <module-option name="rolesProperties" value="${jboss.server.config.dir}/ejb-roles.properties"/>
+// <module-option name="password-stacking" value="useFirstPass"/>
+// </login-module>
+// </authentication>
+// </security-domain>
+

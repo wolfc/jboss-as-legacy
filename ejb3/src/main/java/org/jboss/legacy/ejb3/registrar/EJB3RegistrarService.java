@@ -25,6 +25,8 @@ package org.jboss.legacy.ejb3.registrar;
 import java.net.URL;
 
 import org.jboss.aop.AspectXmlLoader;
+import org.jboss.as.core.security.ServerSecurityManager;
+import org.jboss.as.ee.component.Component;
 import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
 import org.jboss.ejb3.common.registrar.spi.Ejb3RegistrarLocator;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatefulSessionRegistrar;
@@ -48,7 +50,6 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
 
     private static final String AOP_FILE = "ejb3-interceptors-aop.xml";
     private static final String CONNECTOR_BIND_NAME = "org.jboss.ejb3.RemotingConnector";
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(EJB3RegistrarModel.LEGACY).append(EJB3RegistrarModel.SERVICE_NAME);
     //main thing
     private Ejb3Registrar registrar;
     //hacks
@@ -59,7 +60,7 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
     private EJB3Registrar value = new LegacyEJB3RegistrarProxy(this);
 
     private InjectedValue<Connector> connector = new InjectedValue<Connector>();
-
+    private final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
     public EJB3RegistrarService() {
         super();
 
@@ -108,6 +109,11 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
     public InjectedValue<Connector> getInjectedValueConnector(){
         return this.connector;
     }
+
+    public InjectedValue<ServerSecurityManager> getServerSecurityManagerInjectedValue() {
+        return serverSecurityManagerInjectedValue;
+    }
+
     private class LegacyEJB3RegistrarProxy implements EJB3Registrar{
         private EJB3RegistrarService wrapped;
 
@@ -129,5 +135,6 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
         public JndiStatefulSessionRegistrar getJndiStatefulSessionRegistrar() {
             return wrapped.jndiStatefulSessionRegistrar;
         }
+
     }
 }

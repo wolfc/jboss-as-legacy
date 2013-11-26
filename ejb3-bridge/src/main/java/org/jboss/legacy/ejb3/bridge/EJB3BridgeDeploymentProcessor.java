@@ -41,6 +41,7 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
 import org.jboss.legacy.common.EJBDataProxy;
+import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.value.InjectedValue;
 import org.jboss.msc.value.Values;
 /**
@@ -91,7 +92,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                 Set<ViewDescription> views = ejbComponentDescription.getViews();
                                 for (ViewDescription vd : views) {
                                     final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
-                                    if (viewType == MethodIntf.REMOTE || viewType == MethodIntf.HOME) {
+                                    if (viewType == MethodIntf.REMOTE /*|| viewType == MethodIntf.HOME*/) {
                                         final ViewDescription viewDescription = vd;
                                         final String globalBinding = getGlobalBinding(viewDescription.getBindingNames());
                                         deploymentUnit.putAttachment(EJBDataProxy.ATTACHMENT_KEY, new EJBDataProxy(){
@@ -125,7 +126,14 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                             @Override
                                             public String getLocalASBinding() {
                                                 return globalBinding;
+                                            }
+
+                                            @Override
+                                            public ServiceName getViewServiceName() {
+                                                return viewDescription.getServiceName();
                                             }});
+                                        //break from loop
+                                        break;
                                     }
                                 }
                             }

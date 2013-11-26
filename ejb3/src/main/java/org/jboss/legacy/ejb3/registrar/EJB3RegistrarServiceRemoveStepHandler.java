@@ -57,7 +57,6 @@ public class EJB3RegistrarServiceRemoveStepHandler extends AbstractRemoveStepHan
     }
 
     void removeRuntimeService(OperationContext context, ModelNode operation) {
-        final String name = PathAddress.pathAddress(operation.get(ModelDescriptionConstants.ADDRESS)).getLastElement().getValue();
-        context.removeService(EJB3RegistrarService.SERVICE_NAME);
+        context.removeService(EJB3Registrar.SERVICE_NAME);
     }
 }

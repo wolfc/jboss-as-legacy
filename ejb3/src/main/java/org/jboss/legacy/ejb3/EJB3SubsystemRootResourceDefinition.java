@@ -50,6 +50,8 @@ public class EJB3SubsystemRootResourceDefinition extends SimpleResourceDefinitio
         resourceRegistration.registerSubModel(RemotingResourceDefinition.INSTANCE);
         //subsystem=legacy-ejb3/service=ejb3-registrar
         resourceRegistration.registerSubModel(EJB3RegistrarResourceDefinition.INSTANCE);
+        //subsystem=legacy-ejb3/deployment=*/service=*
+        //resourceRegistration.registerSubModel(StatelessResourceDefinition.INSTANCE);
     }
 
 }

@@ -25,6 +25,10 @@
 
         <module name="org.jboss.as.ejb3"/>
         <module name="org.jboss.as.ee"/>
+        <module name="org.jboss.as.core-security"/>
+        <module name="org.jboss.as.security"/>
+        <module name="org.jboss.invocation"/>
+        <module name="org.jboss.ejb-client"/>
         <!--        -->
     </dependencies>
 </module>

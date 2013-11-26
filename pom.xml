@@ -39,6 +39,8 @@
         <version.jboss.as>7.3.0.Final-redhat-SNAPSHOT</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
+	<jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
+        <legacy.jboss.version>5.1.0.GA</legacy.jboss.version>
     </properties>
 
     <modules>
@@ -137,6 +139,11 @@
                 <artifactId>jboss-remoting</artifactId>
                 <version>2.5.4.SP4</version>
             </dependency>
+            <dependency>
+        		<groupId>org.jboss.javaee</groupId>
+        		<artifactId>jboss-jacc-api-1.1_spec</artifactId>
+        		<version>5.0.2.GA</version>
+      		</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -145,6 +152,17 @@
             <id>mead-repository.redhat.com</id>
             <name>JBoss Production Releases MEAD Repository</name>
             <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-5-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>nexus.release</id>
+            <name>JBoss Production Releases MEAD Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

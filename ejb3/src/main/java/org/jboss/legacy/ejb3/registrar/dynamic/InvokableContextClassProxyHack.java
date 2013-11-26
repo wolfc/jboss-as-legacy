@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.ejb3.registrar;
+package org.jboss.legacy.ejb3.registrar.dynamic;
 
 import org.jboss.aop.InstanceAdvisor;
 import org.jboss.aop.joinpoint.Invocation;
@@ -40,7 +40,7 @@ import org.jboss.ejb3.proxy.spi.container.InvokableContext;
 public class InvokableContextClassProxyHack implements ClassProxy {
     private InvokableContext container;
 
-    InvokableContextClassProxyHack(InvokableContext container) {
+    public InvokableContextClassProxyHack(InvokableContext container) {
         assert container != null : "container is null";
 
         this.container = container;

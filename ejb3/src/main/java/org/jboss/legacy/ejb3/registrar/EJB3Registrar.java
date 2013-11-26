@@ -25,11 +25,15 @@ package org.jboss.legacy.ejb3.registrar;
 import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatefulSessionRegistrar;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatelessSessionRegistrar;
+import org.jboss.msc.service.ServiceName;
 
 /**
  * @author baranowb
  */
 public interface EJB3Registrar {
+
+    ServiceName SERVICE_NAME = ServiceName.JBOSS.append(EJB3RegistrarModel.LEGACY).append(EJB3RegistrarModel.SERVICE_NAME);
+
     Ejb3Registrar getRegistrar();
 
     JndiStatelessSessionRegistrar getJndiStatelessSessionRegistrar();

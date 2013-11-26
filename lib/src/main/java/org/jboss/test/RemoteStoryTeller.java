@@ -20,34 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.common;
-
-import java.util.Set;
-
-import org.jboss.as.server.deployment.AttachmentKey;
-import org.jboss.msc.service.ServiceName;
-
-
+package org.jboss.test;
 
 /**
  * @author baranowb
+ *
  */
-public interface EJBDataProxy {
+public interface RemoteStoryTeller {
 
-    AttachmentKey<EJBDataProxy> ATTACHMENT_KEY = AttachmentKey.create(EJBDataProxy.class);
+    String doTell();
 
-    String getName();
-
-    String getRemoteInterfaceClass();
-
-    String getEJBVersion();
-
-    boolean isStateful();
-
-    ClassLoader getBeanClassLoader();
-
-    ServiceName getViewServiceName();
-
-    String getLocalASBinding();
-    //TODO: add more if need be.
 }

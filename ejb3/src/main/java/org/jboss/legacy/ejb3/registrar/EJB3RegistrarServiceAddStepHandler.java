@@ -30,6 +30,8 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.core.security.ServerSecurityManager;
+import org.jboss.as.security.service.SimpleSecurityManagerService;
 import org.jboss.as.server.AbstractDeploymentChainStep;
 import org.jboss.as.server.DeploymentProcessorTarget;
 import org.jboss.as.server.deployment.Phase;
@@ -57,13 +59,6 @@ public class EJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAddStepH
             ServiceVerificationHandler verificationHandler, List<ServiceController<?>> newControllers)
             throws OperationFailedException {
         newControllers.addAll(this.installRuntimeServices(context, operation, model, verificationHandler));
-        context.addStep(new AbstractDeploymentChainStep() {
-            @Override
-            protected void execute(DeploymentProcessorTarget processorTarget) {
-                processorTarget.addDeploymentProcessor(EJB3Extension.SUBSYSTEM_NAME, Phase.INSTALL, 1000,
-                        EJB3DeploymentProcessor.INSTANCE);
-            }
-        }, OperationContext.Stage.RUNTIME);
     }
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
@@ -71,8 +66,9 @@ public class EJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAddStepH
 
         final EJB3RegistrarService service = new EJB3RegistrarService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<EJB3Registrar> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
+        final ServiceBuilder<EJB3Registrar> serviceBuilder = serviceTarget.addService(EJB3Registrar.SERVICE_NAME, service);
         serviceBuilder.addDependency(RemotingConnectorService.SERVICE_NAME,Connector.class,service.getInjectedValueConnector());
+        serviceBuilder.addDependency(SimpleSecurityManagerService.SERVICE_NAME,ServerSecurityManager.class,service.getServerSecurityManagerInjectedValue());
         serviceBuilder.addDependency(JNPServerService.SERVICE_NAME);
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
@@ -80,6 +76,15 @@ public class EJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAddStepH
         final ServiceController<EJB3Registrar> registrarServiceController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(registrarServiceController);
+
+        context.addStep(new AbstractDeploymentChainStep() {
+            @Override
+            protected void execute(DeploymentProcessorTarget processorTarget) {
+                processorTarget.addDeploymentProcessor(EJB3Extension.SUBSYSTEM_NAME, Phase.INSTALL, 1000,
+                        EJB3DeploymentProcessor.INSTANCE);
+            }
+        }, OperationContext.Stage.RUNTIME);
+
         return installedServices;
     }
 }

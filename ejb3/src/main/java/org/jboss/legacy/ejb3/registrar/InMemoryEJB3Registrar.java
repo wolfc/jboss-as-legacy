@@ -24,8 +24,11 @@ package org.jboss.legacy.ejb3.registrar;
 import org.jboss.ejb3.common.registrar.spi.DuplicateBindException;
 import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
 import org.jboss.ejb3.common.registrar.spi.NotBoundException;
+import org.jboss.ejb3.proxy.spi.container.StatefulSessionFactory;
 import org.jboss.logging.Logger;
+import org.jboss.util.id.GUID;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -46,7 +49,11 @@ public class InMemoryEJB3Registrar implements Ejb3Registrar {
 
     @Override
     public Object lookup(Object name) throws NotBoundException {
-        throw new RuntimeException("NYI: org.jboss.ejb.legacy.stateless.InMemoryEjb3Registrar.lookup");
+        // this is for stateful...
+        final Object value = registrar.get(name);
+        if (value == null)
+            throw new NotBoundException("Can't find " + name + "!");
+        return value;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class InMemoryEJB3Registrar implements Ejb3Registrar {
     public void bind(Object name, Object value) throws DuplicateBindException {
         if (registrar.containsKey(name))
             throw new DuplicateBindException(name + " already has an object bound");
-        log.info("Binding " + name);
+        log.info("Binding '" + name + "' '" + value + "'");
         invokeOptionalMethod(value, "start");
         registrar.put(name, value);
     }
@@ -73,9 +80,9 @@ public class InMemoryEJB3Registrar implements Ejb3Registrar {
 
     @Override
     public void unbind(Object name) throws NotBoundException {
-        if(this.registrar.remove(name) == null){
+        if (this.registrar.remove(name) == null) {
             new Exception().printStackTrace();
-            throw new NotBoundException("Name not bound: "+name);
+            throw new NotBoundException("Name not bound: " + name);
         }
     }
 
@@ -101,4 +108,5 @@ public class InMemoryEJB3Registrar implements Ejb3Registrar {
             throw new RuntimeException(e);
         }
     }
+
 }
