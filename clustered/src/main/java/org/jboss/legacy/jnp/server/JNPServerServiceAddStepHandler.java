@@ -21,6 +21,7 @@
  */
 package org.jboss.legacy.jnp.server;
 
+import org.jboss.legacy.jnp.server.clustered.HAServerService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,9 +30,12 @@ import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
+import org.jboss.as.naming.ServiceBasedNamingStore;
+import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ha.jndi.HANamingService;
-import org.jboss.legacy.jnp.connector.JNPServerConnectorService;
+import org.jboss.legacy.jnp.connector.JNPServerNamingConnectorService;
+import org.jboss.legacy.jnp.server.simple.SingleServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
@@ -55,15 +59,22 @@ public class JNPServerServiceAddStepHandler extends AbstractBoottimeAddStepHandl
 
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
-
-        final JNPServerService service = new JNPServerService();
+        final boolean isHA = JNPServerResourceDefinition.HA.resolveModelAttribute(context, operation).asBoolean(false);
         final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<JNPServer> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
-        serviceBuilder.addDependency(JNPServerConnectorService.SERVICE_NAME, HANamingService.class, service.getHaNamingService());
+        final ServiceBuilder<?> serviceBuilder;
+        if (isHA) {
+            HAServerService service = new HAServerService();
+            serviceBuilder = serviceTarget.addService(JNPServerService.SERVICE_NAME, service);
+            serviceBuilder.addDependency(JNPServerNamingConnectorService.SERVICE_NAME, HANamingService.class, ((HAServerService) service).getHaNamingService());
+        } else {
+            SingleServerService service = new SingleServerService();
+            serviceBuilder = serviceTarget.addService(JNPServerService.SERVICE_NAME, service);
+            serviceBuilder.addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, ((SingleServerService) service).getNamingStoreInjector());
+        }
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }
-        final ServiceController<JNPServer> remotingServiceController = serviceBuilder.install();
+        final ServiceController<?> remotingServiceController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(remotingServiceController);
         return installedServices;

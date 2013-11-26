@@ -19,17 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.jboss.legacy.jnp.connector;
 
-package org.jboss.legacy.jnp.server;
+import org.jboss.as.network.SocketBinding;
+import org.jboss.msc.service.Service;
+import org.jboss.msc.service.ServiceName;
+import org.jboss.msc.value.InjectedValue;
 
 /**
- * @author baranowb
  *
+ * @author ehsavoie
+ * @param <T>
  */
-public interface JNPServerModel {
+public interface JNPServerNamingConnectorService<T> extends Service<T> {
 
-    String SERVICE = "service";
-    String SERVICE_NAME = "jnp-server";
-    String LEGACY = "legacy";
-    String HA = "ha";
+    ServiceName SERVICE_NAME = ServiceName.JBOSS.append(JNPServerConnectorModel.LEGACY).append(JNPServerConnectorModel.SERVICE_NAME);
+
+    InjectedValue<SocketBinding> getBinding();
+
+    InjectedValue<SocketBinding> getRmiBinding();
 }

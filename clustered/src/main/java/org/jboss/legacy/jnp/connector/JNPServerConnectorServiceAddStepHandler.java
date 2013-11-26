@@ -35,8 +35,12 @@ import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ha.jndi.HANamingService;
+import org.jboss.legacy.jnp.connector.clustered.HAConnectorService;
+import org.jboss.legacy.jnp.connector.simple.SingleConnectorService;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerService;
 import org.jboss.legacy.jnp.infinispan.InfinispanDistributedTreeManager;
+import org.jboss.legacy.jnp.server.JNPServer;
+import org.jboss.legacy.jnp.server.JNPServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
@@ -61,15 +65,23 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
     Collection<ServiceController<?>> installRuntimeServices(final OperationContext context, final ModelNode operation,
             final ModelNode model, final ServiceVerificationHandler verificationHandler) throws OperationFailedException {
         final ModelNode bindingRefModel = JNPServerConnectorResourceDefinition.SOCKET_BINDING.resolveModelAttribute(context, operation);
-        final String containerRef = JNPServerConnectorResourceDefinition.CACHE_CONTAINER.resolveModelAttribute(context, operation).asString();
-        final JNPServerConnectorService service = new JNPServerConnectorService();
+        final ModelNode containerRef = JNPServerConnectorResourceDefinition.CACHE_CONTAINER.resolveModelAttribute(context, operation);
         final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<HANamingService> serviceBuilder = serviceTarget.addService(JNPServerConnectorService.SERVICE_NAME, service);
-        serviceBuilder.addDependency(CoreGroupCommunicationService.getServiceName(containerRef), CoreGroupCommunicationService.class, service.getCoreGroupCommunicationService())
-                .addDependency(DistributedTreeManagerService.SERVICE_NAME, InfinispanDistributedTreeManager.class, service.getDistributedTreeManager())
-                .addDependency(SocketBinding.JBOSS_BINDING_NAME.append(bindingRefModel.asString()), SocketBinding.class, service.getBinding())
-                .addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, service.getNamingStoreValue());
-
+        final ServiceBuilder<JNPServerNamingConnectorService<?>> serviceBuilder;
+        final JNPServerNamingConnectorService service;
+        if (containerRef.isDefined()) {
+            service = new HAConnectorService();
+            final HAConnectorService haConnectorService = (HAConnectorService) service;
+            serviceBuilder = serviceTarget.addService(JNPServerNamingConnectorService.SERVICE_NAME, service);
+            serviceBuilder.addDependency(CoreGroupCommunicationService.getServiceName(containerRef.asString()), CoreGroupCommunicationService.class, haConnectorService.getCoreGroupCommunicationService())
+                    .addDependency(DistributedTreeManagerService.SERVICE_NAME, InfinispanDistributedTreeManager.class, haConnectorService.getDistributedTreeManager())
+                    .addDependency(ContextNames.JAVA_CONTEXT_SERVICE_NAME, ServiceBasedNamingStore.class, haConnectorService.getNamingStoreValue());
+        } else {
+            service = new SingleConnectorService();
+            serviceBuilder = serviceTarget.addService(JNPServerNamingConnectorService.SERVICE_NAME, service);
+            serviceBuilder.addDependency(JNPServerService.SERVICE_NAME, JNPServer.class, ((SingleConnectorService) service).getJNPServer());
+        }
+        serviceBuilder.addDependency(SocketBinding.JBOSS_BINDING_NAME.append(bindingRefModel.asString()), SocketBinding.class, service.getBinding());
         ModelNode rmiBindingRefModel = JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.resolveModelAttribute(context, operation);
         if (rmiBindingRefModel.isDefined()) {
             serviceBuilder.addDependency(SocketBinding.JBOSS_BINDING_NAME.append(rmiBindingRefModel.asString()), SocketBinding.class, service.getRmiBinding());
@@ -79,7 +91,7 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }
-        final ServiceController<HANamingService> remotingServiceController = serviceBuilder.install();
+        final ServiceController<?> remotingServiceController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(remotingServiceController);
         return installedServices;

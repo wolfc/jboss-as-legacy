@@ -42,6 +42,7 @@ import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerResourceDefinition;
 import org.jboss.legacy.jnp.server.JNPServerModel;
+import org.jboss.legacy.jnp.server.JNPServerResourceDefinition;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 
@@ -76,8 +77,6 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         final ModelNode distributedTreManagerServiceAddOperation = Util.createAddOperation();
         distributedTreManagerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
                 .add(DistributedTreeManagerModel.SERVICE, DistributedTreeManagerModel.SERVICE_NAME);
-        result.add(distributedTreManagerServiceAddOperation);
-
         // elements
         final EnumSet<JNPSubsystemXMLElement> encountered = EnumSet.noneOf(JNPSubsystemXMLElement.class);
         while (xmlExtendedStreamReader.hasNext() && xmlExtendedStreamReader.nextTag() != XMLStreamConstants.END_ELEMENT) {
@@ -91,7 +90,11 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
             switch (element) {
                 case JNP_CONNECTOR:
-                    this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation, distributedTreManagerServiceAddOperation);
+                    boolean isHA = this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation, distributedTreManagerServiceAddOperation);
+                    JNPServerResourceDefinition.HA.parseAndSetParameter(String.valueOf(isHA), jnpServerServiceAddOperation, xmlExtendedStreamReader);
+                    if (isHA) {
+                        result.add(distributedTreManagerServiceAddOperation);
+                    }
                     break;
                 case JNP_SERVER:
                     this.parseJNPServer(xmlExtendedStreamReader, jnpServerServiceAddOperation);
@@ -111,8 +114,9 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         requireNoContent(xmlExtendedStreamReader);
     }
 
-    private void parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
+    private boolean parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
             final ModelNode jnpServerConnectorServiceAddOperation, final ModelNode distributedTreManagerServiceAddOperation) throws XMLStreamException {
+        boolean isHa = false;
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
@@ -126,9 +130,11 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
                 case CACHE_CONTAINER:
                     JNPServerConnectorResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
                     DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
+                    isHa = true;
                     break;
                 case CACHE_REF:
                     DistributedTreeManagerResourceDefinition.CACHE_REF.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
+                    isHa = true;
                     break;
                 case UNKNOWN:
                 default: {
@@ -137,5 +143,6 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
         }
         requireNoContent(xmlExtendedStreamReader);
+        return isHa;
     }
 }

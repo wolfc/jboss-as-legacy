@@ -58,6 +58,6 @@ public class JNPServerConnectorServiceRemoveStepHandler extends AbstractRemoveSt
 
     void removeRuntimeService(OperationContext context, ModelNode operation) {
         final String name = PathAddress.pathAddress(operation.get(ModelDescriptionConstants.ADDRESS)).getLastElement().getValue();
-        context.removeService(JNPServerConnectorService.SERVICE_NAME);
+        context.removeService(JNPServerNamingConnectorService.SERVICE_NAME);
     }
 }

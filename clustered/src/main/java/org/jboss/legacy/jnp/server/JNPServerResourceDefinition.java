@@ -23,14 +23,19 @@
 package org.jboss.legacy.jnp.server;
 
 import org.jboss.as.controller.PathElement;
+import org.jboss.as.controller.SimpleAttributeDefinition;
+import static org.jboss.as.controller.SimpleAttributeDefinitionBuilder.create;
 import org.jboss.as.controller.SimpleResourceDefinition;
+import org.jboss.dmr.ModelType;
 import org.jboss.legacy.jnp.JNPExtension;
 
 /**
  * @author baranowb
  */
 public class JNPServerResourceDefinition extends SimpleResourceDefinition {
-
+    public static final SimpleAttributeDefinition HA = create(JNPServerModel.HA, ModelType.BOOLEAN)
+            .setAllowNull(true)
+            .build();
 
     public static final JNPServerResourceDefinition INSTANCE = new JNPServerResourceDefinition();
 

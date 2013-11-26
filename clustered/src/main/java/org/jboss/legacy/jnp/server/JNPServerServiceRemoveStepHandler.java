@@ -22,6 +22,7 @@
 
 package org.jboss.legacy.jnp.server;
 
+import org.jboss.legacy.jnp.server.clustered.HAServerService;
 import org.jboss.as.controller.AbstractRemoveStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
@@ -58,6 +59,6 @@ public class JNPServerServiceRemoveStepHandler extends AbstractRemoveStepHandler
 
     void removeRuntimeService(OperationContext context, ModelNode operation) {
         final String name = PathAddress.pathAddress(operation.get(ModelDescriptionConstants.ADDRESS)).getLastElement().getValue();
-        context.removeService(JNPServerService.SERVICE_NAME);
+        context.removeService(HAServerService.SERVICE_NAME);
     }
 }

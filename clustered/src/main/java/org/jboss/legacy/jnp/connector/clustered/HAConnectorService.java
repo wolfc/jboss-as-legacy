@@ -19,18 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.jnp.connector;
+package org.jboss.legacy.jnp.connector.clustered;
 
 import org.jboss.as.clustering.impl.CoreGroupCommunicationService;
 import org.jboss.as.naming.ServiceBasedNamingStore;
 import org.jboss.as.network.SocketBinding;
-import org.jboss.ha.jndi.HAJNDI;
 import org.jboss.ha.jndi.HANamingService;
+import org.jboss.legacy.jnp.connector.JNPServerNamingConnectorService;
 import org.jboss.legacy.jnp.infinispan.InfinispanDistributedTreeManager;
 import org.jboss.legacy.jnp.infinispan.InfinispanHAPartition;
 import org.jboss.legacy.jnp.server.NamingStoreWrapper;
-import org.jboss.msc.service.Service;
-import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
@@ -39,10 +37,7 @@ import org.jboss.msc.value.InjectedValue;
 /**
  * @author baranowb
  */
-public class JNPServerConnectorService implements Service<HANamingService> {
-
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(JNPServerConnectorModel.LEGACY).append(
-            JNPServerConnectorModel.SERVICE_NAME);
+public class HAConnectorService implements JNPServerNamingConnectorService<HANamingService> {
 
     private InjectedValue<InfinispanDistributedTreeManager> distributedTreeManager = new InjectedValue<InfinispanDistributedTreeManager>();
     private final InjectedValue<CoreGroupCommunicationService> coreGroupCommunicationService = new InjectedValue<CoreGroupCommunicationService>();
@@ -53,9 +48,8 @@ public class JNPServerConnectorService implements Service<HANamingService> {
     private NamingStoreWrapper singletonNamingServer;
     private HANamingService haNamingService;
 
-    public JNPServerConnectorService() {
+    public HAConnectorService() {
         super();
-
     }
 
     public InjectedValue<InfinispanDistributedTreeManager> getDistributedTreeManager() {
@@ -66,10 +60,12 @@ public class JNPServerConnectorService implements Service<HANamingService> {
         return coreGroupCommunicationService;
     }
 
+    @Override
     public InjectedValue<SocketBinding> getBinding() {
         return binding;
     }
 
+    @Override
     public InjectedValue<SocketBinding> getRmiBinding() {
         return rmiBinding;
     }
@@ -112,5 +108,4 @@ public class JNPServerConnectorService implements Service<HANamingService> {
         this.haNamingService.stop();
         this.haNamingService = null;
     }
-
 }
