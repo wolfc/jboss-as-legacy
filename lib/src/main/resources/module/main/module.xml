@@ -35,9 +35,6 @@
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
-        <!-- Cache 
-        <resource-root path="lib/jbosscache-core.jar"/>
-        <resource-root path="lib/jbosscache-pojo.jar"/>-->
         <!-- HA -->
         <resource-root path="lib/jboss-ha-client.jar"/>
         <resource-root path="lib/jboss-ha-server-api.jar"/>
@@ -51,6 +48,10 @@
         <resource-root path="lib/infinispan-tree.jar"/>
         <resource-root path="lib/jboss-dependency.jar"/>
         <resource-root path="lib/jboss-as-server.jar"/>
+        <!-- Cache -->
+        <!--
+        <resource-root path="lib/jbosscache-core.jar"/>
+        <resource-root path="lib/jbosscache-pojo.jar"/>-->
         <!--
         <resource-root path="lib/jboss-jaxrpc-api_1.1_spec.jar"/>
         -->

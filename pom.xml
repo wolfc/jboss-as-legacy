@@ -43,11 +43,8 @@
 
     <modules>
         <module>lib</module>
-        <!--<module>jnp</module>
-        <module>ha-jnp</module>-->
         <module>ejb3</module>
         <module>ejb3-bridge</module>
-        <!--<module>jnp-ha</module>-->
         <module>clustered</module>
     </modules>
 

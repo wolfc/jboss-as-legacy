@@ -57,8 +57,6 @@ public class JNPExtension implements Extension {
     public void initialize(ExtensionContext context) {
         final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, MANAGEMENT_API_MAJOR_VERSION,
                 MANAGEMENT_API_MINOR_VERSION, MANAGEMENT_API_MICRO_VERSION);
-
-        //subsystem.registerXMLElementWriter(EJB3SubsystemXMLPersister.INSTANCE);
         subsystem.registerSubsystemModel(JNPSubsystemRootResourceDefinition.INSTANCE);
         subsystem.registerXMLElementWriter(JNPSubsystemXMLPersister.INSTANCE);
     }

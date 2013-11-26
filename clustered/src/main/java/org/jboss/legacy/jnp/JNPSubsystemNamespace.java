@@ -33,7 +33,6 @@ import java.util.Map;
 public enum JNPSubsystemNamespace {
     // must be first
     UNKNOWN(null),
-
     LEGACY_JNP_1_0("urn:jboss:domain:legacy-jnp:1.0");
 
 
