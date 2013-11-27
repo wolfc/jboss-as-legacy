@@ -85,18 +85,3 @@ public class Test {
     }
 
 }
-// <security-domain name="ejb-security-domain" cache-type="default">
-// <authentication>
-// <login-module code="Remoting" flag="optional">
-// <module-option name="password-stacking" value="useFirstPass"/>
-// </login-module>
-// <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
-// <module-option name="defaultUsersProperties" value="${jboss.server.config.dir}/ejb-users.properties"/>
-// <module-option name="defaultRolesProperties" value="${jboss.server.config.dir}/ejb-roles.properties"/>
-// <module-option name="usersProperties" value="${jboss.server.config.dir}/ejb-users.properties"/>
-// <module-option name="rolesProperties" value="${jboss.server.config.dir}/ejb-roles.properties"/>
-// <module-option name="password-stacking" value="useFirstPass"/>
-// </login-module>
-// </authentication>
-// </security-domain>
-

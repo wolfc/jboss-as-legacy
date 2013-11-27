@@ -27,6 +27,7 @@
         <resource-root path="lib/jboss-remoting-aspects.jar"/>
         <resource-root path="lib/jboss-remoting.jar"/>
         <resource-root path="lib/jboss-ejb3-common.jar"/>
+        <resource-root path="lib/jboss-ejb3-core.jar"/>
         <resource-root path="lib/jboss-aop.jar"/>
         <resource-root path="lib/jboss-logging-log4j.jar"/>
         <resource-root path="lib/jboss-logging-spi.jar"/>
