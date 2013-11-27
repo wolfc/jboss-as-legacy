@@ -36,6 +36,7 @@
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
+        <resource-root path="lib/jboss-javaee.jar"/>
 
         <!-- HA -->
         <resource-root path="lib/jboss-ha-client.jar"/>
