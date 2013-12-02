@@ -27,12 +27,12 @@ import org.jboss.legacy.jnp.server.JNPServer;
 import org.jboss.legacy.jnp.server.JNPServerService;
 import org.jboss.legacy.jnp.server.NamingStoreWrapper;
 import org.jboss.msc.inject.Injector;
-
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
 import org.jnp.interfaces.Naming;
+import org.jnp.interfaces.NamingContext;
 import org.jnp.server.NamingBean;
 
 /**
@@ -65,6 +65,7 @@ public class SingleServerService implements JNPServerService {
     public void start(StartContext startContext) throws StartException {
         try {
             this.singletonNamingServer = new NamingStoreWrapper(namingStoreValue.getValue());
+            NamingContext.setLocal(this.singletonNamingServer);
         } catch (NamingException e) {
             throw new StartException(e);
         }

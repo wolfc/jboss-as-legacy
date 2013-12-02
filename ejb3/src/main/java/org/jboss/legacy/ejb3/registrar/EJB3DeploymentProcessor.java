@@ -25,10 +25,11 @@ package org.jboss.legacy.ejb3.registrar;
 import org.jboss.as.core.security.ServerSecurityManager;
 import org.jboss.as.ee.component.Attachments;
 import org.jboss.as.ee.component.Component;
+import org.jboss.as.ee.component.ComponentConfiguration;
+import org.jboss.as.ee.component.ComponentConfigurator;
 import org.jboss.as.ee.component.ComponentDescription;
 import org.jboss.as.ee.component.ComponentView;
 import org.jboss.as.ee.component.EEModuleDescription;
-import org.jboss.as.ee.component.ViewDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
 import org.jboss.as.ejb3.deployment.DeploymentRepository;
 import org.jboss.as.security.service.SimpleSecurityManagerService;
@@ -44,8 +45,6 @@ import org.jboss.legacy.ejb3.registrar.dynamic.stateles.StatelesDynamicInvokeSer
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
-import org.jboss.as.ee.component.ComponentConfiguration;
-import org.jboss.as.ee.component.ComponentConfigurator;
 
 /**
  * Processor setup a service which will do AOP/JNP magic

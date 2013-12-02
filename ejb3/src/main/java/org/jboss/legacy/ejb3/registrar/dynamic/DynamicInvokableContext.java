@@ -19,16 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.ejb3.registrar.dynamic;
 
-import static org.jboss.as.ejb3.EjbMessages.MESSAGES;
-
+import com.arjuna.ats.arjuna.common.Uid;
 import java.lang.reflect.Method;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import org.jboss.aop.joinpoint.Invocation;
 import org.jboss.aop.joinpoint.InvocationResponse;
 import org.jboss.aop.joinpoint.MethodInvocation;
@@ -36,11 +34,13 @@ import org.jboss.as.core.security.ServerSecurityManager;
 import org.jboss.as.ee.component.Component;
 import org.jboss.as.ee.component.ComponentView;
 import org.jboss.as.ee.utils.DescriptorUtils;
+import static org.jboss.as.ejb3.EjbMessages.MESSAGES;
 import org.jboss.as.ejb3.component.EJBComponent;
 import org.jboss.as.ejb3.deployment.DeploymentModuleIdentifier;
 import org.jboss.as.ejb3.deployment.DeploymentRepository;
 import org.jboss.as.ejb3.deployment.EjbDeploymentInformation;
 import org.jboss.as.ejb3.deployment.ModuleDeployment;
+import org.jboss.aspects.tx.ClientTxPropagationInterceptor;
 import org.jboss.ejb3.common.lang.SerializableMethod;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.impl.remoting.SessionSpecRemotingMetadata;
@@ -53,16 +53,19 @@ import org.jboss.security.plugins.JBossSecurityContext;
 
 /**
  * Handles magic moombo jumbo invocation.
+ *
  * @author baranowb
  */
 public class DynamicInvokableContext implements InvokableContext {
+
     public static final String LEGACY_MD_SECURITY = "security";
     public static final String LEGACY_MD_KEY_PRINCIPIAL = "principal";
     public static final String LEGACY_MD_KEY_CREDENTIAL = "credential";
     public static final String LEGACY_MD_KEY_CONTEXT = "context";
+    public static final String LEGACY_TX_KEY_CONTEXT = "TransactionPropagationContext";
+    public static final String LEGACY_TX_KEY_ATTRIBUTE = "TransactionPropagationContext";
 
     private EjbDeploymentInformation info;
-
 
     //just a ref copy, but its better to keep classes scoped, inner classes become messy
     //if they have more than few lines
@@ -87,8 +90,7 @@ public class DynamicInvokableContext implements InvokableContext {
      * @param distinctName
      * @param componentName
      */
-    public DynamicInvokableContext(EJBDataProxy ejb3Data,
-            InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue,
+    public DynamicInvokableContext(EJBDataProxy ejb3Data, InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue,
             InjectedValue<EJB3Registrar> ejb3RegistrarInjectedValue,
             InjectedValue<DeploymentRepository> deploymentRepositoryInjectedValue,
             InjectedValue<ComponentView> viewInjectedValue, String applicationName, String moduleName, String distinctName,
@@ -117,10 +119,9 @@ public class DynamicInvokableContext implements InvokableContext {
         ClassLoader invocationCL = switchLoader(this.ejb3Data.getBeanClassLoader());
         try {
             //if (context != null)
-            setupSecurity(si,context);
+            setupSecurity(si, context);
             final InterceptorContext customContext = createInterceptorContext(si);
-            final ComponentView view = viewInjectedValue.getValue();
-            final Object returnValue = view.invoke(customContext);
+            final Object returnValue = transactionalInvokation(si, customContext);
             return new InvocationResponse(returnValue);
         } finally {
             switchLoader(invocationCL);
@@ -138,15 +139,14 @@ public class DynamicInvokableContext implements InvokableContext {
         }
     }
 
-    protected InterceptorContext createInterceptorContext(final MethodInvocation si) throws NamingException{
+    protected InterceptorContext createInterceptorContext(final MethodInvocation si) throws NamingException {
         final InitialContext ic = new InitialContext();
         final SerializableMethod invokedMethod = (SerializableMethod) si.getMetaData(
                 SessionSpecRemotingMetadata.TAG_SESSION_INVOCATION, SessionSpecRemotingMetadata.KEY_INVOKED_METHOD);
         final ComponentView view = viewInjectedValue.getValue();
         final InterceptorContext customContext = new InterceptorContext();
         // Just a copy paste: TODO: this is not very efficient
-        final Method method = view.getMethod(invokedMethod.toMethod().getName(),
-                DescriptorUtils.methodDescriptor(invokedMethod.toMethod()));
+        final Method method = view.getMethod(invokedMethod.toMethod().getName(), DescriptorUtils.methodDescriptor(invokedMethod.toMethod()));
         customContext.setMethod(method);
         customContext.setParameters(si.getArguments());
         customContext.setTarget(ic.lookup(ejb3Data.getLocalASBinding()));
@@ -155,12 +155,42 @@ public class DynamicInvokableContext implements InvokableContext {
         final EJBComponent ejbComponent = ejb.getEjbComponent();
         customContext.putPrivateData(ComponentView.class, view);
         customContext.putPrivateData(Component.class, ejbComponent);
-        // TODO JTA TX
         return customContext;
     }
 
+    public Object transactionalInvokation(final MethodInvocation invocation, final InterceptorContext customContext) throws Throwable {
+        TransactionManager tm = ((EJBComponent) viewInjectedValue.getValue().getComponent()).getTransactionManager();
+        Object tpc = invocation.getMetaData(ClientTxPropagationInterceptor.TRANSACTION_PROPAGATION_CONTEXT,
+                ClientTxPropagationInterceptor.TRANSACTION_PROPAGATION_CONTEXT);
+        if (tpc != null) {
+            Transaction tx = tm.getTransaction();
+            if (tx != null) {
+                throw new RuntimeException("cannot import a transaction context when a transaction is already associated with the thread");
+            }
+            Transaction importedTx = importTPC(tpc);
+            tm.resume(importedTx);
+            try {
+                return doRealInvocation(customContext);
+            } finally {
+                tm.suspend();
+            }
+        } else {
+            return doRealInvocation(customContext);
+        }
+    }
+
+    private Object doRealInvocation(final InterceptorContext customContext) throws Throwable {
+        final ComponentView view = viewInjectedValue.getValue();
+        return view.invoke(customContext);
+    }
+
+    protected Transaction importTPC(Object tpc) throws NamingException {
+        Uid importedTx = new Uid((String) tpc);
+        return com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple.getTransaction(importedTx);
+    }
+
     protected EjbDeploymentInformation findBean() {
-        if(this.info!=null){
+        if (this.info != null) {
             return this.info;
         }
         final ModuleDeployment module = deploymentRepositoryInjectedValue.getValue().getModules().get(new DeploymentModuleIdentifier(this.applicationName, this.moduleName, this.distinctName));

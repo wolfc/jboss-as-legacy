@@ -22,14 +22,11 @@
 
 package org.jboss.legacy.ejb3.registrar.dynamic;
 
-import static org.jboss.as.ejb3.EjbMessages.MESSAGES;
-
 import java.util.Hashtable;
 import java.util.UUID;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
+import javax.transaction.TransactionManager;
 import org.jboss.aop.Advisor;
 import org.jboss.aop.AspectManager;
 import org.jboss.aop.ClassAdvisor;
@@ -38,15 +35,14 @@ import org.jboss.as.core.security.ServerSecurityManager;
 import org.jboss.as.ee.component.ComponentView;
 import org.jboss.as.ee.component.EEModuleDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
-import org.jboss.as.ejb3.deployment.DeploymentModuleIdentifier;
 import org.jboss.as.ejb3.deployment.DeploymentRepository;
-import org.jboss.as.ejb3.deployment.EjbDeploymentInformation;
-import org.jboss.as.ejb3.deployment.ModuleDeployment;
 import org.jboss.ejb3.common.metadata.MetadataUtil;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
@@ -57,8 +53,6 @@ import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
 
 /**
  * @author baranowb
@@ -71,6 +65,7 @@ public abstract class DynamicInvocationService {
 
     protected static final ServiceName SERVICE_NAME_BASE = ServiceName.of("jboss", "legacy");
     protected final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
+    protected final InjectedValue<TransactionManager> transactionManagerInjectedValue = new InjectedValue<TransactionManager>();
     protected final InjectedValue<EJB3Registrar> ejb3RegistrarInjectedValue = new InjectedValue<EJB3Registrar>();
     protected final InjectedValue<DeploymentRepository> deploymentRepositoryInjectedValue = new InjectedValue<DeploymentRepository>();
     protected final InjectedValue<ComponentView> viewInjectedValue = new InjectedValue<ComponentView>();
@@ -108,6 +103,10 @@ public abstract class DynamicInvocationService {
         } catch (NamingException e) {
             e.printStackTrace();
         }
+    }
+
+    public InjectedValue<TransactionManager> getTransactionManagerInjectedValue() {
+        return transactionManagerInjectedValue;
     }
 
     public InjectedValue<ServerSecurityManager> getServerSecurityManagerInjectedValue() {
@@ -230,18 +229,6 @@ public abstract class DynamicInvocationService {
         return (JBossSessionBeanMetaData) this.metadata;
     }
 
-    // protected EjbDeploymentInformation findBean() {
-    // final ModuleDeployment module = deploymentRepositoryInjectedValue.getValue().getModules().get(new
-    // DeploymentModuleIdentifier(this.applicationName, this.moduleName, this.distinctName));
-    // if (module == null) {
-    // throw MESSAGES.unknownDeployment(this.applicationName, this.moduleName, this.distinctName);
-    // }
-    // final EjbDeploymentInformation ejbInfo = module.getEjbs().get(this.componentName);
-    // if (ejbInfo == null) {
-    // throw MESSAGES.ejbNotFoundInDeployment(this.componentName, this.applicationName, this.moduleName, this.distinctName);
-    // }
-    // return ejbInfo;
-    // }
     public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
             final EJBComponentDescription ejbComponentDescription) {
         // TODO: what about ear/war/jar/ejb ?

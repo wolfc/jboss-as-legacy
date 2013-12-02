@@ -38,8 +38,8 @@ import org.jnp.server.SingletonNamingServer;
  */
 public class NamingStoreWrapper implements Naming {
 
-    private SingletonNamingServer singletonNamingServer;
-    private NamingStore namingStore;
+    private final SingletonNamingServer singletonNamingServer;
+    private final NamingStore namingStore;
 
     public NamingStoreWrapper(ServiceBasedNamingStore namingStore) throws NamingException {
         this.namingStore = namingStore;

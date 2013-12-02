@@ -39,8 +39,8 @@
         <version.jboss.as>7.3.0.Final-redhat-SNAPSHOT</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
-	<jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
-        <legacy.jboss.version>5.1.0.GA</legacy.jboss.version>
+        <jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
+        <legacy.jboss.version>5.3.0-SNAPSHOT</legacy.jboss.version>
     </properties>
 
     <modules>
@@ -48,6 +48,7 @@
         <module>ejb3</module>
         <module>ejb3-bridge</module>
         <module>clustered</module>
+        <module>tx</module>
     </modules>
 
     <dependencies>
@@ -60,15 +61,6 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
-            <!--
-                <dependency>
-                <groupId>org.jboss.as</groupId>
-                        <artifactId>jboss-as-parent</artifactId>
-                        <version>${version.jboss.as}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            -->
             <dependency>
                 <groupId>org.jboss.ejb3.bom</groupId>
                 <artifactId>bom-eap5</artifactId>
@@ -115,10 +107,10 @@
                 </exclusions>
             </dependency>
             <dependency>
-	            <groupId>jboss</groupId>
-	            <artifactId>jbosssx-client</artifactId>
-	            <version>4.2.2.GA</version>
-        	</dependency>
+                <groupId>jboss</groupId>
+                <artifactId>jbosssx-client</artifactId>
+                <version>4.2.2.GA</version>
+            </dependency>
             <dependency>
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jbosssx</artifactId>
@@ -145,10 +137,10 @@
                 <version>2.5.4.SP4</version>
             </dependency>
             <dependency>
-        		<groupId>org.jboss.javaee</groupId>
-        		<artifactId>jboss-jacc-api-1.1_spec</artifactId>
-        		<version>5.0.2.GA</version>
-      		</dependency>
+                <groupId>org.jboss.javaee</groupId>
+                <artifactId>jboss-jacc-api-1.1_spec</artifactId>
+                <version>5.0.2.GA</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

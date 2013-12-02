@@ -20,5 +20,6 @@
         <module name="org.jboss.as.clustering.infinispan"/>
         <module name="org.jboss.as.clustering.api"/>
         <module name="org.jboss.invocation"/>
+        <module name="org.jboss.as.transactions"/>
     </dependencies>
 </module>

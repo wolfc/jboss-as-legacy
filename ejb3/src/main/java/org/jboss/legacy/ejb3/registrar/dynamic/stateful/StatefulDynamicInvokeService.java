@@ -23,9 +23,7 @@
 package org.jboss.legacy.ejb3.registrar.dynamic.stateful;
 
 import java.io.Serializable;
-
 import javax.naming.NamingException;
-
 import org.jboss.as.ee.component.Component;
 import org.jboss.as.ee.component.EEModuleDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
@@ -36,7 +34,6 @@ import org.jboss.ejb3.proxy.spi.container.StatefulSessionFactory;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
 import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvocationService;
-import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.value.InjectedValue;
@@ -66,6 +63,7 @@ public class StatefulDynamicInvokeService extends DynamicInvocationService imple
                 super.distinctName, super.componentName);
     }
 
+    @Override
     protected void createLegacyBinding() throws NamingException {
         super.createLegacyBinding();
         final EJB3Registrar value = this.ejb3RegistrarInjectedValue.getValue();

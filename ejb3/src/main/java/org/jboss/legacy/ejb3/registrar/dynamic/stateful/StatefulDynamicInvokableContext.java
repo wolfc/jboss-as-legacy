@@ -23,7 +23,6 @@
 package org.jboss.legacy.ejb3.registrar.dynamic.stateful;
 
 import javax.naming.NamingException;
-
 import org.jboss.aop.joinpoint.MethodInvocation;
 import org.jboss.as.core.security.ServerSecurityManager;
 import org.jboss.as.ee.component.Component;
@@ -50,8 +49,8 @@ public class StatefulDynamicInvokableContext extends DynamicInvokableContext {
             InjectedValue<DeploymentRepository> deploymentRepositoryInjectedValue,
             InjectedValue<ComponentView> viewInjectedValue, String applicationName, String moduleName, String distinctName,
             String componentName) {
-        super(ejb3Data, serverSecurityManagerInjectedValue, ejb3RegistrarInjectedValue, deploymentRepositoryInjectedValue,
-                viewInjectedValue, applicationName, moduleName, distinctName, componentName);
+        super(ejb3Data, serverSecurityManagerInjectedValue, ejb3RegistrarInjectedValue,
+                deploymentRepositoryInjectedValue, viewInjectedValue, applicationName, moduleName, distinctName, componentName);
         this.componentCreateServiceInjectedValue = componentCreateServiceInjectedValue;
     }
 

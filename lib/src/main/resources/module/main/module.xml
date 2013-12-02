@@ -10,17 +10,10 @@
         <resource-root path="lib/hibernate-jpa-2.0-api.jar"/>
         <resource-root path="lib/jboss-ejb3-ext-api.jar"/>
         <resource-root path="lib/jboss-ejb-api_3.1_spec.jar"/>
-        <resource-root path="lib/jboss-integration.jar"/>
         <resource-root path="lib/jboss-logging-processor.jar"/>
-        <!--
-        <resource-root path="lib/jboss-metadata-ejb.jar"/>
-        -->
         <resource-root path="lib/jbosssx.jar"/>
         <resource-root path="lib/jboss-classfilewriter.jar"/>
         <resource-root path="lib/jboss-ejb3-proxy-impl.jar"/>
-        <!--
-        <resource-root path="lib/jboss-ejb-client.jar"/>
-        -->
         <resource-root path="lib/jboss-marshalling.jar"/>
         <resource-root path="lib/jboss-metadata.jar"/>
         <resource-root path="lib/jbossws-spi.jar"/>
@@ -36,7 +29,6 @@
         <resource-root path="lib/jboss-mdr.jar"/>
         <resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
         <resource-root path="lib/jnpserver.jar"/>
-        <resource-root path="lib/jboss-transaction-aspects.jar"/>
         <resource-root path="lib/jboss-javaee.jar"/>
 
         <!-- HA -->
@@ -51,32 +43,28 @@
         <resource-root path="lib/jboss-as-j2se.jar"/>
         <resource-root path="lib/infinispan-tree.jar"/>
         <resource-root path="lib/jboss-dependency.jar"/>
-        <resource-root path="lib/jboss-as-server.jar"/>
         <resource-root path="lib/jboss-as-security.jar"/>
-        
-        <!-- Cache -->
-        <!--
-        <resource-root path="lib/jbosscache-core.jar"/>
-        <resource-root path="lib/jbosscache-pojo.jar"/>-->
+
+        <!-- TX -->
+        <resource-root path="lib/jboss-as-server.jar"/>
+        <resource-root path="lib/jboss-transaction-aspects.jar" />
     </resources>
 
     <dependencies>
         <module name="javax.api"/>
-        <module name="javax.transaction.api" />
         <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.as.controller"/>
         <module name="org.jboss.as.server"/>
         <module name="org.jboss.modules"/>
         <module name="org.jboss.msc"/>
         <module name="org.infinispan"/>
-        <!--
-        <module name="org.jboss.logging"/>
-        -->
-        <module name="org.jboss.vfs"/>        
+        <module name="org.jboss.vfs"/>
         <module name="org.apache.commons.logging" />
-        <!--
-        <module name="org.jboss.as.ejb3"/>
-        <module name="org.jboss.as.ee"/>
-        -->
+        <!-- TX -->
+        <module name="javax.transaction.api" export="true"/>
+        <module name="org.jboss.as.transactions" export="true"/>
+        <module name="org.jboss.jts.integration"export="true"/>
+        <module name="org.jboss.jts" export="true"/>
+        <module name="org.jboss.jboss-transaction-spi"export="true"/>
     </dependencies>
 </module>

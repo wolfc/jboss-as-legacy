@@ -21,11 +21,9 @@
  */
 package org.jboss.legacy.jnp.connector.simple;
 
-import org.jboss.as.naming.ServiceBasedNamingStore;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.legacy.jnp.connector.JNPServerNamingConnectorService;
 import org.jboss.legacy.jnp.server.JNPServer;
-import org.jboss.legacy.jnp.server.simple.SingleServerService;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;

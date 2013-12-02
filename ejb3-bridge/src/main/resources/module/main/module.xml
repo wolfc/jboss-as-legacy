@@ -16,40 +16,40 @@
         <module name="org.jboss.metadata"/>
         -->
         <module name="org.jboss.legacy.library">
-	        <imports>
-	            <exclude-set>
-	                <path name="EDU"/>
-	                <path name="javax"/>
-	                <path name="javassist"/>
-	                <path name="org.jboss.aop"/>
-	                <path name="org.jboss.aspects"/>
-	                <path name="org.jboss.classfilewriter"/>
-	                <path name="org.jboss.net"/>
-	                <path name="org.jboss.util"/>
-	                <path name="org.jboss.ejb"/>
-	                <path name="org.jboss.ejb3"/>
-	                <path name="org.jboss.classloading"/>
-	                <path name="org.jboss.deployers"/>
-	                <path name="org.jboss.deployment"/>
-	                <path name="org.jboss.iiop"/>
-	                <path name="org.jboss.jca"/>
-	                <path name="org.jboss.profileservice"/>
-	                <path name="org.jboss.tm"/>
-	                <path name="org.jboss.logging"/>
-	                <path name="org.jboss.marshalling"/>
-	                <path name="org.jboss.annotation"/>
-	                <path name="org.jboss.metadata"/>
-	                <path name="org.jboss.metamodel"/>
-	                <path name="org.jboss.security"/>
-	                <path name="org.jboss.remoting"/>
-	                <path name="org.jboss.crypto"/>
-	                <path name="org.jboss.resource"/>
-	                <path name="org.jboss.wsf"/>
-	                <path name="org.jboss.naming"/>
-	                <path name="org.jnp"/>
-	                <path name="gnu"/>
-	            </exclude-set>
-	        </imports>
-	    </module>
+            <imports>
+                <exclude-set>
+                    <path name="EDU"/>
+                    <path name="javax"/>
+                    <path name="javassist"/>
+                    <path name="org.jboss.aop"/>
+                    <path name="org.jboss.aspects"/>
+                    <path name="org.jboss.classfilewriter"/>
+                    <path name="org.jboss.net"/>
+                    <path name="org.jboss.util"/>
+                    <path name="org.jboss.ejb"/>
+                    <path name="org.jboss.ejb3"/>
+                    <path name="org.jboss.classloading"/>
+                    <path name="org.jboss.deployers"/>
+                    <path name="org.jboss.deployment"/>
+                    <path name="org.jboss.iiop"/>
+                    <path name="org.jboss.jca"/>
+                    <path name="org.jboss.profileservice"/>
+                    <path name="org.jboss.tm"/>
+                    <path name="org.jboss.logging"/>
+                    <path name="org.jboss.marshalling"/>
+                    <path name="org.jboss.annotation"/>
+                    <path name="org.jboss.metadata"/>
+                    <path name="org.jboss.metamodel"/>
+                    <path name="org.jboss.security"/>
+                    <path name="org.jboss.remoting"/>
+                    <path name="org.jboss.crypto"/>
+                    <path name="org.jboss.resource"/>
+                    <path name="org.jboss.wsf"/>
+                    <path name="org.jboss.naming"/>
+                    <path name="org.jnp"/>
+                    <path name="gnu"/>
+                </exclude-set>
+            </imports>
+        </module>
     </dependencies>
 </module>
