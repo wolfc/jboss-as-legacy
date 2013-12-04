@@ -33,6 +33,7 @@ import org.jboss.as.ee.component.ViewDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
 import org.jboss.as.ejb3.component.EJBViewDescription;
 import org.jboss.as.ejb3.component.MethodIntf;
+import org.jboss.as.ejb3.component.messagedriven.MessageDrivenComponentDescription;
 import org.jboss.as.ejb3.component.session.SessionBeanComponentDescription;
 import org.jboss.as.ejb3.component.session.SessionBeanComponentDescription.SessionBeanType;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
@@ -44,40 +45,45 @@ import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.value.InjectedValue;
 import org.jboss.msc.value.Values;
+
 /**
  * Processor to hook up EJB with nice JNP/AOP binding.
+ * 
  * @author baranowb
  */
 public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
 
     public static final EJB3BridgeDeploymentProcessor INSTANCE = new EJB3BridgeDeploymentProcessor();
+
     @Override
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
-        final ClassLoader moduleClassLoader = this.getClass().getClassLoader();
         if (!EjbDeploymentMarker.isEjbDeployment(deploymentUnit)) {
             return;
         }
-//        // for each remote interface we rock
-//        final EjbJarMetaData ejbMetaData = deploymentUnit.getAttachment(EjbDeploymentAttachmentKeys.EJB_JAR_METADATA);
-//        if (ejbMetaData != null) {
-//            EnterpriseBeansMetaData data = ejbMetaData.getEnterpriseBeans();
-//            if (data != null) {
-//                Iterator<AbstractEnterpriseBeanMetaData> it = data.iterator();
-//                while (it.hasNext()) {
-//                    EnterpriseBeanMetaData ebmd = it.next();
-//                    new DeploymentUnitProcessingException("NYI").printStackTrace();
-//                }
-//            } else {
-//                System.err.println("METADATA2 IS NULL[Bridge]!");
-//            }
-//        } else {
-//            System.err.println("METADATA IS NULL[Bridge]!");
-//        }
+        // // for each remote interface we rock
+        // final EjbJarMetaData ejbMetaData = deploymentUnit.getAttachment(EjbDeploymentAttachmentKeys.EJB_JAR_METADATA);
+        // if (ejbMetaData != null) {
+        // EnterpriseBeansMetaData data = ejbMetaData.getEnterpriseBeans();
+        // if (data != null) {
+        // Iterator<AbstractEnterpriseBeanMetaData> it = data.iterator();
+        // while (it.hasNext()) {
+        // EnterpriseBeanMetaData ebmd = it.next();
+        // new DeploymentUnitProcessingException("NYI").printStackTrace();
+        // }
+        // } else {
+        // System.err.println("METADATA2 IS NULL[Bridge]!");
+        // }
+        // } else {
+        // System.err.println("METADATA IS NULL[Bridge]!");
+        // }
         final EEModuleDescription moduleDescription = deploymentUnit.getAttachment(Attachments.EE_MODULE_DESCRIPTION);
         if (moduleDescription != null) {
 
             for (final ComponentDescription componentDescription : moduleDescription.getComponentDescriptions()) {
+                if(componentDescription instanceof MessageDrivenComponentDescription){
+                    continue;
+                }
                 if (componentDescription instanceof EJBComponentDescription) {
                     try {
                         final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
@@ -85,21 +91,20 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
+
                                 viewClassLoader.setValue(Values.immediateValue(configuration.getModuleClassLoader()));
                                 final SessionBeanComponentDescription sessionBeanComponentDescription = (SessionBeanComponentDescription) description;
-                                final EJBViewDescription remoteView = ejbComponentDescription.getEjbRemoteView();
 
                                 Set<ViewDescription> views = ejbComponentDescription.getViews();
                                 for (ViewDescription vd : views) {
                                     final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
-                                    if (viewType == MethodIntf.REMOTE /*|| viewType == MethodIntf.HOME*/) {
+                                    if (viewType == MethodIntf.REMOTE /* || viewType == MethodIntf.HOME */) {
                                         final ViewDescription viewDescription = vd;
                                         final String globalBinding = getGlobalBinding(viewDescription.getBindingNames());
-                                        deploymentUnit.putAttachment(EJBDataProxy.ATTACHMENT_KEY, new EJBDataProxy(){
+                                        deploymentUnit.putAttachment(EJBDataProxy.ATTACHMENT_KEY, new EJBDataProxy() {
 
                                             @Override
                                             public String getName() {
-                                                // TODO Auto-generated method stub
                                                 return ejbComponentDescription.getComponentName();
                                             }
 
@@ -131,8 +136,30 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                             @Override
                                             public ServiceName getViewServiceName() {
                                                 return viewDescription.getServiceName();
-                                            }});
-                                        //break from loop
+                                            }
+
+                                            @Override
+                                            public String getDeploymentName() {
+                                                return deploymentUnit.getName();
+                                            }
+
+                                            @Override
+                                            public String getDeploymentScopeBaseName() {
+                                                if (deploymentUnit.getParent() != null) {
+                                                    return stripExtension(deploymentUnit.getParent().getName());
+                                                }
+                                                return getDeploymentName();
+                                            }
+
+                                            String stripExtension(String name) {
+                                                int index = name.lastIndexOf('.');
+                                                if (index > 0) {
+                                                    name = name.substring(0, index - 1);
+                                                }
+                                                return name;
+                                            }
+                                        });
+                                        // break from loop
                                         break;
                                     }
                                 }
@@ -151,9 +178,9 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
 
     }
 
-    private String getGlobalBinding(Set<String> bindings){
-        for(String binding:bindings){
-            if(binding.startsWith("java:global") && binding.contains("!")){
+    private String getGlobalBinding(Set<String> bindings) {
+        for (String binding : bindings) {
+            if (binding.startsWith("java:global") && binding.contains("!")) {
                 return binding;
             }
         }
