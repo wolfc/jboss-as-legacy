@@ -154,7 +154,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                             String stripExtension(String name) {
                                                 int index = name.lastIndexOf('.');
                                                 if (index > 0) {
-                                                    name = name.substring(0, index - 1);
+                                                    name = name.substring(0, index);
                                                 }
                                                 return name;
                                             }
