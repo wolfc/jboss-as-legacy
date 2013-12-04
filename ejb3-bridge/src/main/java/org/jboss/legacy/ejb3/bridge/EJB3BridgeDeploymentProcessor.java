@@ -33,6 +33,7 @@ import org.jboss.as.ee.component.ViewDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
 import org.jboss.as.ejb3.component.EJBViewDescription;
 import org.jboss.as.ejb3.component.MethodIntf;
+import org.jboss.as.ejb3.component.messagedriven.MessageDrivenComponentDescription;
 import org.jboss.as.ejb3.component.session.SessionBeanComponentDescription;
 import org.jboss.as.ejb3.component.session.SessionBeanComponentDescription.SessionBeanType;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
@@ -80,6 +81,9 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
         if (moduleDescription != null) {
 
             for (final ComponentDescription componentDescription : moduleDescription.getComponentDescriptions()) {
+                if(componentDescription instanceof MessageDrivenComponentDescription){
+                    continue;
+                }
                 if (componentDescription instanceof EJBComponentDescription) {
                     try {
                         final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
@@ -87,6 +91,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
+
                                 viewClassLoader.setValue(Values.immediateValue(configuration.getModuleClassLoader()));
                                 final SessionBeanComponentDescription sessionBeanComponentDescription = (SessionBeanComponentDescription) description;
 
