@@ -33,7 +33,7 @@ import org.jboss.msc.service.ServiceName;
  * @author baranowb
  */
 public interface EJBDataProxy {
-
+    //TODO: add more if need be.
     AttachmentKey<EJBDataProxy> ATTACHMENT_KEY = AttachmentKey.create(EJBDataProxy.class);
 
     String getName();
@@ -49,5 +49,8 @@ public interface EJBDataProxy {
     ServiceName getViewServiceName();
 
     String getLocalASBinding();
-    //TODO: add more if need be.
+
+    String getDeploymentName();
+
+    String getDeploymentScopeBaseName();
 }

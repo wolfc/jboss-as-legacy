@@ -50,6 +50,7 @@ import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
+import org.jboss.metadata.ejb.jboss.jndipolicy.spi.DeploymentSummary;
 import org.jboss.metadata.ejb.spec.BusinessRemotesMetaData;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
@@ -205,8 +206,14 @@ public abstract class DynamicInvocationService {
         if (this.metadata != null) {
             return (JBossSessionBeanMetaData) metadata;
         }
-        // TODO: deployment summary for EAR scope name
+
         final JBossMetaData jarMetaData = new JBossMetaData();
+        DeploymentSummary deploymentSumary = new DeploymentSummary();
+        deploymentSumary.setDeploymentName(data.getDeploymentName());
+        if(data.getDeploymentScopeBaseName() != null)
+            deploymentSumary.setDeploymentScopeBaseName(data.getDeploymentScopeBaseName());
+        //TODO: deploymentSummary.packagingType && deploymentSummary.loader 
+        jarMetaData.setDeploymentSummary(deploymentSumary);
         jarMetaData.setEjbVersion(data.getEJBVersion());
         final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
         jarMetaData.setEnterpriseBeans(enterpriseBeansMetaData);

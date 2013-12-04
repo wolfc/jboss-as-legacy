@@ -471,6 +471,14 @@
                   					<outputDirectory>${directory.dependencies}</outputDirectory>
                   					<destFileName>jboss-javaee.jar</destFileName>
                 				</artifactItem>
+                				<artifactItem>
+									<groupId>org.jboss.jbossas</groupId>
+            						<artifactId>jboss-as-security</artifactId>
+                  					<type>jar</type>
+                  					<overWrite>true</overWrite>
+                  					<outputDirectory>${directory.dependencies}</outputDirectory>
+                  					<destFileName>jboss-as-security.jar</destFileName>
+                				</artifactItem>
                 				
                                                 <!--<artifactItem>
                                                     <groupId>org.jboss.cache</groupId>
@@ -692,7 +700,7 @@
             <groupId>org.jboss.ejb3</groupId>
             <artifactId>jboss-ejb3-ext-api</artifactId>
         </dependency>
-
+  
         <dependency>
             <groupId>org.jboss.marshalling</groupId>
             <artifactId>jboss-marshalling</artifactId>
@@ -857,7 +865,11 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
-
+		<dependency>
+            <groupId>org.jboss.jbossas</groupId>
+            <artifactId>jboss-as-security</artifactId>
+            <version>${legacy.jboss.version}</version>
+        </dependency>
         <!-- HA -->
         <dependency>
             <groupId>org.jboss.jbossas</groupId>

@@ -52,6 +52,8 @@
         <resource-root path="lib/infinispan-tree.jar"/>
         <resource-root path="lib/jboss-dependency.jar"/>
         <resource-root path="lib/jboss-as-server.jar"/>
+        <resource-root path="lib/jboss-as-security.jar"/>
+        
         <!-- Cache -->
         <!--
         <resource-root path="lib/jbosscache-core.jar"/>
