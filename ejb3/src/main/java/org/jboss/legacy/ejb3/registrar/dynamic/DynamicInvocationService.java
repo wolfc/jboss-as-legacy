@@ -245,7 +245,11 @@ public abstract class DynamicInvocationService {
     public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
             final EJBComponentDescription ejbComponentDescription) {
         // TODO: what about ear/war/jar/ejb ?
-        return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
-                moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        if (moduleDescription.getEarApplicationName() == null) {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        } else {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
+                    moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        }
     }
 }
