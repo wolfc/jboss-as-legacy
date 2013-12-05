@@ -1,6 +1,6 @@
-<module xmlns="urn:jboss:module:1.0" name="org.jboss.legacy.ejb3">
+<module xmlns="urn:jboss:module:1.0" name="org.jboss.legacy.tx">
     <resources>
-        <resource-root path="jboss-as-legacy-ejb3.jar"/>
+        <resource-root path="jboss-as-legacy-tx.jar"/>
     </resources>
 
     <dependencies>
@@ -11,14 +11,10 @@
         <module name="org.jboss.modules"/>
         <module name="org.jboss.msc"/>
         <module name="org.jboss.vfs"/>
+        <module name="org.jboss.as.naming"/>
+        <module name="org.jboss.as.network"/>
+        <module name="org.jboss.invocation"/>
         <module name="org.jboss.legacy.library"/>
         <module name="org.jboss.legacy.jnp"/>
-        <module name="org.jboss.as.network" />
-        <module name="org.jboss.as.ejb3"/>
-        <module name="org.jboss.as.ee"/>
-        <module name="org.jboss.as.core-security"/>
-        <module name="org.jboss.as.security"/>
-        <module name="org.jboss.invocation"/>
-        <module name="org.jboss.ejb-client"/>
     </dependencies>
 </module>

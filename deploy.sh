@@ -13,6 +13,8 @@ cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3-bridge/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -Rf tx/target/module/org $JBOSS_HOME/modules/system/layers/base/
+
 
 echo "Edit configuration file - for instance $JBOSS_HOME/standalone/configuration/standalone.xml"
 
@@ -55,3 +57,19 @@ echo
 echo "2. Add subsystem definition(no args == default IP/port)"
 echo
 echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3-bridge:1.0\"/>"
+echo
+echo
+echo "To enable User-transaction:"
+echo "1 Add extension definition in <extensions>."
+echo
+echo "<extension module=\"org.jboss.legacy.tx\"/>"
+echo
+echo
+echo "2. Add subsystem definition"
+echo
+echo "<subsystem xmlns=\"urn:jboss:domain:legacy-tx:1.0\">"
+echo "    <txremoting socket-binding=\"legacy-remoting\"/>"
+echo "</subsystem>"
+echo
+echo "3. Define a socket-binding for the remoting using the 'legacy-remoting' name"
+echo "<socket-binding name=\"legacy-remoting\" port=\"5432\"/>"

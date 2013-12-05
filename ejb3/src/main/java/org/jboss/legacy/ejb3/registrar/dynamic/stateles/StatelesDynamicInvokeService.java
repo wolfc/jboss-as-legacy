@@ -35,8 +35,9 @@ import org.jboss.msc.service.Service;
  */
 public class StatelesDynamicInvokeService extends DynamicInvocationService implements Service<DynamicInvocationService> {
 
-    public StatelesDynamicInvokeService(final EJBDataProxy ejb3Data, final EEModuleDescription moduleDescription, final EJBComponentDescription ejbComponentDescription) {
-        super(ejb3Data,moduleDescription,ejbComponentDescription);
+    public StatelesDynamicInvokeService(final EJBDataProxy ejb3Data, final EEModuleDescription moduleDescription,
+            final EJBComponentDescription ejbComponentDescription) {
+        super(ejb3Data, moduleDescription, ejbComponentDescription);
     }
 
     @Override
@@ -46,8 +47,7 @@ public class StatelesDynamicInvokeService extends DynamicInvocationService imple
 
     @Override
     protected InvokableContext createInvokableContext() {
-        return new DynamicInvokableContext(
-                super.ejb3Data, super.serverSecurityManagerInjectedValue, super.ejb3RegistrarInjectedValue,
+        return new DynamicInvokableContext(super.ejb3Data, super.serverSecurityManagerInjectedValue, super.ejb3RegistrarInjectedValue,
                 super.deploymentRepositoryInjectedValue, super.viewInjectedValue, super.applicationName, super.moduleName,
                 super.distinctName, super.componentName);
     }
