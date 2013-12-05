@@ -21,33 +21,30 @@
  */
 package org.jboss.legacy.jnp;
 
+import java.util.EnumSet;
+import java.util.List;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
+import org.jboss.as.controller.operations.common.Util;
 import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
 import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
 import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedAttribute;
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
-
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-
-import org.jboss.as.controller.operations.common.Util;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerResourceDefinition;
+import org.jboss.legacy.jnp.remoting.RemotingModel;
+import org.jboss.legacy.jnp.remoting.RemotingResourceDefinition;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 import org.jboss.legacy.jnp.server.JNPServerResourceDefinition;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 
-/**
- */
 public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
 
     public static final JNPSubsystem10Parser INSTANCE = new JNPSubsystem10Parser();
@@ -77,6 +74,12 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         final ModelNode distributedTreManagerServiceAddOperation = Util.createAddOperation();
         distributedTreManagerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
                 .add(DistributedTreeManagerModel.SERVICE, DistributedTreeManagerModel.SERVICE_NAME);
+
+        final ModelNode remotingServiceAddOperation = Util.createAddOperation();
+        remotingServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
+                .add(RemotingModel.SERVICE, RemotingModel.SERVICE_NAME);
+        result.add(remotingServiceAddOperation);
+
         // elements
         final EnumSet<JNPSubsystemXMLElement> encountered = EnumSet.noneOf(JNPSubsystemXMLElement.class);
         while (xmlExtendedStreamReader.hasNext() && xmlExtendedStreamReader.nextTag() != XMLStreamConstants.END_ELEMENT) {
@@ -99,10 +102,12 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
                 case JNP_SERVER:
                     this.parseJNPServer(xmlExtendedStreamReader, jnpServerServiceAddOperation);
                     break;
+                case REMOTING:
+                    this.parseRemoting(xmlExtendedStreamReader, remotingServiceAddOperation);
+                    break;
                 case UNKNOWN:
                 default:
                     throw unexpectedElement(xmlExtendedStreamReader);
-
             }
 
         }
@@ -144,5 +149,23 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         }
         requireNoContent(xmlExtendedStreamReader);
         return isHa;
+    }
+
+    private void parseRemoting(XMLExtendedStreamReader xmlExtendedStreamReader, ModelNode remotingServiceAddOperation) throws XMLStreamException {
+        for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
+            requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
+            final String value = xmlExtendedStreamReader.getAttributeValue(i);
+            switch (JNPSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
+                case SOCKET_BINDING:
+                    RemotingResourceDefinition.SOCKET_BINDING.parseAndSetParameter(value, remotingServiceAddOperation,
+                            xmlExtendedStreamReader);
+                    break;
+                case UNKNOWN:
+                default: {
+                    throw unexpectedAttribute(xmlExtendedStreamReader, i);
+                }
+            }
+        }
+        requireNoContent(xmlExtendedStreamReader);
     }
 }

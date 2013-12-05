@@ -22,15 +22,21 @@ echo "To enable JNP:"
 echo "1 Add extension definition in <extensions>."
 echo "<extension module=\"org.jboss.legacy.jnp\"/>"
 echo
-echo "2. Add sdubsystem definition(no args == default IP/port)"
+echo "2. Add sdubsystem definition"
 echo "<subsystem xmlns=\"urn:jboss:domain:legacy-jnp:1.0\">"
 echo "    <jnp-server/>"
-echo "    <jnp-connector socket-binding=\"jnp\" />"
+echo "    <jnp-connector socket-binding=\"jnp\" rmi-socket-binding=\"rmi-jnp\" />"
+echo "    <remoting socket-binding=\"legacy-remoting\"/>"
 echo "</subsystem>"
 echo 
 echo "3. Define a socket-binding for the JNP Server using the 'jnp' name"
-echo "<socket-binding name=\"jnp\" port=\"1099\"/>"
+echo "<socket-binding name=\"jnp\" port=\"5599\"/>"
 echo
+echo "4. You can also define a RMI binding socket using the 'rmi-jnp' name (Optionnal if you don't have declared it in tht jnp-connector)"
+echo "<socket-binding name=\"rmi-jnp\" port=\"1099\"/>"
+echo
+echo "5. Define a socket-binding for the remoting using the 'legacy-remoting' name"
+echo "<socket-binding name=\"legacy-remoting\" port=\"4873\"/>"
 echo
 echo "To enable EJB3:"
 echo "1 Add extension definition in <extensions>."
@@ -40,19 +46,13 @@ echo
 echo "2. Add subsystem definition(no args == default IP/port)"
 echo
 echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3:1.0\">"
-echo "    <remoting socket-binding=\"remoting2\"/>"
 echo "    <ejb3-registrar/>"
 echo "</subsystem>"
-echo
-echo "3. Define a socket-binding for the remoting using the 'remoting2' name"
-echo "<socket-binding name=\"remoting2\" port=\"4873\"/>"
-echo
 echo
 echo "To enable EJB3-Bridge:"
 echo "1 Add extension definition in <extensions>."
 echo
 echo "<extension module=\"org.jboss.legacy.ejb3.bridge\"/>"
-echo
 echo
 echo "2. Add subsystem definition(no args == default IP/port)"
 echo
@@ -64,12 +64,7 @@ echo "1 Add extension definition in <extensions>."
 echo
 echo "<extension module=\"org.jboss.legacy.tx\"/>"
 echo
-echo
 echo "2. Add subsystem definition"
 echo
-echo "<subsystem xmlns=\"urn:jboss:domain:legacy-tx:1.0\">"
-echo "    <txremoting socket-binding=\"legacy-remoting\"/>"
-echo "</subsystem>"
+echo "<subsystem xmlns=\"urn:jboss:domain:legacy-tx:1.0\"/>"
 echo
-echo "3. Define a socket-binding for the remoting using the 'legacy-remoting' name"
-echo "<socket-binding name=\"legacy-remoting\" port=\"5432\"/>"

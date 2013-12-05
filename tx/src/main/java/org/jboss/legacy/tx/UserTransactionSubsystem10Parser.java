@@ -21,21 +21,14 @@
  */
 package org.jboss.legacy.tx;
 
-import java.util.EnumSet;
 import java.util.List;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
 import org.jboss.as.controller.operations.common.Util;
+import org.jboss.as.controller.parsing.ParseUtils;
 import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
-import static org.jboss.as.controller.parsing.ParseUtils.unexpectedAttribute;
-import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
 import org.jboss.dmr.ModelNode;
-import org.jboss.legacy.tx.remoting.RemotingConnectorModel;
-import org.jboss.legacy.tx.remoting.RemotingResourceDefinition;
 import org.jboss.legacy.tx.txsession.UserSessionTransactionModel;
 import org.jboss.legacy.tx.usertx.ClientUserTransactionModel;
 import org.jboss.staxmapper.XMLElementReader;
@@ -59,13 +52,6 @@ public class UserTransactionSubsystem10Parser implements XMLElementReader<List<M
         final ModelNode txSubsystemAddOperation = Util.createAddOperation();
         txSubsystemAddOperation.get(OP_ADDR).add(SUBSYSTEM, UserTransactionExtension.SUBSYSTEM_NAME);
         result.add(txSubsystemAddOperation);
-
-
-        final ModelNode remotingConnectorServiceAddOperation = Util.createAddOperation();
-        remotingConnectorServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, UserTransactionExtension.SUBSYSTEM_NAME)
-                .add(RemotingConnectorModel.SERVICE, RemotingConnectorModel.SERVICE_NAME);
-        result.add(remotingConnectorServiceAddOperation);
-
         final ModelNode clientUserTransactionServiceAddOperation = Util.createAddOperation();
         clientUserTransactionServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, UserTransactionExtension.SUBSYSTEM_NAME)
                 .add(ClientUserTransactionModel.SERVICE, ClientUserTransactionModel.SERVICE_NAME);
@@ -75,46 +61,6 @@ public class UserTransactionSubsystem10Parser implements XMLElementReader<List<M
         userSessionTransactionServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, UserTransactionExtension.SUBSYSTEM_NAME)
                 .add(UserSessionTransactionModel.SERVICE, UserSessionTransactionModel.SERVICE_NAME);
         result.add(userSessionTransactionServiceAddOperation);
-        final EnumSet<UserTransactionSubsystemXMLElement> encountered = EnumSet.noneOf(UserTransactionSubsystemXMLElement.class);
-        while (xmlExtendedStreamReader.hasNext() && xmlExtendedStreamReader.nextTag() != XMLStreamConstants.END_ELEMENT) {
-            if (UserTransactionSubsystemNamespace.forUri(xmlExtendedStreamReader.getNamespaceURI()) != UserTransactionSubsystemNamespace.LEGACY_TX_1_0) {
-                throw unexpectedElement(xmlExtendedStreamReader);
-            }
-            final UserTransactionSubsystemXMLElement element = UserTransactionSubsystemXMLElement.forName(xmlExtendedStreamReader
-                    .getLocalName());
-            if (!encountered.add(element)) {
-                throw unexpectedElement(xmlExtendedStreamReader);
-            }
-            switch (element) {
-                case CONNECTOR:
-                    parseInvokerConnector(xmlExtendedStreamReader, remotingConnectorServiceAddOperation);
-                    break;
-                case UNKNOWN:
-                default:
-                    throw unexpectedElement(xmlExtendedStreamReader);
-            }
-        }
-
-    }
-
-    private boolean parseInvokerConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
-            final ModelNode remotingConnectorServiceAddOperation) throws XMLStreamException {
-        boolean isHa = false;
-        for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
-            requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
-            final String value = xmlExtendedStreamReader.getAttributeValue(i);
-            switch (UserTransactionSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
-                case SOCKET_BINDING:
-                    RemotingResourceDefinition.SOCKET_BINDING.parseAndSetParameter(value, remotingConnectorServiceAddOperation,
-                            xmlExtendedStreamReader);
-                    break;
-                case UNKNOWN:
-                default: {
-                    throw unexpectedAttribute(xmlExtendedStreamReader, i);
-                }
-            }
-        }
-        requireNoContent(xmlExtendedStreamReader);
-        return isHa;
+        ParseUtils.requireNoContent(xmlExtendedStreamReader);
     }
 }

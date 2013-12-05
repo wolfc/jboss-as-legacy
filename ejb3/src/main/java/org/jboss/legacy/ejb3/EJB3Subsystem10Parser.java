@@ -21,25 +21,18 @@
  */
 package org.jboss.legacy.ejb3;
 
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
-import static org.jboss.as.controller.parsing.ParseUtils.unexpectedAttribute;
-import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
-
 import java.util.EnumSet;
 import java.util.List;
-
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
 import org.jboss.as.controller.operations.common.Util;
+import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
+import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
+import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarModel;
-import org.jboss.legacy.ejb3.remoting.RemotingModel;
-import org.jboss.legacy.ejb3.remoting.RemotingResourceDefinition;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 
@@ -61,11 +54,6 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
         ejb3SubsystemAddOperation.get(OP_ADDR).add(SUBSYSTEM, EJB3Extension.SUBSYSTEM_NAME);
         result.add(ejb3SubsystemAddOperation);
 
-        final ModelNode remotingServiceAddOperation = Util.createAddOperation();
-        remotingServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, EJB3Extension.SUBSYSTEM_NAME)
-                .add(RemotingModel.SERVICE, RemotingModel.SERVICE_NAME);
-        result.add(remotingServiceAddOperation);
-
         final ModelNode ejb3RegistrarServerServiceAddOperation = Util.createAddOperation();
         ejb3RegistrarServerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, EJB3Extension.SUBSYSTEM_NAME)
                 .add(EJB3RegistrarModel.SERVICE, EJB3RegistrarModel.SERVICE_NAME);
@@ -83,9 +71,6 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
                 throw unexpectedElement(xmlExtendedStreamReader);
             }
             switch (element) {
-                case REMOTING:
-                    this.parseRemoting(xmlExtendedStreamReader, remotingServiceAddOperation);
-                    break;
                 case EJB3_REGISTRAR:
                     this.parseRegistrar(xmlExtendedStreamReader);
                     break;
@@ -101,25 +86,6 @@ public class EJB3Subsystem10Parser implements XMLElementReader<List<ModelNode>> 
 
     private void parseRegistrar(XMLExtendedStreamReader xmlExtendedStreamReader) throws XMLStreamException {
         requireNoAttributes(xmlExtendedStreamReader);
-        requireNoContent(xmlExtendedStreamReader);
-    }
-
-    private void parseRemoting(final XMLExtendedStreamReader xmlExtendedStreamReader,
-            final ModelNode ejb3RemotingServiceAddOperation) throws XMLStreamException {
-        for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
-            requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
-            final String value = xmlExtendedStreamReader.getAttributeValue(i);
-            switch (EJB3SubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
-                case SOCKET_BINDING:
-                    RemotingResourceDefinition.SOCKET_BINDING.parseAndSetParameter(value, ejb3RemotingServiceAddOperation,
-                            xmlExtendedStreamReader);
-                    break;
-                case UNKNOWN:
-                default: {
-                    throw unexpectedAttribute(xmlExtendedStreamReader, i);
-                }
-            }
-        }
         requireNoContent(xmlExtendedStreamReader);
     }
 }

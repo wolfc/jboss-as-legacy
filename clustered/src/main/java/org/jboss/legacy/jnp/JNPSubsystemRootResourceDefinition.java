@@ -27,6 +27,7 @@ import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerResourceDefinition;
+import org.jboss.legacy.jnp.remoting.RemotingResourceDefinition;
 import org.jboss.legacy.jnp.server.JNPServerResourceDefinition;
 
 /**
@@ -47,12 +48,10 @@ public class JNPSubsystemRootResourceDefinition extends SimpleResourceDefinition
     @Override
     public void registerChildren(ManagementResourceRegistration resourceRegistration) {
         super.registerChildren(resourceRegistration);
-
-        // subsystem=legacy-jnp/service=jnp-server
         resourceRegistration.registerSubModel(JNPServerResourceDefinition.INSTANCE);
-        // subsystem=legacy-jnp/service=jnp-connector
         resourceRegistration.registerSubModel(JNPServerConnectorResourceDefinition.INSTANCE);
         resourceRegistration.registerSubModel(DistributedTreeManagerResourceDefinition.INSTANCE);
+        resourceRegistration.registerSubModel(RemotingResourceDefinition.INSTANCE);
     }
 
 }

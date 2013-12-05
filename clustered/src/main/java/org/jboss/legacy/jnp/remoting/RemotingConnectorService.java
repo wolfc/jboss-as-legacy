@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.tx.remoting;
+package org.jboss.legacy.jnp.remoting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,16 +35,16 @@ import org.jboss.remoting.ServerConfiguration;
 import org.jboss.remoting.transport.Connector;
 
 /**
+ * @author baranowb
  *
- * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class RemotingConnectorService implements Service<Connector> {
 
-    private static final String TRANSPORT = "socket";
     private static final String INVOCATION_HANDLER_KEY = "AOP";
     private static final String INVOCATION_HANDLER_CLASS = AOPRemotingInvocationHandler.class.getName();
+    private static final String TRANSPORT = "socket";
 
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingConnectorModel.LEGACY).append(RemotingConnectorModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingModel.LEGACY).append(RemotingModel.SERVICE_NAME);
     private Connector connector;
 
     private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();

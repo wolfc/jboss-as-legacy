@@ -25,15 +25,13 @@ package org.jboss.legacy.ejb3;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.legacy.ejb3.remoting.RemotingModel;
 
 /**
  * @author baranowb
  *
  */
 public enum EJB3SubsystemXMLAttribute {
-    UNKNOWN(null),
-    SOCKET_BINDING(RemotingModel.SOCKET_BINDING);
+    UNKNOWN(null);
 
     private final String name;
 

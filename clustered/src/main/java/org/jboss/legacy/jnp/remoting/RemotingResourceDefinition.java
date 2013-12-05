@@ -19,7 +19,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.tx.remoting;
+
+package org.jboss.legacy.jnp.remoting;
 
 import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ReloadRequiredWriteAttributeHandler;
@@ -29,15 +30,15 @@ import org.jboss.as.controller.SimpleResourceDefinition;
 import org.jboss.as.controller.access.management.SensitiveTargetAccessConstraintDefinition;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import static org.jboss.dmr.ModelType.STRING;
-import org.jboss.legacy.tx.UserTransactionExtension;
+import org.jboss.legacy.jnp.JNPExtension;
+import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 
 /**
- *
- * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
+ * @author baranowb
  */
 public class RemotingResourceDefinition extends SimpleResourceDefinition {
 
-    public static final SimpleAttributeDefinition SOCKET_BINDING = create(RemotingConnectorModel.SOCKET_BINDING, STRING)
+    public static final SimpleAttributeDefinition SOCKET_BINDING = create(JNPServerConnectorModel.SOCKET_BINDING, STRING)
             .setAllowNull(false)
             .setRestartAllServices()
             .addAccessConstraint(SensitiveTargetAccessConstraintDefinition.SOCKET_BINDING_REF)
@@ -46,9 +47,9 @@ public class RemotingResourceDefinition extends SimpleResourceDefinition {
     public static final RemotingResourceDefinition INSTANCE = new RemotingResourceDefinition();
 
     private RemotingResourceDefinition() {
-        super(PathElement.pathElement(RemotingConnectorModel.SERVICE, RemotingConnectorModel.SERVICE_NAME),
-                UserTransactionExtension.getResourceDescriptionResolver(RemotingConnectorModel.SERVICE_NAME),
-                RemotingServiceAddStepHandler.INSTANCE, RemotingServiceRemoveStepHandler.INSTANCE);
+        super(PathElement.pathElement(RemotingModel.SERVICE, RemotingModel.SERVICE_NAME), JNPExtension
+                .getResourceDescriptionResolver(RemotingModel.SERVICE_NAME), RemotingServiceAddStepHandler.INSTANCE,
+                RemotingServiceRemoveStepHandler.INSTANCE);
     }
 
     @Override

@@ -25,7 +25,6 @@ package org.jboss.legacy.ejb3.registrar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
@@ -37,7 +36,7 @@ import org.jboss.as.server.DeploymentProcessorTarget;
 import org.jboss.as.server.deployment.Phase;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.EJB3Extension;
-import org.jboss.legacy.ejb3.remoting.RemotingConnectorService;
+import org.jboss.legacy.jnp.remoting.RemotingConnectorService;
 import org.jboss.legacy.jnp.server.JNPServerService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;

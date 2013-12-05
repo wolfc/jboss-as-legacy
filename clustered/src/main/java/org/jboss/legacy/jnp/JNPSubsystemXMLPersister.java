@@ -22,11 +22,11 @@
 package org.jboss.legacy.jnp;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
+import org.jboss.legacy.jnp.remoting.RemotingModel;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
@@ -92,11 +92,28 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
             xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(DistributedTreeManagerModel.CACHE_REF)
                     .asString());
         }
+
+        if (model.hasDefined(RemotingModel.SERVICE_NAME)) {
+            writeRemoting(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
+
         xmlExtendedStreamWriter.writeEndElement();
     }
 
     private void writeJNPServer(XMLExtendedStreamWriter xmlExtendedStreamWriter) throws XMLStreamException {
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_SERVER.getLocalName());
+        xmlExtendedStreamWriter.writeEndElement();
+    }
+
+    private void writeRemoting(XMLExtendedStreamWriter xmlExtendedStreamWriter,
+            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(RemotingModel.SERVICE_NAME);
+
+        xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.REMOTING.getLocalName());
+        if (model.hasDefined(RemotingModel.SOCKET_BINDING)) {
+            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.SOCKET_BINDING.getLocalName(),
+                    model.get(RemotingModel.SOCKET_BINDING).asString());
+        }
         xmlExtendedStreamWriter.writeEndElement();
     }
 }
