@@ -5,9 +5,9 @@ if [ "x$JBOSS_HOME" = "x" ]; then
     return 1
 fi
 #mvn clean install
-# -Dlegacy.jboss.version=5.1.0.GA ... eap build does not produce artifacts...
+# -Dversion.jboss.legacy=5.1.0.GA ... eap build does not produce artifacts...
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
-mvn clean install -Dlegacy.jboss.version=5.1.0.GA -Dcheckstyle.skip=true
+mvn clean install -Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true
 
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/

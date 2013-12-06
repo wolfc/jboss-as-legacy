@@ -30,6 +30,9 @@ import javax.naming.NamingException;
 import org.jboss.as.naming.NamingStore;
 import org.jboss.as.naming.ServiceBasedNamingStore;
 import org.jnp.interfaces.Naming;
+import org.jnp.interfaces.NamingContext;
+import org.jnp.server.EventMgr;
+import org.jnp.server.NamingServer;
 import org.jnp.server.SingletonNamingServer;
 
 /**
@@ -38,12 +41,14 @@ import org.jnp.server.SingletonNamingServer;
  */
 public class NamingStoreWrapper implements Naming {
 
-    private final SingletonNamingServer singletonNamingServer;
+    //private final SingletonNamingServer singletonNamingServer;
+    private final WickedNaming singletonNamingServer;
     private final NamingStore namingStore;
 
     public NamingStoreWrapper(ServiceBasedNamingStore namingStore) throws NamingException {
         this.namingStore = namingStore;
-        this.singletonNamingServer = new SingletonNamingServer();
+        //this.singletonNamingServer = new SingletonNamingServer();
+        this.singletonNamingServer = new WickedNaming();
     }
 
     @Override
@@ -93,4 +98,54 @@ public class NamingStoreWrapper implements Naming {
         return singletonNamingServer.createSubcontext(name);
     }
 
+    class WickedNaming extends NamingServer {
+
+        public WickedNaming() throws NamingException {
+            NamingContext.setLocal(this);
+        }
+
+        public void destroy() {
+            NamingContext.setLocal(null);
+        }
+
+        public WickedNaming(Name prefix, NamingServer parent, EventMgr eventMgr, SecurityManager secMgr) throws NamingException {
+            super(prefix, parent, eventMgr, secMgr);
+            // TODO Auto-generated constructor stub
+        }
+
+        public WickedNaming(Name prefix, NamingServer parent, EventMgr eventMgr) throws NamingException {
+            super(prefix, parent, eventMgr);
+            // TODO Auto-generated constructor stub
+        }
+
+        public WickedNaming(Name prefix, NamingServer parent) throws NamingException {
+            super(prefix, parent);
+            // TODO Auto-generated constructor stub
+        }
+
+        //override this method and sync it. Utils use this directly, rather than through NamingServer.bind>createSubContext
+        //bind is synchronized, this one isnt, hence error conditions on bind....
+        @Override
+        public synchronized Context createSubcontext(Name name) throws NamingException {
+            //in case of:
+            //createSubCOntext("1/2/3")
+            //createSubContext("1/5")
+            //second call will fail, since there is binding at 1 - NamingServer does not check "instanceof Context ? return (Context) value;"
+            try{
+                return super.createSubcontext(name);
+            } catch (NamingException e) {
+                Object value = super.lookup(name);
+                if(value instanceof Context){
+                    return (Context) value;
+                } else {
+                    throw e;
+                }
+            }
+        }
+
+        @Override
+        protected NamingServer createNamingServer(Name prefix, NamingServer parent) throws NamingException {
+            return new WickedNaming(prefix, parent);
+        }
+    }
 }
