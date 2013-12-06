@@ -23,7 +23,6 @@
 package org.jboss.legacy.ejb3.bridge;
 
 import java.util.Set;
-
 import org.jboss.as.ee.component.Attachments;
 import org.jboss.as.ee.component.ComponentConfiguration;
 import org.jboss.as.ee.component.ComponentConfigurator;
@@ -48,7 +47,7 @@ import org.jboss.msc.value.Values;
 
 /**
  * Processor to hook up EJB with nice JNP/AOP binding.
- * 
+ *
  * @author baranowb
  */
 public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
@@ -61,22 +60,6 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
         if (!EjbDeploymentMarker.isEjbDeployment(deploymentUnit)) {
             return;
         }
-        // // for each remote interface we rock
-        // final EjbJarMetaData ejbMetaData = deploymentUnit.getAttachment(EjbDeploymentAttachmentKeys.EJB_JAR_METADATA);
-        // if (ejbMetaData != null) {
-        // EnterpriseBeansMetaData data = ejbMetaData.getEnterpriseBeans();
-        // if (data != null) {
-        // Iterator<AbstractEnterpriseBeanMetaData> it = data.iterator();
-        // while (it.hasNext()) {
-        // EnterpriseBeanMetaData ebmd = it.next();
-        // new DeploymentUnitProcessingException("NYI").printStackTrace();
-        // }
-        // } else {
-        // System.err.println("METADATA2 IS NULL[Bridge]!");
-        // }
-        // } else {
-        // System.err.println("METADATA IS NULL[Bridge]!");
-        // }
         final EEModuleDescription moduleDescription = deploymentUnit.getAttachment(Attachments.EE_MODULE_DESCRIPTION);
         if (moduleDescription != null) {
 
@@ -89,6 +72,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                         final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
                         final InjectedValue<ClassLoader> viewClassLoader = new InjectedValue<ClassLoader>();
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
+                            @Override
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
 
@@ -98,7 +82,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                 Set<ViewDescription> views = ejbComponentDescription.getViews();
                                 for (ViewDescription vd : views) {
                                     final MethodIntf viewType = ((EJBViewDescription) vd).getMethodIntf();
-                                    if (viewType == MethodIntf.REMOTE /* || viewType == MethodIntf.HOME */) {
+                                    if (viewType == MethodIntf.REMOTE) {
                                         final ViewDescription viewDescription = vd;
                                         final String globalBinding = getGlobalBinding(viewDescription.getBindingNames());
                                         deploymentUnit.putAttachment(EJBDataProxy.ATTACHMENT_KEY, new EJBDataProxy() {

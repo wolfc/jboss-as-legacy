@@ -8,6 +8,7 @@ fi
 # -Dversion.jboss.legacy=5.1.0.GA ... eap build does not produce artifacts...
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
 mvn clean install -Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true
+#mvn clean install 
 
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/

@@ -22,16 +22,11 @@
 
 package org.jboss.legacy.ejb3.registrar.dynamic;
 
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
-
 import java.util.Hashtable;
 import java.util.UUID;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
-
 import org.jboss.aop.Advisor;
 import org.jboss.aop.AspectManager;
 import org.jboss.aop.ClassAdvisor;
@@ -46,6 +41,8 @@ import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
@@ -67,6 +64,17 @@ public abstract class DynamicInvocationService {
     public static final String LEGACY_MD_KEY_CONTEXT = "context";
 
     protected static final ServiceName SERVICE_NAME_BASE = ServiceName.of("jboss", "legacy");
+
+    public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
+            final EJBComponentDescription ejbComponentDescription) {
+        // TODO: what about ear/war/jar/ejb ?
+        if (moduleDescription.getEarApplicationName() == null) {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        } else {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
+                    moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        }
+    }
     protected final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
     protected final InjectedValue<TransactionManager> transactionManagerInjectedValue = new InjectedValue<TransactionManager>();
     protected final InjectedValue<EJB3Registrar> ejb3RegistrarInjectedValue = new InjectedValue<EJB3Registrar>();
@@ -133,11 +141,6 @@ public abstract class DynamicInvocationService {
         return this.serviceName;
     }
 
-    /**
-     * @param data
-     * @param phaseContext
-     * @throws NamingException
-     */
     protected void createLegacyBinding() throws NamingException {
         final JBossSessionBeanMetaData metaData = createMetaData(ejb3Data);
         final String containerName = metaData.getName();
@@ -159,7 +162,6 @@ public abstract class DynamicInvocationService {
                 try {
                     context.close();
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             try {
@@ -213,9 +215,10 @@ public abstract class DynamicInvocationService {
         final JBossMetaData jarMetaData = new JBossMetaData();
         DeploymentSummary deploymentSumary = new DeploymentSummary();
         deploymentSumary.setDeploymentName(data.getDeploymentName());
-        if(data.getDeploymentScopeBaseName() != null)
+        if (data.getDeploymentScopeBaseName() != null) {
             deploymentSumary.setDeploymentScopeBaseName(data.getDeploymentScopeBaseName());
-        //TODO: deploymentSummary.packagingType && deploymentSummary.loader 
+        }
+        //TODO: deploymentSummary.packagingType && deploymentSummary.loader
         jarMetaData.setDeploymentSummary(deploymentSumary);
         jarMetaData.setEjbVersion(data.getEJBVersion());
         final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
@@ -231,16 +234,5 @@ public abstract class DynamicInvocationService {
         MetadataUtil.decorateEjbsWithJndiPolicy(jarMetaData, data.getBeanClassLoader());
         this.metadata = (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
         return (JBossSessionBeanMetaData) this.metadata;
-    }
-
-    public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
-            final EJBComponentDescription ejbComponentDescription) {
-        // TODO: what about ear/war/jar/ejb ?
-        if (moduleDescription.getEarApplicationName() == null) {
-            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
-        } else {
-            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
-                    moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
-        }
     }
 }

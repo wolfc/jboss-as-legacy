@@ -39,8 +39,6 @@
 
 
     <build>
-      <!-- Maven will append the version to the finalName (which is the name
-         given to the generated war, and hence the context root) -->
       <finalName>${project.artifactId}</finalName>
       <plugins>
           <plugin>
@@ -52,7 +50,6 @@
                       <goals>
                           <goal>enforce</goal>
                       </goals>
-
                       <configuration>
                           <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
                           <skip>true</skip>
@@ -100,7 +97,8 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-        	<artifactId>maven-dependency-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
         	<executions>
                     <execution>
                         <id>copy</id>
@@ -158,15 +156,6 @@
                                     <outputDirectory>${directory.dependencies}</outputDirectory>
                                     <destFileName>jboss-ejb3-security.jar</destFileName>
                                 </artifactItem>
-                                <!--
-                                <artifactItem>
-                                    <groupId>org.jboss.integration</groupId>
-                                    <artifactId>jboss-integration</artifactId>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                    <destFileName>jboss-integration.jar</destFileName>
-                                </artifactItem>-->
                                 <artifactItem>
                                     <groupId>oswego-concurrent</groupId>
                                     <artifactId>concurrent</artifactId>
@@ -427,6 +416,7 @@
                                 <artifactItem>
                                     <groupId>org.jboss.jbossas</groupId>
                                     <artifactId>jboss-as-server</artifactId>
+                                    <version>${version.jboss.legacy}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${directory.dependencies}</outputDirectory>
@@ -448,92 +438,38 @@
                                     <outputDirectory>${directory.dependencies}</outputDirectory>
                                     <destFileName>infinispan-tree.jar</destFileName>
                                 </artifactItem>
-								<artifactItem>
-									<groupId>org.jboss.javaee</groupId>
-                					<artifactId>jboss-jacc-api-1.1_spec</artifactId>
-                  					<type>jar</type>
-                  					<overWrite>true</overWrite>
-                  					<outputDirectory>${directory.dependencies}</outputDirectory>
-                  					<destFileName>jboss-jacc-api-1.1_spec.jar</destFileName>
-                				</artifactItem>
-                				<artifactItem>
-									<groupId>org.jboss.ejb3</groupId>
-									<artifactId>jboss-ejb3-core</artifactId>
-                  					<type>jar</type>
-                  					<overWrite>true</overWrite>
-                  					<outputDirectory>${directory.dependencies}</outputDirectory>
-                  					<destFileName>jboss-ejb3-core.jar</destFileName>
-                				</artifactItem>
-                				<artifactItem>
-									<groupId>org.jboss.javaee</groupId>
-            						<artifactId>jboss-javaee</artifactId>
-                  					<type>jar</type>
-                  					<overWrite>true</overWrite>
-                  					<outputDirectory>${directory.dependencies}</outputDirectory>
-                  					<destFileName>jboss-javaee.jar</destFileName>
-                				</artifactItem>
-                				<artifactItem>
-									<groupId>org.jboss.jbossas</groupId>
-            						<artifactId>jboss-as-security</artifactId>
-                  					<type>jar</type>
-                  					<overWrite>true</overWrite>
-                  					<outputDirectory>${directory.dependencies}</outputDirectory>
-                  					<destFileName>jboss-as-security.jar</destFileName>
-                				</artifactItem>
-                				
-                                                <!--<artifactItem>
-                                                    <groupId>org.jboss.cache</groupId>
-                                                    <artifactId>jbosscache-core</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jbosscache-core.jar</destFileName>
-                				</artifactItem>
-                                               <artifactItem>
-                                                    <groupId>org.jboss.cache</groupId>
-                                                    <artifactId>jbosscache-pojo</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jbosscache-pojo.jar</destFileName>
-                				</artifactItem>
-                                                
-                                                                           
-                                               <artifactItem>
-                                                    <groupId>org.jgroups</groupId>
-                                                    <artifactId>jgroups</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jgroups.jar</destFileName>
-                                               </artifactItem>
-                                               
-                                               <artifactItem>
-                                                    <groupId>org.jboss.jbossas</groupId>
-                                                    <artifactId>jboss-as-jmx</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-as-jmx.jar</destFileName>
-                                               </artifactItem>
-                                              
-                                               <artifactItem>
-                                                    <groupId>org.jboss.bootstrap</groupId>
-                                                    <artifactId>jboss-bootstrap</artifactId>
-                                                    <type>jar</type>
-                                                    <overWrite>true</overWrite>
-                                                    <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                    <destFileName>jboss-bootstrap.jar</destFileName>
-                                               </artifactItem>
-                                               <artifactItem>
-                                                   <groupId>org.jboss.microcontainer</groupId>
-                                                   <artifactId>jboss-dependency</artifactId>
-                                                   <type>jar</type>
-                                                   <overWrite>true</overWrite>
-                                                   <outputDirectory>${directory.dependencies}</outputDirectory>
-                                                   <destFileName>jboss-dependency.jar</destFileName>
-                                               </artifactItem>
-                                              -->
+                                <artifactItem>
+                                    <groupId>org.jboss.javaee</groupId>
+                                    <artifactId>jboss-jacc-api-1.1_spec</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-jacc-api-1.1_spec.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.ejb3</groupId>
+                                    <artifactId>jboss-ejb3-core</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-ejb3-core.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.javaee</groupId>
+                                    <artifactId>jboss-javaee</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-javaee.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.jbossas</groupId>
+                                    <artifactId>jboss-as-security</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${directory.dependencies}</outputDirectory>
+                                    <destFileName>jboss-as-security.jar</destFileName>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -601,17 +537,6 @@
             <artifactId>jboss-ejb3-security</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.jboss.integration</groupId>
-            <artifactId>jboss-integration</artifactId>
-            <scope>runtime</scope>
-        </dependency>-->
-        <!--
-            Needed by remoting, not declared as runtime dependency?
-
-            Remove if possible later
-        -->
         <dependency>
             <groupId>oswego-concurrent</groupId>
             <artifactId>concurrent</artifactId>
@@ -727,36 +652,6 @@
             <groupId>org.jboss.spec.javax.xml.rpc</groupId>
             <artifactId>jboss-jaxrpc-api_1.1_spec</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.jboss.cache</groupId>
-            <artifactId>jbosscache-core</artifactId> 
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.thoughtworks.qdox</groupId>
-                    <artifactId>qdox</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.cache</groupId>
-            <artifactId>jbosscache-pojo</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-j2ee</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.aop</groupId>
-                    <artifactId>jboss-aop</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.jboss.cluster</groupId>
             <artifactId>jboss-ha-client</artifactId>
@@ -855,13 +750,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-            <version>2.6.22.Final</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -916,15 +804,6 @@
             <groupId>org.jboss.microcontainer</groupId>
             <artifactId>jboss-dependency</artifactId>
         </dependency>
-
-
-        <!--
-      
-        <dependency>
-            <groupId>org.jboss.bootstrap</groupId>
-            <artifactId>jboss-bootstrap</artifactId>
-        </dependency>-->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
