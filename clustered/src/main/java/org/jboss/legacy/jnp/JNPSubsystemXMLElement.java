@@ -19,13 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.legacy.jnp;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
+import org.jboss.legacy.jnp.remoting.RemotingModel;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 
 /**
@@ -33,11 +32,12 @@ import org.jboss.legacy.jnp.server.JNPServerModel;
  *
  */
 public enum JNPSubsystemXMLElement {
- // must be first
+
+    // must be first
     UNKNOWN(null),
     JNP_CONNECTOR(JNPServerConnectorModel.SERVICE_NAME),
-    JNP_SERVER(JNPServerModel.SERVICE_NAME);
-
+    JNP_SERVER(JNPServerModel.SERVICE_NAME),
+    REMOTING(RemotingModel.SERVICE_NAME),;
 
     private final String name;
 
@@ -60,7 +60,9 @@ public enum JNPSubsystemXMLElement {
         final Map<String, JNPSubsystemXMLElement> map = new HashMap<String, JNPSubsystemXMLElement>();
         for (JNPSubsystemXMLElement element : values()) {
             final String name = element.getLocalName();
-            if (name != null) map.put(name, element);
+            if (name != null) {
+                map.put(name, element);
+            }
         }
         MAP = map;
     }

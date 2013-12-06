@@ -26,7 +26,6 @@ import org.jboss.as.controller.SimpleResourceDefinition;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
 import static org.jboss.legacy.tx.UserTransactionExtension.SUBSYSTEM_NAME;
-import org.jboss.legacy.tx.remoting.RemotingResourceDefinition;
 import org.jboss.legacy.tx.txsession.UserSessionTransactionResourceDefinition;
 import org.jboss.legacy.tx.usertx.ClientUserTransactionResourceDefinition;
 
@@ -47,7 +46,6 @@ public class UserTransactionSubsystemRootResourceDefinition extends SimpleResour
     @Override
     public void registerChildren(ManagementResourceRegistration resourceRegistration) {
         super.registerChildren(resourceRegistration);
-        resourceRegistration.registerSubModel(RemotingResourceDefinition.INSTANCE);
         resourceRegistration.registerSubModel(ClientUserTransactionResourceDefinition.INSTANCE);
         resourceRegistration.registerSubModel(UserSessionTransactionResourceDefinition.INSTANCE);
     }

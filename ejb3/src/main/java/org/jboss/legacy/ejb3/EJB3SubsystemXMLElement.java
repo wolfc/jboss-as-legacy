@@ -24,10 +24,7 @@ package org.jboss.legacy.ejb3;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarModel;
-import org.jboss.legacy.ejb3.remoting.RemotingModel;
-import org.jboss.legacy.jnp.server.JNPServerModel;
 
 /**
  * @author baranowb
@@ -36,8 +33,6 @@ import org.jboss.legacy.jnp.server.JNPServerModel;
 public enum EJB3SubsystemXMLElement {
  // must be first
     UNKNOWN(null),
-
-    REMOTING(RemotingModel.SERVICE_NAME),
     EJB3_REGISTRAR(EJB3RegistrarModel.SERVICE_NAME);
 
     private final String name;

@@ -22,11 +22,9 @@
 package org.jboss.legacy.ejb3;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarModel;
-import org.jboss.legacy.ejb3.remoting.RemotingModel;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
@@ -55,31 +53,10 @@ public class EJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMars
         if (model.hasDefined(EJB3RegistrarModel.SERVICE_NAME)) {
             writeEjb3Registrar(xmlExtendedStreamWriter, subsystemMarshallingContext);
         }
-
-        if (model.hasDefined(RemotingModel.SERVICE_NAME)) {
-            writeRemoting(xmlExtendedStreamWriter, subsystemMarshallingContext);
-        }
-    }
-
-    /**
-     * @param xmlExtendedStreamWriter
-     * @param subsystemMarshallingContext
-     */
-    private void writeRemoting(XMLExtendedStreamWriter xmlExtendedStreamWriter,
-            SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode().get(RemotingModel.SERVICE_NAME);
-
-        xmlExtendedStreamWriter.writeStartElement(EJB3SubsystemXMLElement.REMOTING.getLocalName());
-        if (model.hasDefined(RemotingModel.SOCKET_BINDING)) {
-            xmlExtendedStreamWriter.writeAttribute(EJB3SubsystemXMLAttribute.SOCKET_BINDING.getLocalName(),
-                    model.get(RemotingModel.SOCKET_BINDING).asString());
-        }
-        xmlExtendedStreamWriter.writeEndElement();
     }
 
     private void writeEjb3Registrar(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode();
         xmlExtendedStreamWriter.writeStartElement(EJB3SubsystemXMLElement.EJB3_REGISTRAR.getLocalName());
         xmlExtendedStreamWriter.writeEndElement();
     }

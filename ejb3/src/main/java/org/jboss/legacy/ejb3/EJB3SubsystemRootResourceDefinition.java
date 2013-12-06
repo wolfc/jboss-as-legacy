@@ -26,7 +26,6 @@ import org.jboss.as.controller.SimpleResourceDefinition;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
 import org.jboss.legacy.ejb3.registrar.EJB3RegistrarResourceDefinition;
-import org.jboss.legacy.ejb3.remoting.RemotingResourceDefinition;
 
 /**
  * @author baranowb
@@ -46,12 +45,7 @@ public class EJB3SubsystemRootResourceDefinition extends SimpleResourceDefinitio
     @Override
     public void registerChildren(ManagementResourceRegistration resourceRegistration) {
         super.registerChildren(resourceRegistration);
-        //subsystem=legacy-ejb3/service=remoting
-        resourceRegistration.registerSubModel(RemotingResourceDefinition.INSTANCE);
-        //subsystem=legacy-ejb3/service=ejb3-registrar
         resourceRegistration.registerSubModel(EJB3RegistrarResourceDefinition.INSTANCE);
-        //subsystem=legacy-ejb3/deployment=*/service=*
-        //resourceRegistration.registerSubModel(StatelessResourceDefinition.INSTANCE);
     }
 
 }
