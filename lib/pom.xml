@@ -870,38 +870,38 @@
 		<dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-security</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <!-- HA -->
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-server</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-cluster</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-system</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-jmx</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-system-jmx</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-j2se</artifactId>
-            <version>${legacy.jboss.version}</version>
+            <version>${version.jboss.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.microcontainer</groupId>

@@ -22,11 +22,16 @@
 
 package org.jboss.legacy.ejb3.registrar.dynamic;
 
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
+import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
+
 import java.util.Hashtable;
 import java.util.UUID;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
+
 import org.jboss.aop.Advisor;
 import org.jboss.aop.AspectManager;
 import org.jboss.aop.ClassAdvisor;
@@ -41,8 +46,6 @@ import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
@@ -91,8 +94,9 @@ public abstract class DynamicInvocationService {
 
     public void start(StartContext context) throws StartException {
         try {
+
             createLegacyBinding();
-        } catch (NamingException e) {
+        } catch (Exception e) {
             throw new StartException(e);
         }
     }

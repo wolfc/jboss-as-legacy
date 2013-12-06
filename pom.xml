@@ -40,7 +40,7 @@
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
         <jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
-        <legacy.jboss.version>5.1.0.GA</legacy.jboss.version>
+        <version.jboss.legacy>5.1.0.GA</version.jboss.legacy>
     </properties>
 
     <modules>
