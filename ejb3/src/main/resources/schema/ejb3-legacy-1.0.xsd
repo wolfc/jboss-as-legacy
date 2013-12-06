@@ -3,20 +3,11 @@
 xmlns="urn:jboss:domain:legacy-ejb3:1.0" 
 targetNamespace="urn:jboss:domain:legacy-ejb3:1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 
-    <!-- The subsystem root element -->
     <xs:element name="subsystem" type="subsystemType"/>
-
     <xs:complexType name="subsystemType">
     	<xs:sequence>
-         <xs:element name="remoting" minOccurs="1" maxOccurs="1" type="remotingType"/>
-         <xs:element name="jnp-server" minOccurs="1" maxOccurs="1" type="jnpServerType"/>
-         <xs:element name="ejb3-registrar" minOccurs="1" maxOccurs="1" type="ejb3RegistrarType"/>
+         <xs:element name="jnp-server" minOccurs="1" maxOccurs="1"/>
+         <xs:element name="ejb3-registrar" minOccurs="1" maxOccurs="1"/>
        </xs:sequence>
     </xs:complexType>
-    
-    <xs:complexType name="remotingType">
-        <xs:attribute name="socket-binding" type="xs:string" use="required" />
-    </xs:complexType>
-    <xs:complexType name="jnpServerType"/>
-    <xs:complexType name="ejb3RegistrarType"/>
 </xs:schema>

@@ -25,6 +25,7 @@
         <artifactId>jboss-as-legacy-parent</artifactId>
         <groupId>org.jboss.as.legacy</groupId>
         <version>7.3.0.Final-redhat-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     
     <artifactId>jboss-as-legacy-jnp</artifactId>
