@@ -11,7 +11,7 @@ mvn clean install -Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true
 #mvn clean install -Dversion.jboss.legacy=5.3.0-SNAPSHOT
 
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
-cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/
+cp -Rf jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf ejb3-bridge/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf tx/target/module/org $JBOSS_HOME/modules/system/layers/base/

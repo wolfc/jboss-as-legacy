@@ -46,9 +46,9 @@
 
     <modules>
         <module>lib</module>
+        <module>jnp</module>
         <module>ejb3</module>
         <module>ejb3-bridge</module>
-        <module>clustered</module>
         <module>tx</module>
     </modules>
 

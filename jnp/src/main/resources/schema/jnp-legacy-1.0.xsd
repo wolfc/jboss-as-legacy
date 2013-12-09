@@ -8,7 +8,7 @@
             <xs:element name="jnp-server" minOccurs="1" maxOccurs="1" />
             <xs:element name="jnp-connector" minOccurs="1" maxOccurs="1" />
             <xs:element name="remoting" minOccurs="1" maxOccurs="1" type="remotingType"/>
-            <xs:elmement name="distributed-cache" minOccurs="1" maxOccurs="1" type="cacheType"/>
+            <xs:elmement name="distributed-cache" minOccurs="0" maxOccurs="1" type="cacheType"/>
         </xs:sequence>
     </xs:complexType>    
     <xs:complexType name="jnpServerConnectorType">
