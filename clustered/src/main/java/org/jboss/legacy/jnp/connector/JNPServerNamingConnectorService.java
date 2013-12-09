@@ -28,7 +28,7 @@ import org.jboss.msc.value.InjectedValue;
 
 /**
  *
- * @author ehsavoie
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  * @param <T>
  */
 public interface JNPServerNamingConnectorService<T> extends Service<T> {

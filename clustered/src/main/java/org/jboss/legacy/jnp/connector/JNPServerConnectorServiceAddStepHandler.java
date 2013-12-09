@@ -34,7 +34,6 @@ import org.jboss.as.naming.ServiceBasedNamingStore;
 import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
-import org.jboss.ha.jndi.HANamingService;
 import org.jboss.legacy.jnp.connector.clustered.HAConnectorService;
 import org.jboss.legacy.jnp.connector.simple.SingleConnectorService;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerService;

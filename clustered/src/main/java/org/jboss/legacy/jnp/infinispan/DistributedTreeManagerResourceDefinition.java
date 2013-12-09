@@ -33,18 +33,19 @@ import org.jboss.dmr.ModelType;
 import org.jboss.legacy.jnp.JNPExtension;
 
 /**
- * @author ehugonnet
+ *
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class DistributedTreeManagerResourceDefinition extends SimpleResourceDefinition {
 
     public static final SimpleAttributeDefinition CACHE_CONTAINER
-            = new SimpleAttributeDefinitionBuilder(DistributedTreeManagerModel.CACHE_CONTAINER, ModelType.STRING, true)
+            = new SimpleAttributeDefinitionBuilder(DistributedTreeManagerModel.CACHE_CONTAINER, ModelType.STRING, false)
             .setValidator(new StringLengthValidator(1, true))
             .setFlags(AttributeAccess.Flag.RESTART_ALL_SERVICES)
             .build();
 
     public static final SimpleAttributeDefinition CACHE_REF
-            = new SimpleAttributeDefinitionBuilder(DistributedTreeManagerModel.CACHE_REF, ModelType.STRING, true)
+            = new SimpleAttributeDefinitionBuilder(DistributedTreeManagerModel.CACHE_REF, ModelType.STRING, false)
             .setFlags(AttributeAccess.Flag.RESTART_ALL_SERVICES)
             .setValidator(new StringLengthValidator(1, true))
             .build();

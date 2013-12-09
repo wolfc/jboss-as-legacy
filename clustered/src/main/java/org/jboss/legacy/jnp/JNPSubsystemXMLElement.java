@@ -24,6 +24,7 @@ package org.jboss.legacy.jnp;
 import java.util.HashMap;
 import java.util.Map;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
+import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
 import org.jboss.legacy.jnp.remoting.RemotingModel;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 
@@ -37,7 +38,8 @@ public enum JNPSubsystemXMLElement {
     UNKNOWN(null),
     JNP_CONNECTOR(JNPServerConnectorModel.SERVICE_NAME),
     JNP_SERVER(JNPServerModel.SERVICE_NAME),
-    REMOTING(RemotingModel.SERVICE_NAME),;
+    REMOTING(RemotingModel.SERVICE_NAME),
+    DISTRIBUTED_CACHE(DistributedTreeManagerModel.SERVICE_NAME);
 
     private final String name;
 
@@ -57,7 +59,7 @@ public enum JNPSubsystemXMLElement {
     private static final Map<String, JNPSubsystemXMLElement> MAP;
 
     static {
-        final Map<String, JNPSubsystemXMLElement> map = new HashMap<String, JNPSubsystemXMLElement>();
+        final Map<String, JNPSubsystemXMLElement> map = new HashMap<String, JNPSubsystemXMLElement>(5);
         for (JNPSubsystemXMLElement element : values()) {
             final String name = element.getLocalName();
             if (name != null) {

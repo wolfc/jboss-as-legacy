@@ -33,7 +33,7 @@ import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
 /**
  * @author baranowb
- *
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarshallingContext> {
 
@@ -61,6 +61,12 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
         if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
             writeConnector(xmlExtendedStreamWriter, subsystemMarshallingContext);
         }
+
+        final ModelNode treeModel = subsystemMarshallingContext.getModelNode().get(DistributedTreeManagerModel.SERVICE_NAME);
+        if (model.hasDefined(DistributedTreeManagerModel.CACHE_CONTAINER) && treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {
+            writeDistributedCache(xmlExtendedStreamWriter, treeModel);
+        }
+
     }
 
     /**
@@ -79,17 +85,6 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
 
         if (model.hasDefined(JNPServerConnectorModel.RMI_SOCKET_BINDING)) {
             xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.RMI_SOCKET_BINDING.getLocalName(), model.get(JNPServerConnectorModel.RMI_SOCKET_BINDING)
-                    .asString());
-        }
-
-        if (model.hasDefined(JNPServerConnectorModel.CACHE_CONTAINER)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_CONTAINER.getLocalName(), model.get(JNPServerConnectorModel.CACHE_CONTAINER)
-                    .asString());
-        }
-
-        final ModelNode treeModel = subsystemMarshallingContext.getModelNode().get(DistributedTreeManagerModel.SERVICE_NAME);
-        if (treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(DistributedTreeManagerModel.CACHE_REF)
                     .asString());
         }
 
@@ -114,6 +109,15 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
             xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.SOCKET_BINDING.getLocalName(),
                     model.get(RemotingModel.SOCKET_BINDING).asString());
         }
+        xmlExtendedStreamWriter.writeEndElement();
+    }
+
+    private void writeDistributedCache(XMLExtendedStreamWriter xmlExtendedStreamWriter, ModelNode treeModel) throws XMLStreamException {
+        xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.DISTRIBUTED_CACHE.getLocalName());
+        xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_CONTAINER.getLocalName(), treeModel.get(
+                DistributedTreeManagerModel.CACHE_CONTAINER).asString());
+        xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(
+                DistributedTreeManagerModel.CACHE_REF).asString());
         xmlExtendedStreamWriter.writeEndElement();
     }
 }

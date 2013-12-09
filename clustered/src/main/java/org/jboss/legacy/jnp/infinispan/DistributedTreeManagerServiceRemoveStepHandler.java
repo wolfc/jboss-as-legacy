@@ -28,8 +28,8 @@ import org.jboss.as.controller.OperationFailedException;
 import org.jboss.dmr.ModelNode;
 
 /**
- * @author baranowb
  *
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class DistributedTreeManagerServiceRemoveStepHandler extends AbstractRemoveStepHandler {
 
@@ -47,7 +47,6 @@ public class DistributedTreeManagerServiceRemoveStepHandler extends AbstractRemo
     @Override
     protected void recoverServices(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
         if (context.isResourceServiceRestartAllowed()) {
-            //TODO: not null verification handler?
             DistributedTreeManagerServiceAddStepHandler.INSTANCE.installRuntimeServices(context, operation, model, null);
         } else {
             context.revertReloadRequired();
