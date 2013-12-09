@@ -36,10 +36,11 @@ import org.jboss.msc.value.InjectedValue;
 
 /**
  * @author baranowb
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class HAConnectorService implements JNPServerNamingConnectorService<HANamingService> {
 
-    private InjectedValue<InfinispanDistributedTreeManager> distributedTreeManager = new InjectedValue<InfinispanDistributedTreeManager>();
+    private final InjectedValue<InfinispanDistributedTreeManager> distributedTreeManager = new InjectedValue<InfinispanDistributedTreeManager>();
     private final InjectedValue<CoreGroupCommunicationService> coreGroupCommunicationService = new InjectedValue<CoreGroupCommunicationService>();
     private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();
     private final InjectedValue<SocketBinding> rmiBinding = new InjectedValue<SocketBinding>();

@@ -45,6 +45,10 @@ import org.jboss.legacy.jnp.server.JNPServerResourceDefinition;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 
+/**
+ *
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
+ */
 public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
 
     public static final JNPSubsystem10Parser INSTANCE = new JNPSubsystem10Parser();
@@ -55,7 +59,6 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
     @Override
     public void readElement(final XMLExtendedStreamReader xmlExtendedStreamReader, final List<ModelNode> result)
             throws XMLStreamException {
-        // no attributes
         requireNoAttributes(xmlExtendedStreamReader);
         final ModelNode jnpSubsystemAddOperation = Util.createAddOperation();
         jnpSubsystemAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME);
@@ -93,17 +96,18 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
             switch (element) {
                 case JNP_CONNECTOR:
-                    boolean isHA = this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation, distributedTreManagerServiceAddOperation);
-                    JNPServerResourceDefinition.HA.parseAndSetParameter(String.valueOf(isHA), jnpServerServiceAddOperation, xmlExtendedStreamReader);
-                    if (isHA) {
-                        result.add(distributedTreManagerServiceAddOperation);
-                    }
+                    this.parseJNPConnector(xmlExtendedStreamReader, jnpServerConnectorServiceAddOperation);
                     break;
                 case JNP_SERVER:
                     this.parseJNPServer(xmlExtendedStreamReader, jnpServerServiceAddOperation);
                     break;
                 case REMOTING:
                     this.parseRemoting(xmlExtendedStreamReader, remotingServiceAddOperation);
+                    break;
+                case DISTRIBUTED_CACHE:
+                    this.parseDistributedCache(xmlExtendedStreamReader, distributedTreManagerServiceAddOperation, jnpServerConnectorServiceAddOperation);
+                    JNPServerResourceDefinition.HA.parseAndSetParameter("true", jnpServerServiceAddOperation, xmlExtendedStreamReader);
+                    result.add(distributedTreManagerServiceAddOperation);
                     break;
                 case UNKNOWN:
                 default:
@@ -119,9 +123,7 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         requireNoContent(xmlExtendedStreamReader);
     }
 
-    private boolean parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader,
-            final ModelNode jnpServerConnectorServiceAddOperation, final ModelNode distributedTreManagerServiceAddOperation) throws XMLStreamException {
-        boolean isHa = false;
+    private void parseJNPConnector(final XMLExtendedStreamReader xmlExtendedStreamReader, final ModelNode jnpServerConnectorServiceAddOperation) throws XMLStreamException {
         for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
             final String value = xmlExtendedStreamReader.getAttributeValue(i);
@@ -132,15 +134,6 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
                 case RMI_SOCKET_BINDING:
                     JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
                     break;
-                case CACHE_CONTAINER:
-                    JNPServerConnectorResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
-                    DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
-                    isHa = true;
-                    break;
-                case CACHE_REF:
-                    DistributedTreeManagerResourceDefinition.CACHE_REF.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
-                    isHa = true;
-                    break;
                 case UNKNOWN:
                 default: {
                     throw unexpectedAttribute(xmlExtendedStreamReader, i);
@@ -148,7 +141,7 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
         }
         requireNoContent(xmlExtendedStreamReader);
-        return isHa;
+
     }
 
     private void parseRemoting(XMLExtendedStreamReader xmlExtendedStreamReader, ModelNode remotingServiceAddOperation) throws XMLStreamException {
@@ -167,5 +160,28 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
             }
         }
         requireNoContent(xmlExtendedStreamReader);
+    }
+
+    private boolean parseDistributedCache(XMLExtendedStreamReader xmlExtendedStreamReader, ModelNode distributedTreManagerServiceAddOperation,
+            final ModelNode jnpServerConnectorServiceAddOperation) throws XMLStreamException {
+        for (int i = 0; i < xmlExtendedStreamReader.getAttributeCount(); i++) {
+            requireNoNamespaceAttribute(xmlExtendedStreamReader, i);
+            final String value = xmlExtendedStreamReader.getAttributeValue(i);
+            switch (JNPSubsystemXMLAttribute.forName(xmlExtendedStreamReader.getAttributeLocalName(i))) {
+                case CACHE_CONTAINER:
+                    DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
+                    JNPServerConnectorResourceDefinition.CACHE_CONTAINER.parseAndSetParameter(value, jnpServerConnectorServiceAddOperation, xmlExtendedStreamReader);
+                    break;
+                case CACHE_REF:
+                    DistributedTreeManagerResourceDefinition.CACHE_REF.parseAndSetParameter(value, distributedTreManagerServiceAddOperation, xmlExtendedStreamReader);
+                    break;
+                case UNKNOWN:
+                default: {
+                    throw unexpectedAttribute(xmlExtendedStreamReader, i);
+                }
+            }
+        }
+        requireNoContent(xmlExtendedStreamReader);
+        return true;
     }
 }

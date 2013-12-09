@@ -1,7 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2013, Red Hat, Inc., and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package org.jboss.legacy.jnp.infinispan;
 
@@ -36,7 +52,7 @@ import org.jnp.interfaces.NamingParser;
 
 /**
  *
- * @author ehsavoie
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class InfinispanDistributedTreeManager implements org.jnp.interfaces.Naming, DistributedTreeManager {
 
@@ -48,14 +64,12 @@ public class InfinispanDistributedTreeManager implements org.jnp.interfaces.Nami
 
     public static final String DEFAULT_ROOT = "__HA_JNDI__";
 
-    // Attributes --------------------------------------------------------
     private TreeCache<String, Binding> cache;
     private Fqn m_root;
     private Naming haStub;
     private boolean treeRootSet;
     protected boolean acquiredCache = false;
 
-    // Constructor --------------------------------------------------------
     public InfinispanDistributedTreeManager() {
         super();
     }
@@ -79,12 +93,10 @@ public class InfinispanDistributedTreeManager implements org.jnp.interfaces.Nami
         m_root = (rootFqn == null) ? null : Fqn.fromString(rootFqn);
     }
 
-    // JBossCacheDistributedTreeManagerMBean ----------------------------------
     public String getRootFqn() {
         return m_root == null ? DEFAULT_ROOT : m_root.toString();
     }
 
-    // Public -----------------------------------------------------------------
     @SuppressWarnings("unchecked")
     @Override
     public void init() {
@@ -111,7 +123,6 @@ public class InfinispanDistributedTreeManager implements org.jnp.interfaces.Nami
         this.haStub = stub;
     }
 
-    // Naming implementation -----------------------------------------
     @Override
     public void bind(Name name, Object obj, String className) throws NamingException {
         if (log.isTraceEnabled()) {

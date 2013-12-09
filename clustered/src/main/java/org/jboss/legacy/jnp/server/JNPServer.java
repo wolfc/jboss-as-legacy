@@ -31,5 +31,4 @@ import org.jnp.server.NamingBean;
 public interface JNPServer {
 
     NamingBean getNamingBean();
-    //Naming getNaming();
 }

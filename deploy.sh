@@ -8,7 +8,7 @@ fi
 # -Dversion.jboss.legacy=5.1.0.GA ... eap build does not produce artifacts...
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
 mvn clean install -Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true
-#mvn clean install 
+#mvn clean install -Dversion.jboss.legacy=5.3.0-SNAPSHOT
 
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf clustered/target/module/org $JBOSS_HOME/modules/system/layers/base/
@@ -33,11 +33,14 @@ echo
 echo "3. Define a socket-binding for the JNP Server using the 'jnp' name"
 echo "<socket-binding name=\"jnp\" port=\"5599\"/>"
 echo
-echo "4. You can also define a RMI binding socket using the 'rmi-jnp' name (Optionnal if you don't have declared it in tht jnp-connector)"
+echo "4. You can also define a RMI binding socket using the 'rmi-jnp' name (Optionnal if you don't have declared it in the jnp-connector)"
 echo "<socket-binding name=\"rmi-jnp\" port=\"1099\"/>"
 echo
 echo "5. Define a socket-binding for the remoting using the 'legacy-remoting' name"
 echo "<socket-binding name=\"legacy-remoting\" port=\"4873\"/>"
+echo
+echo "5. If you want to configure a HA JNDI JNP Server, you can add :"
+echo "<distributed-cache cache-ref=\"default\" cache-container=\"singleton\"/>"
 echo
 echo "To enable EJB3:"
 echo "1 Add extension definition in <extensions>."
