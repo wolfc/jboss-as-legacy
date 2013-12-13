@@ -84,7 +84,7 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
      */
     private void writeConnector(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode().get(JNPServerConnectorModel.SERVICE_NAME);
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(SERVICE).get(JNPServerConnectorModel.SERVICE_NAME);
 
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_CONNECTOR.getLocalName());
         if (model.hasDefined(JNPServerConnectorModel.SOCKET_BINDING)) {
@@ -105,7 +105,7 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
 
     private void writeRemoting(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode().get(RemotingModel.SERVICE_NAME);
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(SERVICE).get(RemotingModel.SERVICE_NAME);
 
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.REMOTING.getLocalName());
         if (model.hasDefined(RemotingModel.SOCKET_BINDING)) {
