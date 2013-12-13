@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.jboss.legacy.jnp.infinispan;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class DistributedTreeManagerServiceAddStepHandler extends AbstractBoottim
     public static final DistributedTreeManagerServiceAddStepHandler INSTANCE = new DistributedTreeManagerServiceAddStepHandler();
 
     public DistributedTreeManagerServiceAddStepHandler() {
+        super(DistributedTreeManagerResourceDefinition.CACHE_CONTAINER, DistributedTreeManagerResourceDefinition.CACHE_REF);
     }
 
     @Override

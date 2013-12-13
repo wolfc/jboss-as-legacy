@@ -35,6 +35,7 @@ import org.jboss.aop.proxy.Proxy;
 import org.jboss.aspects.remoting.InvokeRemoteInterceptor;
 import org.jboss.aspects.remoting.MergeMetaDataInterceptor;
 import org.jboss.aspects.remoting.RemotingProxyFactory;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.LEGACY;
 import org.jboss.legacy.jnp.server.JNPServer;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
@@ -53,7 +54,7 @@ import org.jnp.interfaces.Naming;
  */
 public class ClientUserTransactionService implements Service<RemotingProxyFactory> {
 
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(ClientUserTransactionModel.LEGACY).append(ClientUserTransactionModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LEGACY).append(ClientUserTransactionModel.SERVICE_NAME);
     private static final String JNDI_UT_SESSION_FACTORY = "UserTransactionSessionFactory";
     private static final String JNDI_UT = "UserTransaction";
     private static final String JNDI_JBOSS_CONTEXT = "java:jboss";

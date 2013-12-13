@@ -24,9 +24,13 @@ package org.jboss.legacy.jnp;
 import javax.xml.stream.XMLStreamException;
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.dmr.ModelNode;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.SERVICE;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
+import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
+import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerResourceDefinition;
 import org.jboss.legacy.jnp.remoting.RemotingModel;
+import org.jboss.legacy.jnp.remoting.RemotingResourceDefinition;
 import org.jboss.legacy.jnp.server.JNPServerModel;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
@@ -43,28 +47,33 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
     public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
         subsystemMarshallingContext.startSubsystemElement(JNPSubsystemNamespace.LEGACY_JNP_1_0.getUriString(), false);
-
         writeElements(xmlExtendedStreamWriter, subsystemMarshallingContext);
-
-        // write the subsystem end element
         xmlExtendedStreamWriter.writeEndElement();
     }
 
     private void writeElements(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode();
+        if (subsystemMarshallingContext.getModelNode().hasDefined(SERVICE))  {
+            final ModelNode model = subsystemMarshallingContext.getModelNode().get(SERVICE);
 
-        if (model.hasDefined(JNPServerModel.SERVICE_NAME)) {
-            writeJNPServer(xmlExtendedStreamWriter);
-        }
+            if (model.hasDefined(JNPServerModel.SERVICE_NAME)) {
+                writeJNPServer(xmlExtendedStreamWriter);
+            }
 
-        if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
-            writeConnector(xmlExtendedStreamWriter, subsystemMarshallingContext);
-        }
+            if (model.hasDefined(JNPServerConnectorModel.SERVICE_NAME)) {
+                writeConnector(xmlExtendedStreamWriter, subsystemMarshallingContext);
+            }
 
-        final ModelNode treeModel = subsystemMarshallingContext.getModelNode().get(DistributedTreeManagerModel.SERVICE_NAME);
-        if (model.hasDefined(DistributedTreeManagerModel.CACHE_CONTAINER) && treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {
-            writeDistributedCache(xmlExtendedStreamWriter, treeModel);
+            if (model.hasDefined(RemotingModel.SERVICE_NAME)) {
+                writeRemoting(xmlExtendedStreamWriter, subsystemMarshallingContext);
+            }
+
+            if (model.hasDefined(DistributedTreeManagerModel.SERVICE_NAME)) {
+                final ModelNode treeModel = model.get(DistributedTreeManagerModel.SERVICE_NAME);
+                if (model.hasDefined(DistributedTreeManagerModel.CACHE_CONTAINER) && treeModel.hasDefined(DistributedTreeManagerModel.CACHE_REF)) {
+                    writeDistributedCache(xmlExtendedStreamWriter, treeModel);
+                }
+            }
         }
 
     }
@@ -79,17 +88,11 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
 
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.JNP_CONNECTOR.getLocalName());
         if (model.hasDefined(JNPServerConnectorModel.SOCKET_BINDING)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.SOCKET_BINDING.getLocalName(), model.get(JNPServerConnectorModel.SOCKET_BINDING)
-                    .asString());
+            JNPServerConnectorResourceDefinition.SOCKET_BINDING.marshallAsAttribute(model, true, xmlExtendedStreamWriter);
         }
 
         if (model.hasDefined(JNPServerConnectorModel.RMI_SOCKET_BINDING)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.RMI_SOCKET_BINDING.getLocalName(), model.get(JNPServerConnectorModel.RMI_SOCKET_BINDING)
-                    .asString());
-        }
-
-        if (model.hasDefined(RemotingModel.SERVICE_NAME)) {
-            writeRemoting(xmlExtendedStreamWriter, subsystemMarshallingContext);
+            JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING.marshallAsAttribute(model, true, xmlExtendedStreamWriter);
         }
 
         xmlExtendedStreamWriter.writeEndElement();
@@ -106,18 +109,15 @@ public class JNPSubsystemXMLPersister implements XMLElementWriter<SubsystemMarsh
 
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.REMOTING.getLocalName());
         if (model.hasDefined(RemotingModel.SOCKET_BINDING)) {
-            xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.SOCKET_BINDING.getLocalName(),
-                    model.get(RemotingModel.SOCKET_BINDING).asString());
+            RemotingResourceDefinition.SOCKET_BINDING.marshallAsAttribute(model, true, xmlExtendedStreamWriter);
         }
         xmlExtendedStreamWriter.writeEndElement();
     }
 
     private void writeDistributedCache(XMLExtendedStreamWriter xmlExtendedStreamWriter, ModelNode treeModel) throws XMLStreamException {
         xmlExtendedStreamWriter.writeStartElement(JNPSubsystemXMLElement.DISTRIBUTED_CACHE.getLocalName());
-        xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_CONTAINER.getLocalName(), treeModel.get(
-                DistributedTreeManagerModel.CACHE_CONTAINER).asString());
-        xmlExtendedStreamWriter.writeAttribute(JNPSubsystemXMLAttribute.CACHE_REF.getLocalName(), treeModel.get(
-                DistributedTreeManagerModel.CACHE_REF).asString());
+        DistributedTreeManagerResourceDefinition.CACHE_CONTAINER.marshallAsAttribute(treeModel, true, xmlExtendedStreamWriter);
+        DistributedTreeManagerResourceDefinition.CACHE_REF.marshallAsAttribute(treeModel, true, xmlExtendedStreamWriter);
         xmlExtendedStreamWriter.writeEndElement();
     }
 }

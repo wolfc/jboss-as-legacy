@@ -34,6 +34,7 @@ import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttri
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedAttribute;
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
 import org.jboss.dmr.ModelNode;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.SERVICE;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorResourceDefinition;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
@@ -65,22 +66,18 @@ public class JNPSubsystem10Parser implements XMLElementReader<List<ModelNode>> {
         result.add(jnpSubsystemAddOperation);
 
         final ModelNode jnpServerServiceAddOperation = Util.createAddOperation();
-        jnpServerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
-                .add(JNPServerModel.SERVICE, JNPServerModel.SERVICE_NAME);
+        jnpServerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME).add(SERVICE, JNPServerModel.SERVICE_NAME);
         result.add(jnpServerServiceAddOperation);
 
         final ModelNode jnpServerConnectorServiceAddOperation = Util.createAddOperation();
-        jnpServerConnectorServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
-                .add(JNPServerConnectorModel.SERVICE, JNPServerConnectorModel.SERVICE_NAME);
+        jnpServerConnectorServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME).add(SERVICE, JNPServerConnectorModel.SERVICE_NAME);
         result.add(jnpServerConnectorServiceAddOperation);
 
         final ModelNode distributedTreManagerServiceAddOperation = Util.createAddOperation();
-        distributedTreManagerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
-                .add(DistributedTreeManagerModel.SERVICE, DistributedTreeManagerModel.SERVICE_NAME);
+        distributedTreManagerServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME).add(SERVICE, DistributedTreeManagerModel.SERVICE_NAME);
 
         final ModelNode remotingServiceAddOperation = Util.createAddOperation();
-        remotingServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME)
-                .add(RemotingModel.SERVICE, RemotingModel.SERVICE_NAME);
+        remotingServiceAddOperation.get(OP_ADDR).add(SUBSYSTEM, JNPExtension.SUBSYSTEM_NAME).add(SERVICE, RemotingModel.SERVICE_NAME);
         result.add(remotingServiceAddOperation);
 
         // elements

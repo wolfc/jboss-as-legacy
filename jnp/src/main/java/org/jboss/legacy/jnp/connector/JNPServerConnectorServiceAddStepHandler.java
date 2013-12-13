@@ -52,6 +52,7 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
     public static final JNPServerConnectorServiceAddStepHandler INSTANCE = new JNPServerConnectorServiceAddStepHandler();
 
     public JNPServerConnectorServiceAddStepHandler() {
+        super(JNPServerConnectorResourceDefinition.SOCKET_BINDING, JNPServerConnectorResourceDefinition.RMI_SOCKET_BINDING);
     }
 
     @Override
@@ -95,4 +96,5 @@ public class JNPServerConnectorServiceAddStepHandler extends AbstractBoottimeAdd
         installedServices.add(remotingServiceController);
         return installedServices;
     }
+
 }

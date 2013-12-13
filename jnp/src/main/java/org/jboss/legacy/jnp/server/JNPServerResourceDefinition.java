@@ -22,12 +22,13 @@
 
 package org.jboss.legacy.jnp.server;
 
-import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import static org.jboss.as.controller.SimpleAttributeDefinitionBuilder.create;
 import org.jboss.as.controller.SimpleResourceDefinition;
 import org.jboss.dmr.ModelType;
 import org.jboss.legacy.jnp.JNPExtension;
+import static org.jboss.legacy.jnp.server.JNPServerModel.JNPSERVER_PATH;
+import static org.jboss.legacy.jnp.server.JNPServerModel.SERVICE_NAME;
 
 /**
  * @author baranowb
@@ -40,8 +41,7 @@ public class JNPServerResourceDefinition extends SimpleResourceDefinition {
     public static final JNPServerResourceDefinition INSTANCE = new JNPServerResourceDefinition();
 
     private JNPServerResourceDefinition() {
-        super(PathElement.pathElement(JNPServerModel.SERVICE, JNPServerModel.SERVICE_NAME), JNPExtension
-                .getResourceDescriptionResolver(JNPServerModel.SERVICE_NAME), JNPServerServiceAddStepHandler.INSTANCE,
-                JNPServerServiceRemoveStepHandler.INSTANCE);
+        super(JNPSERVER_PATH, JNPExtension.getResourceDescriptionResolver(SERVICE_NAME), 
+                JNPServerServiceAddStepHandler.INSTANCE, JNPServerServiceRemoveStepHandler.INSTANCE);
     }
 }

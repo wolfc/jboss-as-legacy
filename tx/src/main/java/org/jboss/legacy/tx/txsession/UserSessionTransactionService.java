@@ -37,6 +37,7 @@ import org.jboss.aop.advice.Interceptor;
 import org.jboss.aspects.remoting.InvokeRemoteInterceptor;
 import org.jboss.aspects.remoting.MergeMetaDataInterceptor;
 import org.jboss.aspects.remoting.RemotingProxyFactory;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.LEGACY;
 import org.jboss.legacy.jnp.server.JNPServer;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
@@ -57,7 +58,7 @@ public class UserSessionTransactionService implements Service<RemotingProxyFacto
     private static final String JNDI_IMPORTER = "java:/TransactionPropagationContextImporter";
     private static final String JNDI_EXPORTER = "java:/TransactionPropagationContextExporter";
 
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(UserSessionTransactionModel.LEGACY).append(UserSessionTransactionModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LEGACY).append(UserSessionTransactionModel.SERVICE_NAME);
 
     private RemotingProxyFactory service;
     private final InjectedValue<Connector> injectedConnector = new InjectedValue<Connector>();

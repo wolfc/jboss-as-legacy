@@ -22,6 +22,7 @@
 package org.jboss.legacy.jnp.connector;
 
 import org.jboss.as.network.SocketBinding;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.LEGACY;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.value.InjectedValue;
@@ -33,7 +34,7 @@ import org.jboss.msc.value.InjectedValue;
  */
 public interface JNPServerNamingConnectorService<T> extends Service<T> {
 
-    ServiceName SERVICE_NAME = ServiceName.JBOSS.append(JNPServerConnectorModel.LEGACY).append(JNPServerConnectorModel.SERVICE_NAME);
+    ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LEGACY).append(JNPServerConnectorModel.SERVICE_NAME);
 
     InjectedValue<SocketBinding> getBinding();
 

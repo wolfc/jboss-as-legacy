@@ -22,15 +22,16 @@
 
 package org.jboss.legacy.jnp.remoting;
 
+import org.jboss.as.controller.PathElement;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.SERVICE;
+
 /**
  * @author baranowb
  * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public interface RemotingModel {
-
-    String SERVICE = "service";
     String SERVICE_NAME = "remoting";
-    String LEGACY = "legacy";
-
     String SOCKET_BINDING = "socket-binding";
+    
+    PathElement REMOTING_PATH = PathElement.pathElement(SERVICE, SERVICE_NAME);
 }

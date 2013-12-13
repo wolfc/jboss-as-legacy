@@ -37,7 +37,7 @@ public class UserTransactionSubsystemXMLPersister implements XMLElementWriter<Su
     @Override
     public void writeContent(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        subsystemMarshallingContext.startSubsystemElement(UserTransactionSubsystemNamespace.LEGACY_TX_1_0.getUriString(), true);
+        subsystemMarshallingContext.startSubsystemElement(UserTransactionSubsystemNamespace.LEGACY_TX_1_0.getUriString(), false);
         xmlExtendedStreamWriter.writeEndElement();
     }
 }

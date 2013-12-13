@@ -21,7 +21,6 @@
  */
 package org.jboss.legacy.jnp.infinispan;
 
-import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ReloadRequiredWriteAttributeHandler;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import org.jboss.as.controller.SimpleAttributeDefinitionBuilder;
@@ -31,6 +30,7 @@ import org.jboss.as.controller.registry.AttributeAccess;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.dmr.ModelType;
 import org.jboss.legacy.jnp.JNPExtension;
+import static org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel.DISTRIBUTED_TREE_PATH;
 
 /**
  *
@@ -53,9 +53,8 @@ public class DistributedTreeManagerResourceDefinition extends SimpleResourceDefi
     public static final DistributedTreeManagerResourceDefinition INSTANCE = new DistributedTreeManagerResourceDefinition();
 
     private DistributedTreeManagerResourceDefinition() {
-        super(PathElement.pathElement(DistributedTreeManagerModel.SERVICE, DistributedTreeManagerModel.SERVICE_NAME), JNPExtension
-                .getResourceDescriptionResolver(DistributedTreeManagerModel.SERVICE_NAME), DistributedTreeManagerServiceAddStepHandler.INSTANCE,
-                DistributedTreeManagerServiceRemoveStepHandler.INSTANCE);
+        super(DISTRIBUTED_TREE_PATH, JNPExtension.getResourceDescriptionResolver(DistributedTreeManagerModel.SERVICE_NAME), 
+                DistributedTreeManagerServiceAddStepHandler.INSTANCE, DistributedTreeManagerServiceRemoveStepHandler.INSTANCE);
     }
 
     @Override

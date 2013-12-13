@@ -21,17 +21,18 @@
  */
 package org.jboss.legacy.jnp.infinispan;
 
+import org.jboss.as.controller.PathElement;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.SERVICE;
+
 /**
  *
  * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public interface DistributedTreeManagerModel {
-
-    String SERVICE = "service";
     String SERVICE_NAME = "distributed-cache";
-    String LEGACY = "legacy";
 
     String CACHE_REF = "cache-ref";
     String CACHE_CONTAINER = "cache-container";
+    PathElement DISTRIBUTED_TREE_PATH = PathElement.pathElement(SERVICE, SERVICE_NAME);
 
 }
