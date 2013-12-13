@@ -22,6 +22,7 @@
 package org.jboss.legacy.jnp.infinispan;
 
 import org.infinispan.Cache;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.LEGACY;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
@@ -34,8 +35,7 @@ import org.jboss.msc.value.InjectedValue;
  * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a> (c) 2013 Red Hat, inc.
  */
 public class DistributedTreeManagerService implements Service<InfinispanDistributedTreeManager> {
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(DistributedTreeManagerModel.LEGACY).append(
-            DistributedTreeManagerModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LEGACY).append(DistributedTreeManagerModel.SERVICE_NAME);
 
     private InfinispanDistributedTreeManager treeManager;
     private final InjectedValue<Cache> cache = new InjectedValue<Cache>();

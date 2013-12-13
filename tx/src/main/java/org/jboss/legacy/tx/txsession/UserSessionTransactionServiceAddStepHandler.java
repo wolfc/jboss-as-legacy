@@ -71,4 +71,9 @@ public class UserSessionTransactionServiceAddStepHandler extends AbstractBoottim
         installedServices.add(userSessionTransactionServiceController);
         return installedServices;
     }
+    
+     @Override
+    protected void populateModel(final ModelNode operation, final ModelNode model) throws OperationFailedException {
+        model.setEmptyObject();
+    }
 }

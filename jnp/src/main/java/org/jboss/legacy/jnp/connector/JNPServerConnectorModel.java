@@ -22,17 +22,19 @@
 
 package org.jboss.legacy.jnp.connector;
 
+import org.jboss.as.controller.PathElement;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.SERVICE;
+
 /**
  * @author baranowb
  *
  */
 public interface JNPServerConnectorModel {
-
-    String SERVICE = "service";
     String SERVICE_NAME = "jnp-connector";
-    String LEGACY = "legacy";
 
     String SOCKET_BINDING = "socket-binding";
     String RMI_SOCKET_BINDING = "rmi-socket-binding";
     String CACHE_CONTAINER = "cache-container";
+    
+    PathElement JNP_CONNECTOR_PATH = PathElement.pathElement(SERVICE, SERVICE_NAME);
 }

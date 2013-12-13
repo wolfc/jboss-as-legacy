@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.aspects.remoting.AOPRemotingInvocationHandler;
+import static org.jboss.legacy.jnp.JNPSubsystemModel.LEGACY;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
@@ -44,7 +45,7 @@ public class RemotingConnectorService implements Service<Connector> {
     private static final String INVOCATION_HANDLER_CLASS = AOPRemotingInvocationHandler.class.getName();
     private static final String TRANSPORT = "socket";
 
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingModel.LEGACY).append(RemotingModel.SERVICE_NAME);
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(LEGACY).append(RemotingModel.SERVICE_NAME);
     private Connector connector;
 
     private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();

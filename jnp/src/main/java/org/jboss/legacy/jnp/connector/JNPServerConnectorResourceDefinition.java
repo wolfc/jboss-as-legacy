@@ -21,7 +21,6 @@
  */
 package org.jboss.legacy.jnp.connector;
 
-import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ReloadRequiredWriteAttributeHandler;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import org.jboss.as.controller.SimpleAttributeDefinitionBuilder;
@@ -34,6 +33,7 @@ import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.dmr.ModelType;
 import static org.jboss.dmr.ModelType.STRING;
 import org.jboss.legacy.jnp.JNPExtension;
+import static org.jboss.legacy.jnp.connector.JNPServerConnectorModel.JNP_CONNECTOR_PATH;
 import org.jboss.legacy.jnp.infinispan.DistributedTreeManagerModel;
 
 /**
@@ -64,9 +64,8 @@ public class JNPServerConnectorResourceDefinition extends SimpleResourceDefiniti
     public static final JNPServerConnectorResourceDefinition INSTANCE = new JNPServerConnectorResourceDefinition();
 
     private JNPServerConnectorResourceDefinition() {
-        super(PathElement.pathElement(JNPServerConnectorModel.SERVICE, JNPServerConnectorModel.SERVICE_NAME), JNPExtension
-                .getResourceDescriptionResolver(JNPServerConnectorModel.SERVICE_NAME), JNPServerConnectorServiceAddStepHandler.INSTANCE,
-                JNPServerConnectorServiceRemoveStepHandler.INSTANCE);
+        super(JNP_CONNECTOR_PATH, JNPExtension.getResourceDescriptionResolver(JNPServerConnectorModel.SERVICE_NAME), 
+                JNPServerConnectorServiceAddStepHandler.INSTANCE, JNPServerConnectorServiceRemoveStepHandler.INSTANCE);
     }
 
     @Override

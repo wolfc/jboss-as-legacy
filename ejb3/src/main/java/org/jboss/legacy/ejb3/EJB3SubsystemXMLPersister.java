@@ -48,10 +48,12 @@ public class EJB3SubsystemXMLPersister implements XMLElementWriter<SubsystemMars
 
     private void writeElements(XMLExtendedStreamWriter xmlExtendedStreamWriter,
             SubsystemMarshallingContext subsystemMarshallingContext) throws XMLStreamException {
-        final ModelNode model = subsystemMarshallingContext.getModelNode();
+        if(subsystemMarshallingContext.getModelNode().hasDefined(EJB3RegistrarModel.SERVICE)) {
+        final ModelNode model = subsystemMarshallingContext.getModelNode().get(EJB3RegistrarModel.SERVICE);
 
         if (model.hasDefined(EJB3RegistrarModel.SERVICE_NAME)) {
             writeEjb3Registrar(xmlExtendedStreamWriter, subsystemMarshallingContext);
+        }
         }
     }
 

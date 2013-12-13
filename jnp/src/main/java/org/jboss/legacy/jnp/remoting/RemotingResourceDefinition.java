@@ -22,7 +22,6 @@
 
 package org.jboss.legacy.jnp.remoting;
 
-import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ReloadRequiredWriteAttributeHandler;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import static org.jboss.as.controller.SimpleAttributeDefinitionBuilder.create;
@@ -32,6 +31,7 @@ import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import static org.jboss.dmr.ModelType.STRING;
 import org.jboss.legacy.jnp.JNPExtension;
 import org.jboss.legacy.jnp.connector.JNPServerConnectorModel;
+import static org.jboss.legacy.jnp.remoting.RemotingModel.REMOTING_PATH;
 
 /**
  * @author baranowb
@@ -47,8 +47,7 @@ public class RemotingResourceDefinition extends SimpleResourceDefinition {
     public static final RemotingResourceDefinition INSTANCE = new RemotingResourceDefinition();
 
     private RemotingResourceDefinition() {
-        super(PathElement.pathElement(RemotingModel.SERVICE, RemotingModel.SERVICE_NAME), JNPExtension
-                .getResourceDescriptionResolver(RemotingModel.SERVICE_NAME), RemotingServiceAddStepHandler.INSTANCE,
+        super(REMOTING_PATH, JNPExtension.getResourceDescriptionResolver(RemotingModel.SERVICE_NAME), RemotingServiceAddStepHandler.INSTANCE,
                 RemotingServiceRemoveStepHandler.INSTANCE);
     }
 

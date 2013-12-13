@@ -74,4 +74,9 @@ public class ClientUserTransactionServiceAddStepHandler extends AbstractBoottime
         installedServices.add(clientUsertransactionServiceController);
         return installedServices;
     }
+
+    @Override
+    protected void populateModel(final ModelNode operation, final ModelNode model) throws OperationFailedException {
+        model.setEmptyObject();
+    }
 }
