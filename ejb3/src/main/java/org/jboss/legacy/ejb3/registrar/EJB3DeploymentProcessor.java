@@ -38,6 +38,7 @@ import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
+import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvocationService;
 import org.jboss.legacy.ejb3.registrar.dynamic.stateful.StatefulDynamicInvokeService;
@@ -74,8 +75,9 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
-                                final EJBDataProxy data = deploymentUnit.getAttachment(EJBDataProxy.ATTACHMENT_KEY);
-                                if (data != null) {
+                                final DeploymentEJBDataProxyMap dataMap = deploymentUnit.getAttachment(DeploymentEJBDataProxyMap.ATTACHMENT_KEY);
+                                if (dataMap != null && dataMap.get(dataMap.getServiceName(moduleDescription, ejbComponentDescription))!=null) {
+                                    final EJBDataProxy data = dataMap.get(dataMap.getServiceName(moduleDescription, ejbComponentDescription));
                                     // create servuce
                                     if (data.isStateful()) {
                                         StatefulDynamicInvokeService service = new StatefulDynamicInvokeService(data,

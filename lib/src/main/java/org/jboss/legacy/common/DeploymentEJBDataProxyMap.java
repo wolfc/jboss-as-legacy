@@ -22,34 +22,30 @@
 
 package org.jboss.legacy.common;
 
-import java.util.Set;
+import java.util.HashMap;
 
+import org.jboss.as.ee.component.EEModuleDescription;
+import org.jboss.as.ejb3.component.EJBComponentDescription;
 import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.msc.service.ServiceName;
-
-
 
 /**
  * @author baranowb
  */
-public interface EJBDataProxy {
-    //TODO: add more if need be.
+public class DeploymentEJBDataProxyMap extends HashMap<ServiceName, EJBDataProxy> {
+    public static final ServiceName SERVICE_NAME_BASE = ServiceName.of("jboss", "legacy");
+    public static final AttachmentKey<DeploymentEJBDataProxyMap> ATTACHMENT_KEY = AttachmentKey
+            .create(DeploymentEJBDataProxyMap.class);
 
-    String getName();
-
-    String getRemoteInterfaceClass();
-
-    String getEJBVersion();
-
-    boolean isStateful();
-
-    ClassLoader getBeanClassLoader();
-
-    ServiceName getViewServiceName();
-
-    String getLocalASBinding();
-
-    String getDeploymentName();
-
-    String getDeploymentScopeBaseName();
+    public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
+            final EJBComponentDescription ejbComponentDescription) {
+        // TODO: what about ear/war/jar/ejb ?
+        if (moduleDescription.getEarApplicationName() == null) {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getModuleName(),
+                    ejbComponentDescription.getComponentName());
+        } else {
+            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
+                    moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
+        }
+    }
 }
