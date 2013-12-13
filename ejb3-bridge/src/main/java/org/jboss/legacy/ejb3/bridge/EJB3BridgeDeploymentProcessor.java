@@ -40,6 +40,7 @@ import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
+import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.value.InjectedValue;
@@ -70,6 +71,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                 if (componentDescription instanceof EJBComponentDescription) {
                     try {
                         final EJBComponentDescription ejbComponentDescription = (EJBComponentDescription) componentDescription;
+                        final DeploymentEJBDataProxyMap deploymentEJBDataProxyMap = getEJBDAtaProxyMap(deploymentUnit);
                         final InjectedValue<ClassLoader> viewClassLoader = new InjectedValue<ClassLoader>();
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             @Override
@@ -85,7 +87,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                     if (viewType == MethodIntf.REMOTE) {
                                         final ViewDescription viewDescription = vd;
                                         final String globalBinding = getGlobalBinding(viewDescription.getBindingNames());
-                                        deploymentUnit.putAttachment(EJBDataProxy.ATTACHMENT_KEY, new EJBDataProxy() {
+                                        deploymentEJBDataProxyMap.put(deploymentEJBDataProxyMap.getServiceName(moduleDescription, ejbComponentDescription), new EJBDataProxy() {
 
                                             @Override
                                             public String getName() {
@@ -155,6 +157,19 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                 }
             }
         }
+    }
+
+    /**
+     * @param deploymentUnit
+     * @return
+     */
+    private DeploymentEJBDataProxyMap getEJBDAtaProxyMap(DeploymentUnit deploymentUnit) {
+        DeploymentEJBDataProxyMap data = deploymentUnit.getAttachment(DeploymentEJBDataProxyMap.ATTACHMENT_KEY);
+        if(data == null){
+            data = new DeploymentEJBDataProxyMap();
+            deploymentUnit.putAttachment(data.ATTACHMENT_KEY, data);
+        }
+        return data;
     }
 
     @Override

@@ -39,6 +39,7 @@ import org.jboss.as.ejb3.deployment.DeploymentRepository;
 import org.jboss.ejb3.common.metadata.MetadataUtil;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
+import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
 import org.jboss.legacy.common.EJBDataProxy;
 import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
 import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
@@ -63,18 +64,6 @@ public abstract class DynamicInvocationService {
     public static final String LEGACY_MD_KEY_CREDENTIAL = "credential";
     public static final String LEGACY_MD_KEY_CONTEXT = "context";
 
-    protected static final ServiceName SERVICE_NAME_BASE = ServiceName.of("jboss", "legacy");
-
-    public static ServiceName getServiceName(final EEModuleDescription moduleDescription,
-            final EJBComponentDescription ejbComponentDescription) {
-        // TODO: what about ear/war/jar/ejb ?
-        if (moduleDescription.getEarApplicationName() == null) {
-            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
-        } else {
-            return SERVICE_NAME_BASE.of(SERVICE_NAME_BASE, moduleDescription.getEarApplicationName(),
-                    moduleDescription.getModuleName(), ejbComponentDescription.getComponentName());
-        }
-    }
     protected final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
     protected final InjectedValue<TransactionManager> transactionManagerInjectedValue = new InjectedValue<TransactionManager>();
     protected final InjectedValue<EJB3Registrar> ejb3RegistrarInjectedValue = new InjectedValue<EJB3Registrar>();
@@ -93,16 +82,23 @@ public abstract class DynamicInvocationService {
     public DynamicInvocationService(EJBDataProxy ejb3Data, EEModuleDescription moduleDescription,
             EJBComponentDescription ejbComponentDescription) {
         this.ejb3Data = ejb3Data;
-        this.serviceName = getServiceName(moduleDescription, ejbComponentDescription);
+        this.serviceName = DeploymentEJBDataProxyMap.getServiceName(moduleDescription, ejbComponentDescription);
         this.applicationName = moduleDescription.getEarApplicationName();
         this.moduleName = moduleDescription.getModuleName();
         this.distinctName = moduleDescription.getDistinctName();
         this.componentName = ejbComponentDescription.getComponentName();
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DynamicInvocationService [serviceName=" + serviceName + "]@"+this.hashCode();
+    }
+
     public void start(StartContext context) throws StartException {
         try {
-
             createLegacyBinding();
         } catch (Exception e) {
             throw new StartException(e);
