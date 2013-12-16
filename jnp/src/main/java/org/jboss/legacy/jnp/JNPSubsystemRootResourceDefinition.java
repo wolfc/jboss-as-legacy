@@ -53,5 +53,4 @@ public class JNPSubsystemRootResourceDefinition extends SimpleResourceDefinition
         resourceRegistration.registerSubModel(DistributedTreeManagerResourceDefinition.INSTANCE);
         resourceRegistration.registerSubModel(RemotingResourceDefinition.INSTANCE);
     }
-
 }
