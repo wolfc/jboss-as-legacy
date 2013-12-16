@@ -20,8 +20,8 @@ import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
 
 /**
- *
- * @author ehsavoie
+ * 
+ * @author <a href="mailto:ehugonne@redhat.com">Emmanuel Hugonnet</a>  (c) 2013 Red Hat, inc.
  */
 public class DistributedTreeManagerServiceAddStepHandler extends AbstractBoottimeAddStepHandler {
 
