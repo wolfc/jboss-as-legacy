@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-parent</artifactId>
-        <version>7.3.0.Final-redhat-SNAPSHOT</version>
+        <version>7.4.0.Final-redhat-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -37,7 +37,7 @@
 
     <properties>
         <directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
-        <version.jboss.as>7.3.0.Final-redhat-SNAPSHOT</version.jboss.as>
+        <version.jboss.as>7.4.0.Final-redhat-SNAPSHOT</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
         <jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
