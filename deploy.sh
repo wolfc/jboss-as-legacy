@@ -1,14 +1,15 @@
 #!/bin/sh
-if [ "x$JBOSS_HOME" = "x" ]; then
-    # get the full path (without any relative bits)
-    echo "Set ENV JBOSS_HOME!"
-    return 1
-fi
+
 #mvn clean install
 # -Dversion.jboss.legacy=5.1.0.GA ... eap build does not produce artifacts...
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
 mvn clean install -Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true
 #mvn clean install -Dversion.jboss.legacy=5.3.0-SNAPSHOT
+if [ "x$JBOSS_HOME" = "x" ]; then
+    # get the full path (without any relative bits)
+    echo "Set ENV JBOSS_HOME!"
+    return 1
+fi
 
 cp -Rf lib/target/module/org $JBOSS_HOME/modules/system/layers/base/
 cp -Rf jnp/target/module/org $JBOSS_HOME/modules/system/layers/base/
