@@ -24,7 +24,7 @@
     <parent>
         <artifactId>jboss-as-legacy-parent</artifactId>
 		<groupId>org.jboss.as.legacy</groupId>
-		<version>7.3.0.Final-redhat-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jboss-as-legacy-ejb3</artifactId>

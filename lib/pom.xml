@@ -25,7 +25,7 @@
     <parent>
         <artifactId>jboss-as-legacy-parent</artifactId>
         <groupId>org.jboss.as.legacy</groupId>
-        <version>7.3.0.Final-redhat-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jboss-as-legacy-lib</artifactId>
@@ -41,22 +41,6 @@
     <build>
       <finalName>${project.artifactId}</finalName>
       <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-enforcer-plugin</artifactId>
-              <executions>
-                  <execution>
-                      <id>ban-bad-dependencies</id>
-                      <goals>
-                          <goal>enforce</goal>
-                      </goals>
-                      <configuration>
-                          <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
-                          <skip>true</skip>
-                      </configuration>
-                  </execution>
-              </executions>
-          </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

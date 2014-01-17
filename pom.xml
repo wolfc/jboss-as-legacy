@@ -22,22 +22,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jboss.as</groupId>
-        <artifactId>jboss-as-parent</artifactId>
-        <version>7.3.0.Final-redhat-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>11-redhat-1</version>
     </parent>
 
     <artifactId>jboss-as-legacy-parent</artifactId>
     <groupId>org.jboss.as.legacy</groupId>
     <!-- NOTE: dont change version, it must be the same as AS, cause if it isn't, ${project.version} in parent is resolved to one set in here -->
     <name>JBoss Application Server: Legacy : Parent</name>
+    <version>0.0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <properties>
         <directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
-        <version.jboss.as>7.3.0.Final-redhat-SNAPSHOT</version.jboss.as>
+        <version.jboss.as>7.3.1.Final-redhat-1</version.jboss.as>
         <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
         <version.junit>4.8.2</version.junit>
         <jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
@@ -54,14 +54,23 @@
 
     <dependencies>
         <!-- I have no idea why this is required.... -->
+        <!--
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-build-config</artifactId>
             <version>${version.jboss.as}</version>
         </dependency>
+        -->
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-parent</artifactId>
+                <version>7.3.1.Final-redhat-1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.jboss.ejb3.bom</groupId>
                 <artifactId>bom-eap5</artifactId>
@@ -158,6 +167,18 @@
             </snapshots>
         </repository>
         <repository>
+            <id>mead-repository6.redhat.com</id>
+            <name>JBoss Production Releases MEAD Repository</name>
+            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6.2.0-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!--
+        <repository>
             <id>nexus.release</id>
             <name>JBoss Production Releases MEAD Repository</name>
             <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
@@ -168,15 +189,49 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        -->
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mead-repository6.redhat.com</id>
+            <name>JBoss Production Releases MEAD Repository</name>
+            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6.2.0-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <!-- Maven will append the version to the finalName (which is the name
         given to the generated war, and hence the context root) -->
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <!--
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jboss.as</groupId>
+                        <artifactId>jboss-as-build-config</artifactId>
+                        <version>${version.jboss.as}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
+                    <skip>true</skip>
+                </configuration>
+                <!--
                 <executions>
                     <execution>
                         <id>ban-bad-dependencies</id>
@@ -184,11 +239,12 @@
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
-                            <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
+                            < ! - - This module does not ban bad deps, since it actually depends on bad dep! - - >
                             <skip>true</skip>
                         </configuration>
                     </execution>
                 </executions>
+                -->
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
