@@ -21,15 +21,15 @@
   --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.jboss.as</groupId>
-        <artifactId>jboss-as-parent</artifactId>
-        <version>7.4.0.Final-redhat-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+	<parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>11-redhat-1</version>
     </parent>
 
     <artifactId>jboss-as-legacy-parent</artifactId>
     <groupId>org.jboss.as.legacy</groupId>
+    <version>1.0.0-SNAPSHOT</version>
     <!-- NOTE: dont change version, it must be the same as AS, cause if it isn't, ${project.version} in parent is resolved to one set in here -->
     <name>JBoss Application Server: Legacy : Parent</name>
 
@@ -37,11 +37,26 @@
 
     <properties>
         <directory.dependencies>${project.build.directory}/dependencies</directory.dependencies>
-        <version.jboss.as>7.4.0.Final-redhat-SNAPSHOT</version.jboss.as>
-        <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
+        <!--TODO merge & remove versions in order to depend on cm/boms-->
+        <!-- for some reason deps are not inherited... -->
+        <version.checkstyle.plugin>2.10</version.checkstyle.plugin>
+        <version.compiler.plugin>3.1</version.compiler.plugin>
+        <version.jboss.aspects.remoting>1.0.3</version.jboss.aspects.remoting>
+        <!-- NOTE: due to maven buggy nature, this values is spread across other poms, cause prop ref defaults to ${project.version} -->
+        <version.jboss.as>7.3.1.Final-redhat-1</version.jboss.as>
+        <version.jboss.as.legacy>5.1.0.GA</version.jboss.as.legacy>
+        <version.jboss.as.legacy.cm>5.2.0</version.jboss.as.legacy.cm>
+        <version.jboss.cache.core>3.2.11.GA</version.jboss.cache.core>
+        <version.jboss.ejb3.bom>1.0.4</version.jboss.ejb3.bom>
+        <version.jboss.javaee>5.0.2.GA</version.jboss.javaee>
+        <version.jboss.jbosssx>2.0.5.SP3-1</version.jboss.jbosssx>
+        <version.jboss.jbosssx.client>4.2.2.GA</version.jboss.jbosssx.client>
+        <version.jboss.metadata>7.0.8.Final-redhat-1</version.jboss.metadata>
+        <version.jboss.metadata.legacy>1.0.6.GA</version.jboss.metadata.legacy>
+        <version.jboss.remoting>2.5.4.SP4</version.jboss.remoting>
+        <version.jboss.ws.spi>1.1.2.SP8</version.jboss.ws.spi>
         <version.junit>4.8.2</version.junit>
-        <jbosscache-core-version>3.2.11.GA</jbosscache-core-version>
-        <version.jboss.legacy>5.1.0.GA</version.jboss.legacy>
+        <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
     </properties>
 
     <modules>
@@ -54,32 +69,51 @@
 
     <dependencies>
         <!-- I have no idea why this is required.... -->
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-build-config</artifactId>
-            <version>${version.jboss.as}</version>
-        </dependency>
+        
     </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.jboss.ejb3.bom</groupId>
                 <artifactId>bom-eap5</artifactId>
-                <version>1.0.4</version>
+                <version>${version.jboss.ejb3.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+				<groupId>org.jboss.as</groupId>
+        		<artifactId>jboss-as-parent</artifactId>
+        		<version>7.3.1.Final-redhat-1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.jboss.jbossas</groupId>
                 <artifactId>jboss-as-component-matrix</artifactId>
-                <version>5.2.0</version>
+                <version>${version.jboss.as.legacy.cm}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller</artifactId>
+	            <!-- this has to be here... -->
+	            <version>7.3.1.Final-redhat-1</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.jboss.metadata</groupId>
+               	<artifactId>jboss-metadata-ejb</artifactId>
+               	<version>${version.jboss.metadata}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.jboss.metadata</groupId>
+               	<artifactId>jboss-metadata-common</artifactId>
+               	<version>${version.jboss.metadata}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.metadata</groupId>
                 <artifactId>jboss-metadata</artifactId>
-                <version>1.0.6.GA</version>
+                <version>${version.jboss.metadata.legacy}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>sun-jaxb</groupId>
@@ -110,70 +144,50 @@
             <dependency>
                 <groupId>jboss</groupId>
                 <artifactId>jbosssx-client</artifactId>
-                <version>4.2.2.GA</version>
+                <version>${version.jboss.jbosssx.client}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jbosssx</artifactId>
-                <version>2.0.5.SP3-1</version>
+                <version>${version.jboss.jbosssx}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jboss-security-spi</artifactId>
-                <version>2.0.5.SP3-1</version>
+                <version>${version.jboss.jbosssx}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.ws</groupId>
                 <artifactId>jbossws-spi</artifactId>
-                <version>1.1.2.SP8</version>
+                <version>${version.jboss.ws.spi}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.aspects</groupId>
                 <artifactId>jboss-remoting-aspects</artifactId>
-                <version>1.0.3</version>
+                <version>${version.jboss.aspects.remoting}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.remoting</groupId>
                 <artifactId>jboss-remoting</artifactId>
-                <version>2.5.4.SP4</version>
+                <version>${version.jboss.remoting}</version>
             </dependency>
+            <!-- this has to be defined, otherwise maven fallbaks to 3.0.0.GA, even thought 5.0.2.GA is in dep tree -->
             <dependency>
                 <groupId>org.jboss.javaee</groupId>
                 <artifactId>jboss-jacc-api-1.1_spec</artifactId>
-                <version>5.0.2.GA</version>
+                <version>${version.jboss.javaee}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>mead-repository.redhat.com</id>
-            <name>JBoss Production Releases MEAD Repository</name>
-            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-5-rhel-6-build/latest/maven</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>nexus.release</id>
-            <name>JBoss Production Releases MEAD Repository</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    
     <build>
         <!-- Maven will append the version to the finalName (which is the name
         given to the generated war, and hence the context root) -->
         <finalName>${project.artifactId}</finalName>
         <plugins>
+        	<!-- This module does not ban bad deps, since it actually depends on bad dep! -->
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -184,19 +198,26 @@
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
-                            <!-- This module does not ban bad deps, since it actually depends on bad dep! -->
                             <skip>true</skip>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.plugin}</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${version.checkstyle.plugin}</version>
+            </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -216,6 +237,8 @@
                     <forkMode>once</forkMode>
                 </configuration>
             </plugin>
+            -->
+            <!--
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -227,6 +250,129 @@
                     </descriptors>
                 </configuration>
             </plugin>
+            -->
         </plugins>
+        
     </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Main Apache Maven Repository</name>
+            <url>http://repo.maven.apache.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jboss-product-repository</id>
+            <name>JBoss Internal Product Repository</name>
+            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6-rhel-6-build/latest/maven/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>redhat.com-eap6</id>
+            <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-eap-6-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>redhat.com-eap6-2</id>
+            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6.2.0-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>redhat.com-eap6-3</id>
+            <url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6-rhel-6-build/latest/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>redhat.com-eap5</id>
+            <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-eap-5-rhel-6-build/latest/maven</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <!--
+        <repository>
+            <id>nexus.release</id>
+            <name>JBoss Production Releases MEAD Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+        </repository>
+        -->
+    </repositories>
 </project>
