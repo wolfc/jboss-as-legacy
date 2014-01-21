@@ -67,10 +67,6 @@
         <module>tx</module>
     </modules>
 
-    <dependencies>
-        <!-- I have no idea why this is required.... -->
-        
-    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -94,11 +90,76 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+	    <dependency>
+                <groupId>org.jboss.jbossas</groupId>
+                <artifactId>jboss-as-server</artifactId>
+                <version>${version.jboss.as.legacy}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>sun-jaxb</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.ws.native</groupId>
+                        <artifactId>jbossws-native-jaxws</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.ws.native</groupId>
+                        <artifactId>jbossws-native-saaj</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.security</groupId>
+                        <artifactId>jaas</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jpl-pattern</groupId>
+                        <artifactId>jpl-pattern</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jpl-util</groupId>
+                        <artifactId>jpl-util</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.jbossas</groupId>
+                        <artifactId>jboss-as-deployment</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.jbossas</groupId>
+                        <artifactId>jboss-as-j2se</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.jbossas</groupId>
+                        <artifactId>jboss-as-security</artifactId>
+                    </exclusion>
+                </exclusions>      
+            </dependency>
             <dependency>
                 <groupId>org.jboss.as</groupId>
                 <artifactId>jboss-as-controller</artifactId>
-	            <!-- this has to be here... -->
-	            <version>7.3.1.Final-redhat-1</version>
+		<version>${version.jboss.as}</version>
+            </dependency>
+	    <dependency>
+                <groupId>org.jboss.jbossas</groupId>
+                <artifactId>jboss-as-system</artifactId>
+                <version>${version.jboss.as.legacy}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.deployers</groupId>
+                        <artifactId>jboss-deployers-impl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.jbossas</groupId>
+                        <artifactId>jboss-as-security</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.ws.native</groupId>
+                        <artifactId>jbossws-native-jaxws</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.ws.native</groupId>
+                        <artifactId>jbossws-native-saaj</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
             	<groupId>org.jboss.metadata</groupId>
@@ -139,6 +200,10 @@
                         <groupId>org.jboss.javaee</groupId>
                         <artifactId>jboss-ejb-api</artifactId>
                     </exclusion>
+		    <exclusion> 
+                        <groupId>org.jboss</groupId>
+                        <artifactId>jbossxb</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -150,11 +215,23 @@
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jbosssx</artifactId>
                 <version>${version.jboss.jbosssx}</version>
+		<exclusions>
+                    <exclusion>
+                        <groupId>javax.security</groupId>
+                        <artifactId>jaas</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.jboss.security</groupId>
                 <artifactId>jboss-security-spi</artifactId>
                 <version>${version.jboss.jbosssx}</version>
+		<exclusions>
+                    <exclusion>
+                        <groupId>javax.security</groupId>
+                        <artifactId>jaas</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.jboss.ws</groupId>
@@ -345,34 +422,29 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-        <!--
         <repository>
-            <id>nexus.release</id>
-            <name>JBoss Production Releases MEAD Repository</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+            <id>repository.jboss.org</id>
+            <name>JBoss Repository</name>
+            <layout>default</layout>
+            <url>http://repository.jboss.org/maven2/</url>
             <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
         <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <id>snapshots.jboss.org</id>
+            <name>JBoss Snapshots Repository</name>
             <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
+            <url>http://snapshots.jboss.org/maven2/</url>
             <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
+                <enabled>false</enabled>
             </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
-        -->
     </repositories>
 </project>
