@@ -25,6 +25,7 @@
         <artifactId>jboss-as-legacy-parent</artifactId>
     	<groupId>org.jboss.as.legacy</groupId>
     	<version>1.0.0-SNAPSHOT</version>
+	<relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>jboss-as-legacy-ejb3-bridge</artifactId>
@@ -35,9 +36,6 @@
     
     <properties>
     	<module.name>org.jboss.legacy.ejb3.bridge</module.name>
-        <version.jboss.as>${project.version}</version.jboss.as>
-        <version.plugin.maven.assembly>2.8</version.plugin.maven.assembly>
-        <version.junit>4.8.2</version.junit>
     </properties>
     <dependencies>
     	<dependency>
