@@ -18,15 +18,13 @@
   ~ License along with this software; if not, write to the Free
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>jboss-as-legacy-parent</artifactId>
     	<groupId>org.jboss.as.legacy</groupId>
     	<version>1.0.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>jboss-as-legacy-lib</artifactId>
@@ -45,7 +43,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
         		<executions>
                     <execution>
                         <id>copy</id>
@@ -472,26 +469,10 @@
         <dependency>
             <groupId>org.jboss.ejb3</groupId>
             <artifactId>jboss-ejb3-core</artifactId>
-	    <exclusions>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.ejb3</groupId>
             <artifactId>jboss-ejb3-proxy-spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss</groupId>
-                    <artifactId>jbossxb</artifactId>
-                </exclusion>                 
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.ejb3</groupId>
@@ -542,16 +523,6 @@
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-security</artifactId>
-	    <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-jaxws</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
@@ -573,75 +544,52 @@
             <groupId>org.jboss</groupId>
             <artifactId>jboss-iiop-client</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging-processor</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-	
         <dependency>
             <groupId>org.jboss.security</groupId>
             <artifactId>jbosssx</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.security</groupId>
             <artifactId>jboss-security-spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
-	<dependency>
+	   <dependency>
             <groupId>org.jboss.metadata</groupId>
             <artifactId>jboss-metadata</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.metadata</groupId>
             <artifactId>jboss-metadata-ejb</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.ejb3</groupId>
             <artifactId>jboss-ejb3-ext-api</artifactId>
         </dependency>
-  
         <dependency>
             <groupId>org.jboss.marshalling</groupId>
             <artifactId>jboss-marshalling</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.marshalling</groupId>
             <artifactId>jboss-marshalling-river</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
             <artifactId>jboss-ejb-api_3.1_spec</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.spec.javax.jms</groupId>
             <artifactId>jboss-jms-api_1.1_spec</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.spec.javax.xml.rpc</groupId>
             <artifactId>jboss-jaxrpc-api_1.1_spec</artifactId>
@@ -649,256 +597,71 @@
         <dependency>
             <groupId>org.jboss.cluster</groupId>
             <artifactId>jboss-ha-client</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.aspects</groupId>
-                    <artifactId>jboss-remoting-aspects</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss.remoting</groupId>
-                    <artifactId>jboss-remoting</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.aop</groupId>
-                    <artifactId>jboss-aop</artifactId>            
-                </exclusion>
-            </exclusions>
         </dependency>
-      
         <dependency>
             <groupId>org.jboss.cluster</groupId>
             <artifactId>jboss-ha-server-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss</groupId>
-                    <artifactId>jboss-common-core</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging-spi</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.cache</groupId>
-                    <artifactId>jbosscache-core</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.cache</groupId>
-                    <artifactId>jbosscache-pojo</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>jgroups</groupId>
-                    <artifactId>jgroups</artifactId>            
-                </exclusion>
-            </exclusions>
         </dependency>
-      
         <dependency>
             <groupId>org.jboss.cluster</groupId>
             <artifactId>jboss-ha-server-cache-spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.naming</groupId>
-                    <artifactId>jnp-client</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-serialization</artifactId>            
-                </exclusion>
-            </exclusions>
-        </dependency>      
+        </dependency>
         <dependency>
             <groupId>org.jboss.cluster</groupId>
             <artifactId>jboss-ha-server-cache-jbc</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss</groupId>
-                    <artifactId>jboss-common-core</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging-spi</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.cache</groupId>
-                    <artifactId>jbosscache-core</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.cache</groupId>
-                    <artifactId>jbosscache-pojo</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>jgroups</groupId>
-                    <artifactId>jgroups</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.naming</groupId>
-                    <artifactId>jnp-client</artifactId>            
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>            
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
-	<dependency>
+    	<dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-security</artifactId>
-            <version>${version.jboss.as.legacy}</version>
-	    <exclusions>
-                <exclusion>
-                    <groupId>org.apache</groupId>
-                    <artifactId>xmlsec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
+
         <!-- HA -->
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-server</artifactId>
-             <exclusions>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-jaxws</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-saaj</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jpl-pattern</groupId>
-                    <artifactId>jpl-pattern</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jpl-util</groupId>
-                    <artifactId>jpl-util</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-deployment</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-j2se</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-security</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-cluster</artifactId>
-            <version>${version.jboss.as.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-system</artifactId>
-            <version>${version.jboss.as.legacy}</version>
-	    <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.deployers</groupId>
-                    <artifactId>jboss-deployers-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-security</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-jaxws</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.ws.native</groupId>
-                    <artifactId>jbossws-native-saaj</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-jmx</artifactId>
-            <version>${version.jboss.as.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-system-jmx</artifactId>
-            <version>${version.jboss.as.legacy}</version>
-	    <exclusions>
-                <exclusion>
-                    <groupId>jpl-util</groupId>
-                    <artifactId>jpl-util</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.security</groupId>
-                    <artifactId>jaas</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss</groupId>
-                    <artifactId>jbossxb</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-j2se</artifactId>
-            <version>${version.jboss.as.legacy}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.microcontainer</groupId>
             <artifactId>jboss-kernel</artifactId>
-	    <exclusions>
-                <exclusion>
-                    <groupId>sun-jaxb</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-tree</artifactId>
-            <version>5.2.7.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.microcontainer</groupId>
             <artifactId>jboss-dependency</artifactId>
-	    <exclusions>
-                <exclusion>
-                    <groupId>org.jboss</groupId>
-                    <artifactId>jbossxb</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-tree</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-subsystem-test</artifactId>
