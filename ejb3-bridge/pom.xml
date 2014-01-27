@@ -51,41 +51,41 @@
                    </exclusion>
               </exclusions>
          </dependency>
-    	<dependency>
+    	 <dependency>
                 <groupId>org.jboss.metadata</groupId>
                 <artifactId>jboss-metadata-common</artifactId>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.jboss</groupId>
-                        <artifactId>jboss-common-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jboss.logging</groupId>
-                        <artifactId>jboss-logging-spi</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jboss.javaee</groupId>
-                        <artifactId>jboss-ejb-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jboss.ws</groupId>
-                        <artifactId>jbossws-spi</artifactId>
+                        <groupId>apache-xerces</groupId>
+                        <artifactId>xml-apis</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.hibernate</groupId>
                         <artifactId>ejb3-persistence</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>org.jboss.javaee</groupId>
-                        <artifactId>jboss-jms-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>apache-xerces</groupId>
-                        <artifactId>xml-apis</artifactId>
+                        <groupId>org.jboss</groupId>
+                        <artifactId>jboss-common-core</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.jboss</groupId>
                         <artifactId>jboss-reflect</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.javaee</groupId>
+                        <artifactId>jboss-ejb-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.javaee</groupId>
+                        <artifactId>jboss-jms-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging-spi</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.ws</groupId>
+                        <artifactId>jbossws-spi</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>sun-jaxb</groupId>
@@ -93,122 +93,105 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-        <dependency>
-        	<!-- This is PITA -->
-        	<artifactId>jboss-as-legacy-lib</artifactId>
-            <groupId>org.jboss.as.legacy</groupId>
-            <version>${project.version}</version>
-            <exclusions>
-	            <exclusion>
-		            <groupId>org.jboss.ejb3</groupId>
-		            <artifactId>jboss-ejb3-proxy-impl</artifactId>
-		        </exclusion>
-		
-		        <!-- More runtime dependencies -->
-		        <exclusion>
-		            <groupId>org.jboss.ejb3</groupId>
-		            <artifactId>jboss-ejb3-security</artifactId>
-		        </exclusion>
-		        <exclusion>
-		            <groupId>org.jboss.integration</groupId>
-		            <artifactId>jboss-integration</artifactId>
-		        </exclusion>
-		        <exclusion>
-		            <groupId>oswego-concurrent</groupId>
-		            <artifactId>concurrent</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.as</groupId>
-		            <artifactId>jboss-as-clustering-api</artifactId>
-		        </exclusion>
-		        <exclusion>
-		            <groupId>org.jboss.as</groupId>
-		            <artifactId>jboss-as-clustering-registry</artifactId>
-		        </exclusion>
-		        <exclusion>
-		            <groupId>org.jboss.as</groupId>
-		            <artifactId>jboss-as-jacorb</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.as</groupId>
-		            <artifactId>jboss-as-security</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.as</groupId>
-		            <artifactId>jboss-as-transactions</artifactId>
-		        </exclusion>
-		        <exclusion>
-		            <groupId>org.hibernate.javax.persistence</groupId>
-		            <artifactId>hibernate-jpa-2.0-api</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss</groupId>
-		            <artifactId>jboss-common-core</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.classfilewriter</groupId>
-		            <artifactId>jboss-classfilewriter</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss</groupId>
-		            <artifactId>jboss-ejb-client</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss</groupId>
-		            <artifactId>jboss-iiop-client</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.logging</groupId>
-		            <artifactId>jboss-logging</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.logging</groupId>
-		            <artifactId>jboss-logging-processor</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.metadata</groupId>
-		            <artifactId>jboss-metadata-ejb</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.ejb3</groupId>
-		            <artifactId>jboss-ejb3-ext-api</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.marshalling</groupId>
-		            <artifactId>jboss-marshalling</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.marshalling</groupId>
-		            <artifactId>jboss-marshalling-river</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.spec.javax.ejb</groupId>
-		            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.spec.javax.jms</groupId>
-		            <artifactId>jboss-jms-api_1.1_spec</artifactId>
-		        </exclusion>
-		
-		        <exclusion>
-		            <groupId>org.jboss.spec.javax.xml.rpc</groupId>
-		            <artifactId>jboss-jaxrpc-api_1.1_spec</artifactId>
-		        </exclusion>	
+            <dependency>
+        	    <!-- This is PITA -->
+        	    <artifactId>jboss-as-legacy-lib</artifactId>
+                <groupId>org.jboss.as.legacy</groupId>
+                <version>${project.version}</version>
+                <exclusions>
+                    <exclusion>
+	    	            <groupId>org.jboss</groupId>
+		                <artifactId>jboss-common-core</artifactId>
+		            </exclusion>
+		            <exclusion>
+	    	            <groupId>org.jboss</groupId>
+		                <artifactId>jboss-ejb-client</artifactId>
+		            </exclusion>
+    		        <exclusion>
+	    	            <groupId>org.jboss</groupId>
+		                <artifactId>jboss-iiop-client</artifactId>
+		            </exclusion>
+                    <exclusion>
+	        	        <groupId>org.jboss.as</groupId>
+		                <artifactId>jboss-as-clustering-api</artifactId>
+		            </exclusion>
+		            <exclusion>
+		                <groupId>org.hibernate.javax.persistence</groupId>
+    		            <artifactId>hibernate-jpa-2.0-api</artifactId>
+	    	        </exclusion>
+    		        <exclusion>
+	    	            <groupId>org.jboss.as</groupId>
+		                <artifactId>jboss-as-clustering-registry</artifactId>
+		            </exclusion>
+    		        <exclusion>
+	                    <groupId>org.jboss.as</groupId>
+		                <artifactId>jboss-as-jacorb</artifactId>
+		            </exclusion>
+	    	        <exclusion>
+    		            <groupId>org.jboss.as</groupId>
+		                <artifactId>jboss-as-security</artifactId>
+		            </exclusion>
+    		        <exclusion>
+	    	            <groupId>org.jboss.as</groupId>
+		                <artifactId>jboss-as-transactions</artifactId>
+		            </exclusion>
+		            <exclusion>
+	    	            <groupId>org.jboss.classfilewriter</groupId>
+		                <artifactId>jboss-classfilewriter</artifactId>
+		            </exclusion>
+		            <exclusion>
+	    	            <groupId>org.jboss.ejb3</groupId>
+		                <artifactId>jboss-ejb3-ext-api</artifactId>
+		            </exclusion>
+                    <exclusion>
+	    	            <groupId>org.jboss.ejb3</groupId>
+		                <artifactId>jboss-ejb3-proxy-impl</artifactId>
+		            </exclusion>
+		            <exclusion>
+		                <groupId>org.jboss.ejb3</groupId>
+    		            <artifactId>jboss-ejb3-security</artifactId>
+	    	        </exclusion>
+                    <exclusion>
+		                <groupId>org.jboss.integration</groupId>
+		                <artifactId>jboss-integration</artifactId>
+    		        </exclusion>
+                    <exclusion>
+    		            <groupId>org.jboss.logging</groupId>
+		                <artifactId>jboss-logging</artifactId>
+		            </exclusion>
+    		        <exclusion>
+	    	            <groupId>org.jboss.logging</groupId>
+		                <artifactId>jboss-logging-processor</artifactId>
+		            </exclusion>
+		            <exclusion>
+				       <groupId>org.jboss.marshalling</groupId>
+		        	   <artifactId>jboss-marshalling</artifactId>
+				   </exclusion>
+				   <exclusion>
+				       <groupId>org.jboss.marshalling</groupId>
+		        	   <artifactId>jboss-marshalling-river</artifactId>
+		           </exclusion>
+		            <exclusion>
+        	            <groupId>org.jboss.metadata</groupId>
+		                <artifactId>jboss-metadata-ejb</artifactId>
+		            </exclusion>
+		            <!-- More runtime dependencies -->
+    		        <exclusion>
+		               <groupId>org.jboss.spec.javax.ejb</groupId>
+		               <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+		          </exclusion>
+		          <exclusion>
+		               <groupId>org.jboss.spec.javax.jms</groupId>
+		               <artifactId>jboss-jms-api_1.1_spec</artifactId>
+		          </exclusion>
+		          <exclusion>
+    		           <groupId>org.jboss.spec.javax.xml.rpc</groupId>
+		               <artifactId>jboss-jaxrpc-api_1.1_spec</artifactId>
+		          </exclusion>
+	    	        <exclusion>
+		                <groupId>oswego-concurrent</groupId>
+		                <artifactId>concurrent</artifactId>
+		            </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

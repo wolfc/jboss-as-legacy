@@ -4,37 +4,29 @@
     <interceptor class="org.jboss.aspects.remoting.InvokeRemoteInterceptor" scope="PER_VM"/>
     <interceptor class="org.jboss.ejb3.security.client.SecurityClientInterceptor" scope="PER_VM"/>
     <interceptor class="org.jboss.aspects.tx.ClientTxPropagationInterceptor" scope="PER_VM"/>
-    <interceptor class="org.jboss.ejb3.remoting.IsLocalInterceptor" scope="PER_VM"/>
-    <interceptor class="org.jboss.ejb3.remoting.ClusteredIsLocalInterceptor" scope="PER_VM"/>
     <interceptor class="org.jboss.aspects.remoting.ClusterChooserInterceptor" scope="PER_VM"/>
 
     <interceptor class="org.jboss.aspects.tx.TxPropagationInterceptor" scope="PER_VM"/>
 
     <stack name="ServiceClientInterceptors">
-        <interceptor-ref name="org.jboss.ejb3.remoting.IsLocalInterceptor"/>
         <interceptor-ref name="org.jboss.ejb3.security.client.SecurityClientInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.tx.ClientTxPropagationInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.remoting.InvokeRemoteInterceptor"/>
     </stack>
 
     <stack name="StatelessSessionClientInterceptors">
-        <!-- IsLocalInterceptor uses a proprietary Core API.
-        <interceptor-ref name="org.jboss.ejb3.remoting.IsLocalInterceptor"/>
-        -->
         <interceptor-ref name="org.jboss.ejb3.security.client.SecurityClientInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.tx.ClientTxPropagationInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.remoting.InvokeRemoteInterceptor"/>
     </stack>
 
     <stack name="StatefulSessionClientInterceptors">
-        <interceptor-ref name="org.jboss.ejb3.remoting.IsLocalInterceptor"/>
         <interceptor-ref name="org.jboss.ejb3.security.client.SecurityClientInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.tx.ClientTxPropagationInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.remoting.InvokeRemoteInterceptor"/>
     </stack>
 
     <stack name="ClusteredStatelessSessionClientInterceptors">
-        <interceptor-ref name="org.jboss.ejb3.remoting.ClusteredIsLocalInterceptor"/>
         <interceptor-ref name="org.jboss.ejb3.security.client.SecurityClientInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.tx.ClientTxPropagationInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.remoting.ClusterChooserInterceptor"/>
@@ -42,7 +34,6 @@
     </stack>
 
     <stack name="ClusteredStatefulSessionClientInterceptors">
-        <interceptor-ref name="org.jboss.ejb3.remoting.ClusteredIsLocalInterceptor"/>
         <interceptor-ref name="org.jboss.ejb3.security.client.SecurityClientInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.tx.ClientTxPropagationInterceptor"/>
         <interceptor-ref name="org.jboss.aspects.remoting.ClusterChooserInterceptor"/>
