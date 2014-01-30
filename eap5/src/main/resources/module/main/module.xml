@@ -1,0 +1,33 @@
+<module xmlns="urn:jboss:module:1.0" name="org.jboss.legacy.eap5">
+    <resources>
+    	<resource-root path="lib/jboss-aop.jar"/>
+    	<resource-root path="lib/jboss-ejb3-common.jar"/>
+    	<resource-root path="lib/jboss-ejb3-proxy-impl.jar"/>
+    	<resource-root path="lib/jboss-ejb3-proxy-spi.jar"/>
+    	<resource-root path="lib/jboss-metadata.jar"/>
+    	<!--connector-->
+    	<resource-root path="lib/jboss-remoting-aspects.jar"/>
+    	<!-- ejb3 
+    	<resource-root path="lib/jboss-ejb3-proxy-impl.jar"/>
+    	-->
+    	<resource-root path="lib/jboss-ejb3-common.jar"/>
+    	<resource-root path="lib/trove.jar"/>
+    	<resource-root path="lib/jboss-mdr.jar"/>
+    	<!--
+    	<resource-root path="lib/jboss-logging-spi.jar"/>
+    	<resource-root path="lib/jboss-logging-log4j.jar"/>
+    	-->
+    	
+    	<!-- to be removed 
+    	<resource-root path="lib/jboss-remoting.jar"/>
+		
+		-->
+        <!-- TX -->
+        <resource-root path="lib/jboss-transaction-aspects.jar"/>
+    </resources>
+
+    <dependencies>    	
+    	<module name="org.jboss.legacy.jnp" export="true"/>
+    	<module name="org.javassist"/>
+    </dependencies>
+</module>
