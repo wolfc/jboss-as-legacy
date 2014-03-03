@@ -37,10 +37,7 @@
  	    
     <properties>
     	<module.name>org.jboss.legacy.eap5</module.name>
-	<eap5.home>/home/baranowb/redhat/svn/JBPAPP_5/build/output/jboss-5.3.0.Branch</eap5.home>
-	<!--
-    	<eap5.home>${env.EAP5_HOME}</eap5.home>
-	-->
+	<eap5.home>${env.EAP5_HOME}</eap5.home>
     </properties>
 	<!-- dep mgmt in case other modules need those artifacts, lets keep version mgmt in on eplace, atleast for eap 5 -->
 	<dependencyManagement>
