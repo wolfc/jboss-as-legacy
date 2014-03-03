@@ -37,7 +37,10 @@
  	    
     <properties>
     	<module.name>org.jboss.legacy.eap5</module.name>
+	<eap5.home>/home/baranowb/redhat/svn/JBPAPP_5/build/output/jboss-5.3.0.Branch</eap5.home>
+	<!--
     	<eap5.home>${env.EAP5_HOME}</eap5.home>
+	-->
     </properties>
 	<!-- dep mgmt in case other modules need those artifacts, lets keep version mgmt in on eplace, atleast for eap 5 -->
 	<dependencyManagement>
@@ -95,14 +98,14 @@
 			
 			
 			-->
-			<!-- XXX connector 
+			<!-- XXX connector -->
 			<dependency>
                 <groupId>org.jboss.remoting</groupId>
                 <artifactId>jboss-remoting</artifactId>
                 <version>${version.jboss.as.legacy}</version>
                 <scope>system</scope>
                 <systemPath>${eap5.home}/common/lib/jboss-remoting.jar</systemPath>
-            </dependency>-->
+            </dependency>
             <!-- XXX connector -->
 			<dependency>
                 <groupId>org.jboss.aspects</groupId>
@@ -140,6 +143,21 @@
                 <scope>system</scope>
                 <systemPath>${eap5.home}/lib/trove.jar</systemPath>
             </dependency>
+            <dependency>
+                <groupId>jboss</groupId>
+            	<artifactId>jbosssx-client</artifactId>
+                <version>${version.jboss.as.legacy}</version>
+                <scope>system</scope>
+                <systemPath>${eap5.home}/client/jbosssx-client.jar</systemPath>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.security</groupId>
+            	<artifactId>jboss-security-spi</artifactId>
+                <version>${version.jboss.as.legacy}</version>
+                <scope>system</scope>
+                <systemPath>${eap5.home}/lib/jboss-security-spi.jar</systemPath>
+            </dependency>
+            
             <!-- EJB/AOP needs this - LoggingPlugin, even though this one is banned 
             <dependency>
 				<groupId>org.jboss.logging</groupId>
@@ -149,6 +167,58 @@
                 <systemPath>${eap5.home}/client/jboss-logging-spi.jar</systemPath>
 			</dependency>
             -->
+            <!-- test -->
+            <dependency>
+	            <groupId>org.jboss.jbossas</groupId>
+	            <artifactId>jboss-as-security</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/lib/jbosssx-server.jar</systemPath>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jboss.ejb3</groupId>
+                <artifactId>jboss-ejb3-ext-api</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/common/lib/jboss-ejb3-ext-api.jar</systemPath>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jboss.ejb3</groupId>
+                <artifactId>jboss-ejb3-security</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/common/lib/jboss-ejb3-security.jar</systemPath>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jboss</groupId>
+            	<artifactId>jboss-iiop-client</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/client/jboss-iiop-client.jar</systemPath>
+	        </dependency>
+	        
+	        <dependency>
+	            <groupId>org.jboss.security</groupId>
+                <artifactId>jbosssx</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/lib/jbosssx.jar</systemPath>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jboss.ws</groupId>
+                <artifactId>jbossws-spi</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/common/lib/jbossws-spi.jar</systemPath>
+	        </dependency>
+	        <dependency>
+	            <groupId>jboss</groupId>
+                <artifactId>jboss-serialization</artifactId>
+	            <version>${version.jboss.as.legacy}</version>
+	            <scope>system</scope>
+                <systemPath>${eap5.home}/common/lib/jboss-serialization.jar</systemPath>
+	        </dependency>
+	        
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -182,11 +252,11 @@
             <artifactId>jboss-logging-log4j</artifactId>
         </dependency>
 		-->
-		<!-- XXX connector: to be removed 
+		<!-- XXX connector: to be removed -->
 		<dependency>
             <groupId>org.jboss.remoting</groupId>
             <artifactId>jboss-remoting</artifactId>
-        </dependency>-->
+        </dependency>
         <!-- XXX connector -->
 		<dependency>
             <groupId>org.jboss.aspects</groupId>
@@ -208,13 +278,53 @@
         <dependency>
             <groupId>trove</groupId>
             <artifactId>trove</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jboss</groupId>
+           	<artifactId>jbosssx-client</artifactId>
+        </dependency>  
+        <dependency>
+            <groupId>org.jboss.security</groupId>
+            <artifactId>jboss-security-spi</artifactId>
         </dependency>    
+        
         <!-- EJB3/AOP needs this 
         <dependency>
 		    <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging-spi</artifactId>
 		</dependency>
 		-->
+		<!-- test -->
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+	        <artifactId>jboss-as-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ejb3</groupId>
+            <artifactId>jboss-ejb3-ext-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ejb3</groupId>
+            <artifactId>jboss-ejb3-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss</groupId>
+            <artifactId>jboss-iiop-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.security</groupId>
+            <artifactId>jbosssx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ws</groupId>
+            <artifactId>jbossws-spi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jboss</groupId>
+            <artifactId>jboss-serialization</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

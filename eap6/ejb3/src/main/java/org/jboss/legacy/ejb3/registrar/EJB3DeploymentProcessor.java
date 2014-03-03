@@ -39,16 +39,22 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
 import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
-import org.jboss.legacy.common.EJBDataProxy;
-import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvocationService;
+import org.jboss.legacy.common.ExtendedEJBDataProxy;
+import org.jboss.legacy.ejb3.registrar.dynamic.AbstractDynamicInvocationService;
 import org.jboss.legacy.ejb3.registrar.dynamic.stateful.StatefulDynamicInvokeService;
 import org.jboss.legacy.ejb3.registrar.dynamic.stateles.StatelesDynamicInvokeService;
+import org.jboss.legacy.spi.ejb3.dynamic.stateful.StatefulDynamicInvocationTarget;
+import org.jboss.legacy.spi.ejb3.dynamic.stateles.StatelesDynamicInvocationTarget;
+import org.jboss.legacy.spi.ejb3.registrar.EJB3RegistrarProxy;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
 
 /**
- * Processor setup a service which will do AOP/JNP magic
+ * Processor setup a service which will do AOP/JNP magic. This processor and related services depend on proxy data being
+ * injected into deployment context by {@link org.jboss.legacy.ejb3.bridge.EJB3BridgeDeploymentProcessor}. Note that MDBs are
+ * ignored - there is no AOP, only messages.
+ * 
  * @author baranowb
  */
 public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
@@ -75,20 +81,23 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                         ejbComponentDescription.getConfigurators().add(new ComponentConfigurator() {
                             public void configure(DeploymentPhaseContext context, ComponentDescription description,
                                     ComponentConfiguration configuration) throws DeploymentUnitProcessingException {
-                                final DeploymentEJBDataProxyMap dataMap = deploymentUnit.getAttachment(DeploymentEJBDataProxyMap.ATTACHMENT_KEY);
-                                if (dataMap != null && dataMap.get(dataMap.getServiceName(moduleDescription, ejbComponentDescription))!=null) {
-                                    final EJBDataProxy data = dataMap.get(dataMap.getServiceName(moduleDescription, ejbComponentDescription));
+                                final DeploymentEJBDataProxyMap dataMap = deploymentUnit
+                                        .getAttachment(DeploymentEJBDataProxyMap.ATTACHMENT_KEY);
+                                if (dataMap != null
+                                        && dataMap.get(dataMap.getServiceName(moduleDescription, ejbComponentDescription)) != null) {
+                                    final ExtendedEJBDataProxy data = dataMap.get(dataMap.getServiceName(moduleDescription,
+                                            ejbComponentDescription));
                                     // create servuce
                                     if (data.isStateful()) {
                                         StatefulDynamicInvokeService service = new StatefulDynamicInvokeService(data,
                                                 moduleDescription, ejbComponentDescription);
                                         final ServiceName serviceName = service.getServiceName();
                                         final ServiceTarget serviceTarget = phaseContext.getServiceTarget();
-                                        final ServiceBuilder<DynamicInvocationService> serviceBuilder = serviceTarget
+                                        final ServiceBuilder<StatefulDynamicInvocationTarget> serviceBuilder = serviceTarget
                                                 .addService(serviceName, service);
                                         serviceBuilder.addDependency(SimpleSecurityManagerService.SERVICE_NAME,
                                                 ServerSecurityManager.class, service.getServerSecurityManagerInjectedValue());
-                                        serviceBuilder.addDependency(EJB3Registrar.SERVICE_NAME, EJB3Registrar.class,
+                                        serviceBuilder.addDependency(EJB3RegistrarService.SERVICE_NAME, EJB3RegistrarProxy.class,
                                                 service.getEJB3RegistrarInjectedValue());
                                         serviceBuilder.addDependency(data.getViewServiceName(), ComponentView.class,
                                                 service.getViewInjectedValue());
@@ -102,11 +111,11 @@ public class EJB3DeploymentProcessor implements DeploymentUnitProcessor {
                                                 moduleDescription, ejbComponentDescription);
                                         final ServiceName serviceName = service.getServiceName();
                                         final ServiceTarget serviceTarget = phaseContext.getServiceTarget();
-                                        final ServiceBuilder<DynamicInvocationService> serviceBuilder = serviceTarget
+                                        final ServiceBuilder<StatelesDynamicInvocationTarget> serviceBuilder = serviceTarget
                                                 .addService(serviceName, service);
                                         serviceBuilder.addDependency(SimpleSecurityManagerService.SERVICE_NAME,
                                                 ServerSecurityManager.class, service.getServerSecurityManagerInjectedValue());
-                                        serviceBuilder.addDependency(EJB3Registrar.SERVICE_NAME, EJB3Registrar.class,
+                                        serviceBuilder.addDependency(EJB3RegistrarService.SERVICE_NAME, EJB3RegistrarProxy.class,
                                                 service.getEJB3RegistrarInjectedValue());
                                         serviceBuilder.addDependency(data.getViewServiceName(), ComponentView.class,
                                                 service.getViewInjectedValue());

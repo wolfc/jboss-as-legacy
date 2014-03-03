@@ -37,7 +37,6 @@
     	<module.name>org.jboss.legacy.ejb3.bridge</module.name>
     </properties>
     <dependencies>
-    	<!-- remove -->
     	<dependency>
 	    	<artifactId>jboss-as-legacy-eap6-ejb3</artifactId>
 	        <groupId>org.jboss.as.legacy.ejb3.eap6</groupId>
@@ -48,6 +47,17 @@
 	    			<artifactId>*</artifactId>
 	    		</exclusion>
 	    	</exclusions>
+    	</dependency>
+    	<dependency>
+    		<artifactId>jboss-as-legacy-eap6-spi</artifactId>
+        	<groupId>org.jboss.as.legacy.ejb3.eap6</groupId>
+    		<version>${project.version}</version>
+    		<exclusions>
+    			<exclusion>
+    				<groupId>*</groupId>
+    				<artifactId>*</artifactId>
+    			</exclusion>
+    		</exclusions>
     	</dependency>
     	<dependency>
             <groupId>org.jboss.as</groupId>

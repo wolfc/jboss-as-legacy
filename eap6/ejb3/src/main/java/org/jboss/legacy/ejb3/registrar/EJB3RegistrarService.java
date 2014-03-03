@@ -22,65 +22,47 @@
 
 package org.jboss.legacy.ejb3.registrar;
 
-import java.net.URL;
-
-import org.jboss.aop.AspectXmlLoader;
 import org.jboss.as.core.security.ServerSecurityManager;
-import org.jboss.as.ee.component.Component;
-import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
-import org.jboss.ejb3.common.registrar.spi.Ejb3RegistrarLocator;
-import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatefulSessionRegistrar;
-import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatelessSessionRegistrar;
-import org.jboss.ejb3.proxy.impl.objectfactory.session.stateful.StatefulSessionProxyObjectFactory;
-import org.jboss.ejb3.proxy.impl.objectfactory.session.stateless.StatelessSessionProxyObjectFactory;
+import org.jboss.legacy.spi.connector.ConnectorProxy;
+import org.jboss.legacy.spi.ejb3.registrar.EJB3RegistrarProxy;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
-import org.jboss.remoting.transport.Connector;
-
 
 /**
  * @author baranowb
- *
+ * 
  */
-public class EJB3RegistrarService implements Service<EJB3Registrar>{
+public class EJB3RegistrarService implements Service<EJB3RegistrarProxy> {
 
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(EJB3RegistrarModel.LEGACY).append(
+            EJB3RegistrarModel.SERVICE_NAME);
     private static final String AOP_FILE = "ejb3-interceptors-aop.xml";
-    private static final String CONNECTOR_BIND_NAME = "org.jboss.ejb3.RemotingConnector";
-    //main thing
-    private Ejb3Registrar registrar;
-    //hacks
-    private JndiStatelessSessionRegistrar jndiStatelessSessionRegistrar;
-    private JndiStatefulSessionRegistrar jndiStatefulSessionRegistrar;
-    private URL aopURL;
 
-    private EJB3Registrar value = new LegacyEJB3RegistrarProxy(this);
+    private EJB3RegistrarProxy value;
 
-    private InjectedValue<Connector> connector = new InjectedValue<Connector>();
+    private InjectedValue<ConnectorProxy> connector = new InjectedValue<ConnectorProxy>();
     private final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
+
     public EJB3RegistrarService() {
         super();
+        this.value = new EJB3RegistrarProxy();
     }
 
     @Override
-    public EJB3Registrar getValue() throws IllegalStateException, IllegalArgumentException {
+    public EJB3RegistrarProxy getValue() throws IllegalStateException, IllegalArgumentException {
         return value;
     }
 
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
-            this.registrar = new InMemoryEJB3Registrar();
-            Ejb3RegistrarLocator.bindRegistrar(this.registrar);
-            Ejb3RegistrarLocator.locateRegistrar().bind(CONNECTOR_BIND_NAME, this.connector.getValue());
-            this.aopURL = Thread.currentThread().getContextClassLoader().getResource(AOP_FILE);
-            AspectXmlLoader.deployXML(this.aopURL);
-            this.jndiStatelessSessionRegistrar = new JndiStatelessSessionRegistrar(StatelessSessionProxyObjectFactory.class.getName());
-            this.jndiStatefulSessionRegistrar = new JndiStatefulSessionRegistrar(StatefulSessionProxyObjectFactory.class.getName());
-          //TODO AOP + ejb3 deployment interceptor to bind proxy.// AOP
+            this.value.setConnector(this.connector.getValue());
+            this.value.setEjb3AOPInterceptorsURL(Thread.currentThread().getContextClassLoader().getResource(AOP_FILE));
+            this.value.start();
         } catch (Exception e) {
             throw new StartException(e);
         }
@@ -89,23 +71,14 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
 
     @Override
     public void stop(StopContext stopContext) {
-        if(Ejb3RegistrarLocator.isRegistrarBound() && Ejb3RegistrarLocator.locateRegistrar() == this.registrar){
-            Ejb3RegistrarLocator.locateRegistrar().unbind(CONNECTOR_BIND_NAME);
-            Ejb3RegistrarLocator.unbindRegistrar();
+        try {
+            this.value.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if(aopURL!=null){
-            try {
-                AspectXmlLoader.undeployXML(aopURL);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            aopURL = null;
-        }
-        this.jndiStatelessSessionRegistrar = null;
-        this.jndiStatefulSessionRegistrar = null;
     }
 
-    public InjectedValue<Connector> getInjectedValueConnector(){
+    public InjectedValue<ConnectorProxy> getInjectedValueConnector() {
         return this.connector;
     }
 
@@ -113,27 +86,4 @@ public class EJB3RegistrarService implements Service<EJB3Registrar>{
         return serverSecurityManagerInjectedValue;
     }
 
-    private class LegacyEJB3RegistrarProxy implements EJB3Registrar{
-        private EJB3RegistrarService wrapped;
-
-        public LegacyEJB3RegistrarProxy(EJB3RegistrarService legacyEJB3RegistrarService) {
-            this.wrapped = legacyEJB3RegistrarService;
-        }
-
-        @Override
-        public Ejb3Registrar getRegistrar() {
-            return wrapped.registrar;
-        }
-
-        @Override
-        public JndiStatelessSessionRegistrar getJndiStatelessSessionRegistrar() {
-            return wrapped.jndiStatelessSessionRegistrar;
-        }
-
-        @Override
-        public JndiStatefulSessionRegistrar getJndiStatefulSessionRegistrar() {
-            return wrapped.jndiStatefulSessionRegistrar;
-        }
-
-    }
 }

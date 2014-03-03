@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.ejb3.registrar.dynamic;
+package org.jboss.legacy.spi.ejb3.dynamic;
 
 import org.jboss.aop.InstanceAdvisor;
 import org.jboss.aop.joinpoint.Invocation;
@@ -32,12 +32,13 @@ import org.jboss.ejb3.proxy.spi.container.InvokableContext;
  * Exposes InvokableContext.dynamicInvoke to Remoting
  * <p/>
  * org.jboss.aop.Dispatcher can handle only certain types.
- *
+ * 
  * Copy of the one in Core org.jboss.ejb3.session.InvokableContextClassProxyHack.
- *
+ * 
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  */
 public class InvokableContextClassProxyHack implements ClassProxy {
+    // TODO: check if this can be removed.
     private InvokableContext container;
 
     public InvokableContextClassProxyHack(InvokableContext container) {

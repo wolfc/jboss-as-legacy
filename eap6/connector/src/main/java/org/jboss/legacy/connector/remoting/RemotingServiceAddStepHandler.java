@@ -31,10 +31,10 @@ import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.ServiceVerificationHandler;
 import org.jboss.as.network.SocketBinding;
 import org.jboss.dmr.ModelNode;
+import org.jboss.legacy.spi.connector.ConnectorProxy;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
-import org.jboss.remoting.transport.Connector;
 
 /**
  * @author baranowb
@@ -61,13 +61,13 @@ public class RemotingServiceAddStepHandler extends AbstractBoottimeAddStepHandle
 
         final RemotingConnectorService service = new RemotingConnectorService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<Connector> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
+        final ServiceBuilder<ConnectorProxy> serviceBuilder = serviceTarget.addService(service.SERVICE_NAME, service);
         serviceBuilder.addDependency(service.SERVICE_NAME).addDependency(SocketBinding.JBOSS_BINDING_NAME.append(
                 bindingRefModel.asString()), SocketBinding.class, service.getBinding());
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }
-        final ServiceController<Connector> remotingServiceController = serviceBuilder.install();
+        final ServiceController<ConnectorProxy> remotingServiceController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(remotingServiceController);
         return installedServices;

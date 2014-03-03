@@ -25,6 +25,7 @@ package org.jboss.legacy.ejb3.registrar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
@@ -38,10 +39,11 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.legacy.connector.remoting.RemotingConnectorService;
 import org.jboss.legacy.ejb3.EJB3Extension;
 import org.jboss.legacy.jnp.server.JNPServerService;
+import org.jboss.legacy.spi.connector.ConnectorProxy;
+import org.jboss.legacy.spi.ejb3.registrar.EJB3RegistrarProxy;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceTarget;
-import org.jboss.remoting.transport.Connector;
 
 /**
  * @author baranowb
@@ -65,14 +67,14 @@ public class EJB3RegistrarServiceAddStepHandler extends AbstractBoottimeAddStepH
 
         final EJB3RegistrarService service = new EJB3RegistrarService();
         final ServiceTarget serviceTarget = context.getServiceTarget();
-        final ServiceBuilder<EJB3Registrar> serviceBuilder = serviceTarget.addService(EJB3Registrar.SERVICE_NAME, service);
-        serviceBuilder.addDependency(RemotingConnectorService.SERVICE_NAME,Connector.class,service.getInjectedValueConnector());
+        final ServiceBuilder<EJB3RegistrarProxy> serviceBuilder = serviceTarget.addService(EJB3RegistrarService.SERVICE_NAME, service);
+        serviceBuilder.addDependency(RemotingConnectorService.SERVICE_NAME,ConnectorProxy.class,service.getInjectedValueConnector());
         serviceBuilder.addDependency(SimpleSecurityManagerService.SERVICE_NAME,ServerSecurityManager.class,service.getServerSecurityManagerInjectedValue());
         serviceBuilder.addDependency(JNPServerService.SERVICE_NAME);
         if (verificationHandler != null) {
             serviceBuilder.addListener(verificationHandler);
         }
-        final ServiceController<EJB3Registrar> registrarServiceController = serviceBuilder.install();
+        final ServiceController<EJB3RegistrarProxy> registrarServiceController = serviceBuilder.install();
         final List<ServiceController<?>> installedServices = new ArrayList<ServiceController<?>>();
         installedServices.add(registrarServiceController);
 

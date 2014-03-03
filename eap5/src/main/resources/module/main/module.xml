@@ -18,16 +18,33 @@
     	<resource-root path="lib/jboss-logging-log4j.jar"/>
     	-->
     	
-    	<!-- to be removed 
+    	<!-- to be removed --> 
     	<resource-root path="lib/jboss-remoting.jar"/>
 		
+		<resource-root path="lib/jbosssx.jar"/>
+		<resource-root path="lib/jboss-ejb3-ext-api.jar"/>
+		<resource-root path="lib/jboss-ejb3-security.jar"/>
+		<!--
+		<resource-root path="lib/jboss-jacc-api-1.1_spec.jar"/>
 		-->
+		<resource-root path="lib/jboss-as-security.jar"/>
+		<resource-root path="lib/jbossws-spi.jar"/>
+		<resource-root path="lib/jboss-serialization.jar"/>
+		
+		
+		<!-- test -->
         <!-- TX -->
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
     </resources>
 
     <dependencies>    	
     	<module name="org.jboss.legacy.jnp" export="true"/>
-    	<module name="org.javassist"/>
+    	<module name="org.javassist" />
+    	<!--test -->
+    	<module name="javax.persistence.api"/>
+    	<module name="javax.ejb.api"/>
+    	<module name="javax.jms.api"/>
+    	
+    	
     </dependencies>
 </module>

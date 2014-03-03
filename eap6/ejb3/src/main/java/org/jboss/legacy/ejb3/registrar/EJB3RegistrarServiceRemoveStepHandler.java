@@ -25,8 +25,6 @@ package org.jboss.legacy.ejb3.registrar;
 import org.jboss.as.controller.AbstractRemoveStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
-import org.jboss.as.controller.PathAddress;
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
 import org.jboss.dmr.ModelNode;
 
 /**
@@ -57,6 +55,6 @@ public class EJB3RegistrarServiceRemoveStepHandler extends AbstractRemoveStepHan
     }
 
     void removeRuntimeService(OperationContext context, ModelNode operation) {
-        context.removeService(EJB3Registrar.SERVICE_NAME);
+        context.removeService(EJB3RegistrarService.SERVICE_NAME);
     }
 }

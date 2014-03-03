@@ -4,6 +4,7 @@
     </resources>
 
     <dependencies>
+    	<module name="org.jboss.legacy.spi"/>
     	<module name="org.jboss.legacy.connector"/>
     	<module name="org.jboss.legacy.eap5"/>
 

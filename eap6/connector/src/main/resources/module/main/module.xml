@@ -9,6 +9,6 @@
         <module name="org.jboss.msc"/>
         <module name="org.jboss.staxmapper"/>
 
-        <module name="org.jboss.legacy.eap5"/>
+        <module name="org.jboss.legacy.spi"/>
     </dependencies>
 </module>

@@ -22,33 +22,48 @@
 
 package org.jboss.legacy.ejb3.registrar.dynamic.stateles;
 
+import java.lang.reflect.Method;
+
 import org.jboss.as.ee.component.EEModuleDescription;
 import org.jboss.as.ejb3.component.EJBComponentDescription;
-import org.jboss.ejb3.proxy.spi.container.InvokableContext;
-import org.jboss.legacy.common.EJBDataProxy;
-import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvocationService;
-import org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext;
+import org.jboss.invocation.InterceptorContext;
+import org.jboss.legacy.common.ExtendedEJBDataProxy;
+import org.jboss.legacy.ejb3.registrar.dynamic.AbstractDynamicInvocationService;
+import org.jboss.legacy.spi.ejb3.dynamic.DynamicInvocationProxy;
+import org.jboss.legacy.spi.ejb3.dynamic.stateles.StatelesDynamicInvocationProxy;
+import org.jboss.legacy.spi.ejb3.dynamic.stateles.StatelesDynamicInvocationTarget;
 import org.jboss.msc.service.Service;
 
 /**
  * @author baranowb
  */
-public class StatelesDynamicInvokeService extends DynamicInvocationService implements Service<DynamicInvocationService> {
+public class StatelesDynamicInvokeService extends AbstractDynamicInvocationService implements StatelesDynamicInvocationTarget,
+        Service<StatelesDynamicInvocationTarget> {
 
-    public StatelesDynamicInvokeService(final EJBDataProxy ejb3Data, final EEModuleDescription moduleDescription,
+    public StatelesDynamicInvokeService(final ExtendedEJBDataProxy ejb3Data, final EEModuleDescription moduleDescription,
             final EJBComponentDescription ejbComponentDescription) {
         super(ejb3Data, moduleDescription, ejbComponentDescription);
     }
 
     @Override
-    public DynamicInvocationService getValue() throws IllegalStateException, IllegalArgumentException {
+    public StatelesDynamicInvocationTarget getValue() throws IllegalStateException, IllegalArgumentException {
         return this;
     }
 
     @Override
-    protected InvokableContext createInvokableContext() {
-        return new DynamicInvokableContext(super.ejb3Data, super.serverSecurityManagerInjectedValue, super.ejb3RegistrarInjectedValue,
-                super.deploymentRepositoryInjectedValue, super.viewInjectedValue, super.applicationName, super.moduleName,
-                super.distinctName, super.componentName);
+    public Object invoke(Method method, Object[] arguments) throws Exception {
+        // TODO: check Exception propagation
+        InterceptorContext ic = createInterceptorContext(method, arguments);
+        return viewInjectedValue.getValue().invoke(ic);
     }
+
+    @Override
+    protected DynamicInvocationProxy createInvocationProxy() {
+        StatelesDynamicInvocationProxy value = new StatelesDynamicInvocationProxy();
+        value.setDynamicInvocationTarget(this);
+        value.setEjb3Data(ejb3Data);
+        value.setEjb3RegistrarProxy(super.ejb3RegistrarInjectedValue.getValue());
+        return value;
+    }
+
 }

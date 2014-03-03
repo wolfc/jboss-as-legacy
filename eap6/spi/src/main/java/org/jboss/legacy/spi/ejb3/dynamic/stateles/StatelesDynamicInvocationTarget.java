@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2014, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,36 +20,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.common;
+package org.jboss.legacy.spi.ejb3.dynamic.stateles;
 
-import java.util.Set;
+import java.lang.reflect.Method;
 
-import org.jboss.as.server.deployment.AttachmentKey;
-import org.jboss.msc.service.ServiceName;
-
-
+import org.jboss.legacy.spi.ejb3.dynamic.DynamicInvocationTarget;
 
 /**
  * @author baranowb
+ * 
  */
-public interface EJBDataProxy {
-    //TODO: add more if need be.
-
-    String getName();
-
-    String getRemoteInterfaceClass();
-
-    String getEJBVersion();
-
-    boolean isStateful();
-
-    ClassLoader getBeanClassLoader();
-
-    ServiceName getViewServiceName();
-
-    String getLocalASBinding();
-
-    String getDeploymentName();
-
-    String getDeploymentScopeBaseName();
+public interface StatelesDynamicInvocationTarget extends DynamicInvocationTarget {
+    Object invoke(Method method, Object[] arguments) throws Exception;
 }

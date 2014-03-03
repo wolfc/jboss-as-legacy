@@ -43,6 +43,19 @@
             <artifactId>jboss-as-legacy-eap6-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.jboss.as.legacy.ejb3.eap6</groupId>
+            <artifactId>jboss-as-legacy-eap6-spi</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+    			<exclusion>
+    				<groupId>*</groupId>
+    				<artifactId>*</artifactId>
+    			</exclusion>
+    		</exclusions>
+        </dependency>
+        -->
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-ejb3</artifactId>
@@ -58,7 +71,7 @@
     		<groupId>org.jboss.as.legacy.naming</groupId>
     		<artifactId>jboss-as-legacy-naming-jnp</artifactId>
     	</dependency>
-        <!-- EAP5 system deps, need to define directly, since those are not included as trans -->
+        <!-- EAP5 system deps, need to define directly, since those are not included as trans 
         <dependency>
 			<groupId>org.jboss.aop</groupId>
 	    	<artifactId>jboss-aop</artifactId>
@@ -83,7 +96,7 @@
 			<groupId>org.jboss.metadata</groupId>
 			<artifactId>jboss-metadata</artifactId>
 		</dependency>
-		
+		-->
     </dependencies>
     <build>
       <!-- Maven will append the version to the finalName (which is the name 

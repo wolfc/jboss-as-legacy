@@ -30,9 +30,12 @@ import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.msc.service.ServiceName;
 
 /**
+ * Simple map like object with additional method to calculate keys. This class is used to store ejb-service->EAP5-data-proxy
+ * values in deploy context.
+ * 
  * @author baranowb
  */
-public class DeploymentEJBDataProxyMap extends HashMap<ServiceName, EJBDataProxy> {
+public class DeploymentEJBDataProxyMap extends HashMap<ServiceName, ExtendedEJBDataProxy> {
     public static final ServiceName SERVICE_NAME_BASE = ServiceName.of("jboss", "legacy");
     public static final AttachmentKey<DeploymentEJBDataProxyMap> ATTACHMENT_KEY = AttachmentKey
             .create(DeploymentEJBDataProxyMap.class);

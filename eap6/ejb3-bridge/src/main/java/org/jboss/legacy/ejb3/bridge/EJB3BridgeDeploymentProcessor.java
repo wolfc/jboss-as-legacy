@@ -41,7 +41,7 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.EjbDeploymentMarker;
 import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
-import org.jboss.legacy.common.EJBDataProxy;
+import org.jboss.legacy.common.ExtendedEJBDataProxy;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.value.InjectedValue;
 import org.jboss.msc.value.Values;
@@ -87,7 +87,7 @@ public class EJB3BridgeDeploymentProcessor implements DeploymentUnitProcessor {
                                     if (viewType == MethodIntf.REMOTE) {
                                         final ViewDescription viewDescription = vd;
                                         final String globalBinding = getGlobalBinding(viewDescription.getBindingNames());
-                                        deploymentEJBDataProxyMap.put(deploymentEJBDataProxyMap.getServiceName(moduleDescription, ejbComponentDescription), new EJBDataProxy() {
+                                        deploymentEJBDataProxyMap.put(deploymentEJBDataProxyMap.getServiceName(moduleDescription, ejbComponentDescription), new ExtendedEJBDataProxy() {
 
                                             @Override
                                             public String getName() {

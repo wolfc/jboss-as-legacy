@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2014, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,121 +20,104 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3.registrar.dynamic;
+package org.jboss.legacy.spi.ejb3.dynamic;
 
 import java.util.Hashtable;
 import java.util.UUID;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
+
 import org.jboss.aop.Advisor;
 import org.jboss.aop.AspectManager;
 import org.jboss.aop.ClassAdvisor;
 import org.jboss.aop.Dispatcher;
-import org.jboss.as.core.security.ServerSecurityManager;
-import org.jboss.as.ee.component.ComponentView;
-import org.jboss.as.ee.component.EEModuleDescription;
-import org.jboss.as.ejb3.component.EJBComponentDescription;
-import org.jboss.as.ejb3.deployment.DeploymentRepository;
 import org.jboss.ejb3.common.metadata.MetadataUtil;
 import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiSessionRegistrarBase;
 import org.jboss.ejb3.proxy.spi.container.InvokableContext;
-import org.jboss.legacy.common.DeploymentEJBDataProxyMap;
-import org.jboss.legacy.common.EJBDataProxy;
-import org.jboss.legacy.ejb3.registrar.EJB3Registrar;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.getJndiSessionRegistrarBase;
-import static org.jboss.legacy.ejb3.registrar.dynamic.DynamicInvokableContext.switchLoader;
+import org.jboss.legacy.spi.common.LegacyBean;
+import org.jboss.legacy.spi.ejb3.common.EJBDataProxy;
+import org.jboss.legacy.spi.ejb3.registrar.EJB3RegistrarProxy;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.metadata.ejb.jboss.JBossSessionBeanMetaData;
 import org.jboss.metadata.ejb.jboss.jndipolicy.spi.DeploymentSummary;
 import org.jboss.metadata.ejb.spec.BusinessRemotesMetaData;
-import org.jboss.msc.service.ServiceName;
-import org.jboss.msc.service.StartContext;
-import org.jboss.msc.service.StartException;
-import org.jboss.msc.service.StopContext;
-import org.jboss.msc.value.InjectedValue;
 
 /**
  * @author baranowb
+ * 
  */
-public abstract class DynamicInvocationService {
-    public static final String LEGACY_MD_SECURITY = "security";
-    public static final String LEGACY_MD_KEY_PRINCIPIAL = "principal";
-    public static final String LEGACY_MD_KEY_CREDENTIAL = "credential";
-    public static final String LEGACY_MD_KEY_CONTEXT = "context";
+public abstract class DynamicInvocationProxy extends LegacyBean {
 
-    protected final InjectedValue<ServerSecurityManager> serverSecurityManagerInjectedValue = new InjectedValue<ServerSecurityManager>();
-    protected final InjectedValue<TransactionManager> transactionManagerInjectedValue = new InjectedValue<TransactionManager>();
-    protected final InjectedValue<EJB3Registrar> ejb3RegistrarInjectedValue = new InjectedValue<EJB3Registrar>();
-    protected final InjectedValue<DeploymentRepository> deploymentRepositoryInjectedValue = new InjectedValue<DeploymentRepository>();
-    protected final InjectedValue<ComponentView> viewInjectedValue = new InjectedValue<ComponentView>();
+    protected EJBDataProxy ejb3Data;
+    protected EJB3RegistrarProxy ejb3RegistrarProxy;
+    protected JBossSessionBeanMetaData metadata;
+    protected DynamicInvocationTarget dynamicInvocationTarget;
 
-    protected final ServiceName serviceName;
-    protected final String applicationName;
-    protected final String moduleName;
-    protected final String distinctName;
-    protected final String componentName;
-    protected final EJBDataProxy ejb3Data;
-
-    protected Object metadata;
-
-    public DynamicInvocationService(EJBDataProxy ejb3Data, EEModuleDescription moduleDescription,
-            EJBComponentDescription ejbComponentDescription) {
-        this.ejb3Data = ejb3Data;
-        this.serviceName = DeploymentEJBDataProxyMap.getServiceName(moduleDescription, ejbComponentDescription);
-        this.applicationName = moduleDescription.getEarApplicationName();
-        this.moduleName = moduleDescription.getModuleName();
-        this.distinctName = moduleDescription.getDistinctName();
-        this.componentName = ejbComponentDescription.getComponentName();
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return the ejb3Data
      */
+    public EJBDataProxy getEjb3Data() {
+        return ejb3Data;
+    }
+
+    /**
+     * @param ejb3Data the ejb3Data to set
+     */
+    public void setEjb3Data(EJBDataProxy ejb3Data) {
+        this.ejb3Data = ejb3Data;
+    }
+
+    /**
+     * @return the ejb3RegistrarProxy
+     */
+    public EJB3RegistrarProxy getEjb3RegistrarProxy() {
+        return ejb3RegistrarProxy;
+    }
+
+    /**
+     * @param ejb3RegistrarProxy the ejb3RegistrarProxy to set
+     */
+    public void setEjb3RegistrarProxy(EJB3RegistrarProxy ejb3RegistrarProxy) {
+        this.ejb3RegistrarProxy = ejb3RegistrarProxy;
+    }
+
+    /**
+     * @return the metadata
+     */
+    public JBossSessionBeanMetaData getMetadata() {
+        return metadata;
+    }
+
+    /**
+     * @return the dynamicInvocationTarget
+     */
+    public DynamicInvocationTarget getDynamicInvocationTarget() {
+        return dynamicInvocationTarget;
+    }
+
+    /**
+     * @param dynamicInvocationTarget the dynamicInvocationTarget to set
+     */
+    public void setDynamicInvocationTarget(DynamicInvocationTarget dynamicInvocationTarget) {
+        this.dynamicInvocationTarget = dynamicInvocationTarget;
+    }
+
     @Override
-    public String toString() {
-        return "DynamicInvocationService [serviceName=" + serviceName + "]@"+this.hashCode();
+    protected void internalStart() throws Exception {
+        if (ejb3Data == null)
+            throw new IllegalArgumentException("EJB3 Data must not be null");
+        if (ejb3RegistrarProxy == null)
+            throw new IllegalArgumentException("EJB3 Registrar proxy must not be null");
+        if (dynamicInvocationTarget == null)
+            throw new IllegalArgumentException("Dynamic Target must nto be null");
+        createLegacyBinding();
     }
 
-    public void start(StartContext context) throws StartException {
-        try {
-            createLegacyBinding();
-        } catch (Exception e) {
-            throw new StartException(e);
-        }
-    }
-
-    public void stop(StopContext context) {
-        try {
-            removeLegacyBinding();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public InjectedValue<TransactionManager> getTransactionManagerInjectedValue() {
-        return transactionManagerInjectedValue;
-    }
-
-    public InjectedValue<ServerSecurityManager> getServerSecurityManagerInjectedValue() {
-        return serverSecurityManagerInjectedValue;
-    }
-
-    public InjectedValue<EJB3Registrar> getEJB3RegistrarInjectedValue() {
-        return ejb3RegistrarInjectedValue;
-    }
-
-    public InjectedValue<DeploymentRepository> getDeploymentRepositoryInjectedValue() {
-        return deploymentRepositoryInjectedValue;
-    }
-
-    public InjectedValue<ComponentView> getViewInjectedValue() {
-        return this.viewInjectedValue;
-    }
-
-    public ServiceName getServiceName() {
-        return this.serviceName;
+    @Override
+    protected void internalStop() throws Exception {
+        removeLegacyBinding();
     }
 
     protected void createLegacyBinding() throws NamingException {
@@ -142,13 +125,13 @@ public abstract class DynamicInvocationService {
         final String containerName = metaData.getName();
         final ClassLoader beanClassLoader = ejb3Data.getBeanClassLoader();
         Dispatcher.singleton.registerTarget(containerName, new InvokableContextClassProxyHack(createInvokableContext()));
-        final EJB3Registrar value = this.ejb3RegistrarInjectedValue.getValue();
-        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(ejb3Data, value);
+
+        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(this.ejb3Data, this.ejb3RegistrarProxy);
         final String containerGuid = containerName + ":" + UUID.randomUUID().toString();
         final AspectManager aspectManager = AspectManager.instance(beanClassLoader);
         // TODO: probably ClassAdvisor won't do
         final Advisor advisor = new ClassAdvisor(Object.class, aspectManager);
-        final ClassLoader old = switchLoader(getClass().getClassLoader());
+        //final ClassLoader old = switchLoader(getClass().getClassLoader());
         InitialContext context = null;
         try {
             context = createJNPLocalContext();
@@ -160,19 +143,19 @@ public abstract class DynamicInvocationService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            try {
-                Thread.currentThread().setContextClassLoader(old);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.currentThread().setContextClassLoader(old);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
         }
     }
 
     protected void removeLegacyBinding() throws NamingException {
-        final EJB3Registrar value = this.ejb3RegistrarInjectedValue.getValue();
-        final JBossSessionBeanMetaData metaData = createMetaData(ejb3Data);
-        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(ejb3Data, value);
+
+        final JBossSessionBeanMetaData metaData = createMetaData(this.ejb3Data);
+        final JndiSessionRegistrarBase registrar = getJndiSessionRegistrarBase(this.ejb3Data, this.ejb3RegistrarProxy);
         final ClassLoader old = switchLoader(getClass().getClassLoader());
         InitialContext context = null;
         try {
@@ -214,7 +197,7 @@ public abstract class DynamicInvocationService {
         if (data.getDeploymentScopeBaseName() != null) {
             deploymentSumary.setDeploymentScopeBaseName(data.getDeploymentScopeBaseName());
         }
-        //TODO: deploymentSummary.packagingType && deploymentSummary.loader
+        // TODO: deploymentSummary.packagingType && deploymentSummary.loader ?
         jarMetaData.setDeploymentSummary(deploymentSumary);
         jarMetaData.setEjbVersion(data.getEJBVersion());
         final JBossEnterpriseBeansMetaData enterpriseBeansMetaData = new JBossEnterpriseBeansMetaData();
@@ -230,5 +213,11 @@ public abstract class DynamicInvocationService {
         MetadataUtil.decorateEjbsWithJndiPolicy(jarMetaData, data.getBeanClassLoader());
         this.metadata = (JBossSessionBeanMetaData) jarMetaData.getEnterpriseBean(smd.getName());
         return (JBossSessionBeanMetaData) this.metadata;
+    }
+
+    public static JndiSessionRegistrarBase getJndiSessionRegistrarBase(final EJBDataProxy data,
+            final EJB3RegistrarProxy registrarService) {
+        return data.isStateful() ? registrarService.getJndiStatefulSessionRegistrar() : registrarService
+                .getJndiStatelessSessionRegistrar();
     }
 }

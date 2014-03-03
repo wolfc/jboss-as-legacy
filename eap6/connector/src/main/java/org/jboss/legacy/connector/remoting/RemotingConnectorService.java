@@ -21,36 +21,31 @@
  */
 package org.jboss.legacy.connector.remoting;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.jboss.as.network.SocketBinding;
-import org.jboss.aspects.remoting.AOPRemotingInvocationHandler;
+import org.jboss.legacy.spi.connector.ConnectorProxy;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
-import org.jboss.remoting.ServerConfiguration;
-import org.jboss.remoting.transport.Connector;
 
 /**
+ * Service which manages remoting connector.
  * @author baranowb
- *
+ * 
  */
-public class RemotingConnectorService implements Service<Connector> {
+public class RemotingConnectorService implements Service<ConnectorProxy> {
 
-    private static final String INVOCATION_HANDLER_KEY = "AOP";
-    private static final String INVOCATION_HANDLER_CLASS = AOPRemotingInvocationHandler.class.getName();
-    private static final String TRANSPORT = "socket";
+    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingModel.LEGACY).append(
+            RemotingModel.SERVICE_NAME);
 
-    public static final ServiceName SERVICE_NAME = ServiceName.JBOSS.append(RemotingModel.LEGACY).append(RemotingModel.SERVICE_NAME);
-    private Connector connector;
-
+    private ConnectorProxy connector;
     private final InjectedValue<SocketBinding> binding = new InjectedValue<SocketBinding>();
 
     public RemotingConnectorService() {
         super();
+        this.connector = new ConnectorProxy();
     }
 
     public InjectedValue<SocketBinding> getBinding() {
@@ -58,27 +53,16 @@ public class RemotingConnectorService implements Service<Connector> {
     }
 
     @Override
-    public Connector getValue() throws IllegalStateException, IllegalArgumentException {
+    public ConnectorProxy getValue() throws IllegalStateException, IllegalArgumentException {
         return this.connector;
     }
 
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
-            final ServerConfiguration serverConfiguration = new ServerConfiguration(TRANSPORT);
-            Map<String, String> parameters = new HashMap<String, String>(6);
-            parameters.put("serverBindAddress", this.getBinding().getValue().getAddress().getHostName());
-            parameters.put("serverBindPort", String.valueOf(this.getBinding().getValue().getAbsolutePort()));
-            parameters.put("dataType", "invocation");
-            parameters.put("marshaller", "org.jboss.invocation.unified.marshall.InvocationMarshaller");
-            parameters.put("unmarshaller", "org.jboss.invocation.unified.marshall.InvocationUnMarshaller");
-            parameters.put("enableTcpNoDelay", "true");
-            serverConfiguration.setInvokerLocatorParameters(parameters);
-            final Map<String, String> invocationHandlers = new HashMap<String, String>(1);
-            invocationHandlers.put(INVOCATION_HANDLER_KEY, INVOCATION_HANDLER_CLASS);
-            serverConfiguration.setInvocationHandlers(invocationHandlers);
-            this.connector = new Connector();
-            this.connector.setServerConfiguration(serverConfiguration);
+            this.connector.setHost(this.getBinding().getValue().getAddress().getHostName());
+            this.connector.setPort(String.valueOf(this.getBinding().getValue().getAbsolutePort()));
+            this.connector.setTcpNoDelay(true);
             this.connector.start();
         } catch (Exception e) {
             throw new StartException(e);
@@ -87,7 +71,11 @@ public class RemotingConnectorService implements Service<Connector> {
 
     @Override
     public void stop(StopContext stopContext) {
-        this.connector.stop();
+        try {
+            this.connector.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

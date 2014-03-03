@@ -19,14 +19,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.legacy.ejb3.registrar;
+package org.jboss.legacy.spi.ejb3.registrar;
 
 import org.jboss.ejb3.common.registrar.spi.DuplicateBindException;
 import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
 import org.jboss.ejb3.common.registrar.spi.NotBoundException;
-import org.jboss.ejb3.proxy.spi.container.StatefulSessionFactory;
-import org.jboss.logging.Logger;
-import org.jboss.util.id.GUID;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -38,7 +35,6 @@ import java.util.Map;
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  */
 public class InMemoryEJB3Registrar implements Ejb3Registrar {
-    private static final Logger log = Logger.getLogger(InMemoryEJB3Registrar.class);
 
     final Map<Object, Object> registrar = new HashMap<Object, Object>();
 
@@ -68,7 +64,6 @@ public class InMemoryEJB3Registrar implements Ejb3Registrar {
     public void bind(Object name, Object value) throws DuplicateBindException {
         if (registrar.containsKey(name))
             throw new DuplicateBindException(name + " already has an object bound");
-        log.info("Binding '" + name + "' '" + value + "'");
         invokeOptionalMethod(value, "start");
         registrar.put(name, value);
     }

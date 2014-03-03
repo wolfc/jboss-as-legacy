@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2014, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,24 +20,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.legacy.ejb3.registrar;
+package org.jboss.legacy.spi.ejb3.dynamic;
 
-import org.jboss.ejb3.common.registrar.spi.Ejb3Registrar;
-import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatefulSessionRegistrar;
-import org.jboss.ejb3.proxy.impl.jndiregistrar.JndiStatelessSessionRegistrar;
-import org.jboss.msc.service.ServiceName;
+import javax.security.auth.Subject;
 
 /**
+ * This interface defines methods that can be called from SPI in AS7 space. SPI is responsible for setting up proper CL
+ * 
  * @author baranowb
+ * 
  */
-public interface EJB3Registrar {
+public interface DynamicInvocationTarget {
 
-    ServiceName SERVICE_NAME = ServiceName.JBOSS.append(EJB3RegistrarModel.LEGACY).append(EJB3RegistrarModel.SERVICE_NAME);
+    // TODO: check if Subject must be removed after call
+    void setupSecurity(String securityDomain, String string, char[] cs, Subject subject);
 
-    Ejb3Registrar getRegistrar();
-
-    JndiStatelessSessionRegistrar getJndiStatelessSessionRegistrar();
-
-    JndiStatefulSessionRegistrar getJndiStatefulSessionRegistrar();
+    // void setupTrasaction;
 
 }
