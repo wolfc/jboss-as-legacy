@@ -51,7 +51,9 @@
         <!--
         <version.jboss.as.legacy.cm>5.2.0</version.jboss.as.legacy.cm>
         -->
-        <version.jboss.as.legacy.jnp>1.0.0-SNAPSHOT</version.jboss.as.legacy.jnp>
+        <!--
+        <version.jboss.as.legacy.jnp>1.0.0</version.jboss.as.legacy.jnp>
+        -->
         <version.javax.transaction>1.0.1.Final-redhat-1</version.javax.transaction>
         <version.jboss.jts.itengration>4.17.15.Final-redhat-4</version.jboss.jts.itengration>
         <!--

@@ -13,8 +13,8 @@
     	<resource-root path="lib/jboss-ejb3-common.jar"/>
     	<resource-root path="lib/trove.jar"/>
     	<resource-root path="lib/jboss-mdr.jar"/>
-    	<!--
     	<resource-root path="lib/jboss-logging-spi.jar"/>
+        <!--
     	<resource-root path="lib/jboss-logging-log4j.jar"/>
     	-->
     	
@@ -35,10 +35,16 @@
 		<!-- test -->
         <!-- TX -->
         <resource-root path="lib/jboss-transaction-aspects.jar"/>
+
+        <!-- TODO: move to generic eap5 module -->
+        <resource-root path="lib/jboss-common-core.jar"/>
+        <resource-root path="lib/oswego-concurrent.jar"/>
     </resources>
 
-    <dependencies>    	
+    <dependencies>
+        <!--
     	<module name="org.jboss.legacy.jnp" export="true"/>
+    	-->
     	<module name="org.javassist" />
     	<!--test -->
     	<module name="javax.persistence.api"/>

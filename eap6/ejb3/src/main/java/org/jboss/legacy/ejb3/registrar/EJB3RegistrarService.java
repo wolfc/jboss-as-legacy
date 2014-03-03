@@ -22,9 +22,14 @@
 
 package org.jboss.legacy.ejb3.registrar;
 
+import static org.jboss.legacy.ejb3.registrar.SecurityActions.moduleClassLoader;
+
 import org.jboss.as.core.security.ServerSecurityManager;
+import org.jboss.as.security.plugins.ModuleClassLoaderLocator;
 import org.jboss.legacy.spi.connector.ConnectorProxy;
 import org.jboss.legacy.spi.ejb3.registrar.EJB3RegistrarProxy;
+import org.jboss.modules.ModuleClassLoader;
+import org.jboss.modules.ModuleClassLoaderFactory;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
@@ -60,9 +65,17 @@ public class EJB3RegistrarService implements Service<EJB3RegistrarProxy> {
     @Override
     public void start(StartContext startContext) throws StartException {
         try {
-            this.value.setConnector(this.connector.getValue());
-            this.value.setEjb3AOPInterceptorsURL(Thread.currentThread().getContextClassLoader().getResource(AOP_FILE));
-            this.value.start();
+            final ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            final ClassLoader cl = moduleClassLoader("org.jboss.legacy.spi");
+            Thread.currentThread().setContextClassLoader(cl);
+            System.err.println(Class.forName("org.jboss.logging.Logger", false, cl).getClassLoader());
+            try {
+                this.value.setConnector(this.connector.getValue());
+                this.value.setEjb3AOPInterceptorsURL(currentClassLoader.getResource(AOP_FILE));
+                this.value.start();
+            } finally {
+                Thread.currentThread().setContextClassLoader(currentClassLoader);
+            }
         } catch (Exception e) {
             throw new StartException(e);
         }

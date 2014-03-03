@@ -58,10 +58,12 @@
             <artifactId>jboss-remoting</artifactId>
         </dependency>
         -->
+        <!--
         <dependency>
     		<groupId>org.jboss.as.legacy.naming</groupId>
     		<artifactId>jboss-as-legacy-naming-jnp</artifactId>
     	</dependency>
+        -->
     	<dependency>
     		<artifactId>jboss-as-legacy-eap6-spi</artifactId>
         	<groupId>org.jboss.as.legacy.ejb3.eap6</groupId>

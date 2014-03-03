@@ -5,7 +5,7 @@
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
 #mvn clean install -s ~/redhat/git/jboss-eap/tools/maven/conf/settings.xml -Dmaven.repo.local=/home/baranowb/redhat/tmp/maven-local2 
 #mvn clean install -s ~/redhat/git/jboss-eap/tools/maven/conf/settings.xml
-mvn clean install
+#mvn clean install
 #-Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true 
 #mvn clean install -Dversion.jboss.legacy=5.3.0-SNAPSHOT
 if [ "x$JBOSS_HOME" = "x" ]; then
