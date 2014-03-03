@@ -4,7 +4,8 @@
 # -Dversion.jboss.legacy=5.1.0.GA ... eap build does not produce artifacts...
 # -Dcheckstyle.skip=true - ... signed jars screw checkstyle
 #mvn clean install -s ~/redhat/git/jboss-eap/tools/maven/conf/settings.xml -Dmaven.repo.local=/home/baranowb/redhat/tmp/maven-local2 
-mvn clean install -s ~/redhat/git/jboss-eap/tools/maven/conf/settings.xml
+#mvn clean install -s ~/redhat/git/jboss-eap/tools/maven/conf/settings.xml
+mvn clean install
 #-Dversion.jboss.legacy=5.1.0.GA -Dcheckstyle.skip=true 
 #mvn clean install -Dversion.jboss.legacy=5.3.0-SNAPSHOT
 if [ "x$JBOSS_HOME" = "x" ]; then
@@ -31,9 +32,13 @@ echo "<extension module=\"org.jboss.legacy.connector\"/>"
 echo
 echo "2. Add subsystem definition(no args == default IP/port)"
 echo
-echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3:1.0\">"
-echo "    <ejb3-registrar/>"
+echo "<subsystem xmlns=\"urn:jboss:domain:legacy-connector:1.0\">"
+echo "    <remoting socket-binding=\"remoting-socket-binding\"/>"
 echo "</subsystem>"
+echo
+echo "3. Define socket binding"
+echo
+echo "<socket-binding name=\"remoting-socket-binding\" port=\"4873\"/>"
 echo
 echo "To enable EJB3:"
 echo "1 Add extension definition in <extensions>."
@@ -43,12 +48,8 @@ echo
 echo "2. Add subsystem definition"
 echo
 echo "<subsystem xmlns=\"urn:jboss:domain:legacy-ejb3:1.0\">"
-echo "    <remoting socket-binding=\"remoting-socket-binding\">"
+echo "    <ejb3-registrar/>"
 echo "</subsystem>"
-echo
-echo "3. Define socket binding"
-echo
-echo "<socket-binding name=\"remoting-socket-binding\" port=\"4873\"/>"
 echo
 echo "To enable EJB3-Bridge:"
 echo "1 Add extension definition in <extensions>."
